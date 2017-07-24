@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import java.io.File;
 
@@ -13,16 +15,15 @@ import java.io.File;
  * Created by 叶明林 on 2017/7/23.
  */
 
-public class MediaPlayerManager{
+public class MediaPlayerManager
+{
     private SurfaceView surfaceView;
     private MediaPlayer player;
     private SurfaceHolder surfaceHolder;
     private int currentIndex=0;
-    private boolean isSurfaceCreated=false;
-    private boolean isPlaying=false;
-    private boolean isLoop=false;
-
     private String mediaPath;        // 视频路径
+    private boolean isSurfaceCreated=false;
+    private boolean isLoop=false;
 
     public MediaPlayerManager(SurfaceView surfaceView1,String path,boolean loop)
     {
@@ -30,9 +31,14 @@ public class MediaPlayerManager{
         this.surfaceView=surfaceView1;
         this.mediaPath=path;
         this.createSurface();
-        this.startVideo();
+        this.prepareVideo();
     }
-    public void changeLoop(boolean loop)
+    public void addOnClickListener(View.OnClickListener listener)
+    {
+        if(this.surfaceView!=null)
+            this.surfaceView.setOnClickListener(listener);
+    }
+    public void setLoopState(boolean loop)
     {
         this.isLoop=loop;
     }
@@ -42,8 +48,7 @@ public class MediaPlayerManager{
         this.surfaceHolder.addCallback(new MyCallBack());
         surfaceHolder.setFixedSize(100,100);
     }
-    public void pause(){this.player.pause();}
-    private void startVideo()
+    private void prepareVideo()
     {
         try
         {
@@ -52,15 +57,64 @@ public class MediaPlayerManager{
             this.player.setDataSource(this.mediaPath);
             this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             this.player.prepare();
+            this.player.setDisplay(this.surfaceHolder);
             player.seekTo(this.currentIndex);
-            player.start();
-            isPlaying=true;
         }
         catch(Exception e)
         {
-            isPlaying=false;
             e.printStackTrace();
         }
+    }
+    public void startVideo()
+    {
+        player.start();
+    }
+    public void pauseVideo()
+    {
+        if(this.player!=null&&this.player.isPlaying())
+        {
+            currentIndex=player.getCurrentPosition();
+            this.player.pause();
+        }
+    }
+    public void reStartVideo()
+    {
+        if(!isSurfaceCreated)
+            createSurface();
+        this.prepareVideo();
+        this.startVideo();
+    }
+    public void changeVideo(String newPath)
+    {
+        this.mediaPath=newPath;
+        this.currentIndex=0;
+        player.release();
+        try
+        {
+            player=new MediaPlayer();
+            player.setDisplay(surfaceHolder);
+            player.setLooping(this.isLoop);
+            this.player.setDataSource(this.mediaPath);
+            this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            this.player.prepare();
+            player.seekTo(this.currentIndex);
+            player.start();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public void relesePlayer()
+    {
+        if(this.player!=null)
+            this.player.release();
+    }
+    public boolean getPlayerSate()
+    {
+        if(this.player!=null)
+            return this.player.isPlaying();
+        return false;
     }
     private class MyCallBack implements SurfaceHolder.Callback {
         @Override
@@ -73,40 +127,14 @@ public class MediaPlayerManager{
 
         }
         @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
+        public void surfaceDestroyed(SurfaceHolder holder)
+        {
             isSurfaceCreated=false;
+            if(player.isPlaying())
+            {
+                currentIndex=player.getCurrentPosition();
+                player.stop();
+            }
         }
-    }
-    public void changeVideo(String newPath)
-    {
-        this.mediaPath=newPath;
-        this.currentIndex=0;
-        player.release();
-        isPlaying=false;
-        //if(!isSurfaceCreated)
-        //this.createSurface();
-        try
-        {
-            player=new MediaPlayer();
-            player.setDisplay(surfaceHolder);
-            player.setLooping(this.isLoop);
-            this.player.setDataSource(this.mediaPath);
-            this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            this.player.prepare();
-            player.seekTo(this.currentIndex);
-            player.start();
-            isPlaying=true;
-        }
-        catch(Exception e)
-        {
-            isPlaying=false;
-            e.printStackTrace();
-        }
-    }
-    public void onRestart()
-    {
-        if(!isSurfaceCreated)
-            createSurface();
-        this.startVideo();
     }
 }
