@@ -33,6 +33,10 @@ public class MediaPlayerManager
         this.createSurface();
         this.prepareVideo();
     }
+    public int getCurrentIndex()
+    {
+        return this.player.getCurrentPosition();
+    }
     public void addOnClickListener(View.OnClickListener listener)
     {
         if(this.surfaceView!=null)
@@ -53,6 +57,7 @@ public class MediaPlayerManager
         try
         {
             player=new MediaPlayer();
+            player.setVolume(0,0);
             player.setLooping(this.isLoop);
             this.player.setDataSource(this.mediaPath);
             this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);

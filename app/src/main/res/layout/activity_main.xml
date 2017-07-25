@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.myapplication.MainActivity">
+
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/layout_full"
+        android:layout_margin="15dp"
         android:orientation="vertical"
-        android:layout_margin="15dp">
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-3dp">
         <!--android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:weightSum="1"-->
@@ -18,8 +20,8 @@
             style="@style/layout_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight="0.2">
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
             <!--android:layout_weight="0.15"-->
 
             <LinearLayout
@@ -29,19 +31,27 @@
                 <!--android:layout_weight="193dp"-->
 
                 <TextView
+                    android:id="@+id/textView_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="时间:"
+                    android:textSize="25sp"/>
+
+                <TextView
                     android:id="@+id/textView_zheng"
                     style="@style/layout_vertical"
-                    android:textSize="25sp"
                     android:layout_weight="1"
-                    android:text="正手：" />
+                    android:text="正手："
+                    android:textSize="25sp" />
                 <!---->
 
                 <TextView
                     android:id="@+id/textView_fan"
                     style="@style/layout_vertical"
-                    android:textSize="25sp"
                     android:layout_weight="1"
-                    android:text="反手：" />
+                    android:text="反手："
+                    android:textSize="25sp" />
 
                 <!---->
             </LinearLayout>
@@ -49,9 +59,9 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_margin="20px"
                 android:layout_weight="0.15"
-                android:orientation="horizontal"
-                android:layout_margin="20px">
+                android:orientation="horizontal">
 
                 <SurfaceView
                     android:id="@+id/surfaceView2"
@@ -70,11 +80,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.45"
-                android:layout_marginRight="35px"
-                android:layout_marginLeft="35px"
-                android:layout_marginTop="10px"
                 android:layout_marginBottom="10px"
+                android:layout_marginLeft="35px"
+                android:layout_marginRight="35px"
+                android:layout_marginTop="10px"
+                android:layout_weight="0.45"
                 android:orientation="horizontal">
 
                 <com.balysv.materialripple.MaterialRippleLayout
@@ -91,8 +101,7 @@
                         android:background="@drawable/button_red"
                         android:text="X轴加速度"
                         android:textColor="@drawable/text_color_selector"
-                        android:textSize="18sp"
-                        />
+                        android:textSize="18sp" />
                     <!--android:layout_weight="0.45"-->
                 </com.balysv.materialripple.MaterialRippleLayout>
 
@@ -136,15 +145,17 @@
             <!--android:layout_weight="0.75"-->
         </LinearLayout>
         //图像
+
         <com.github.mikephil.charting.charts.LineChart
-            style="@style/layout_vertical"
             android:id="@+id/linechart"
+            style="@style/layout_vertical"
             android:layout_weight="0.35" />
         <!--android:layout_weight="0.40"-->
         //视频
+
         <SurfaceView
-            style="@style/layout_vertical"
             android:id="@+id/surfaceView"
+            style="@style/layout_vertical"
             android:layout_weight="0.35" />
 
         <!--android:layout_weight="0.44"-->

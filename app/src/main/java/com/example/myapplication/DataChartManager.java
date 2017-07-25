@@ -33,6 +33,8 @@ public class DataChartManager extends Thread{
     private Timer timer = new Timer();
     private List<View.OnClickListener> listeners=new ArrayList<View.OnClickListener>();
     private TimerTask task;
+    private boolean isPassingData=false;
+    private final int XRangeMaximum=100;
     public DataChartManager(LineChart chart,TimerTask timerTask,String[] name,int[] color)
     {
         this.task=timerTask;
@@ -67,9 +69,18 @@ public class DataChartManager extends Thread{
     {
         this.datachart.addEntry(dataList);
     }
+
+    public void setPassingData(boolean passingData) {
+        isPassingData = passingData;
+    }
+    public boolean isPassingData() {
+        return isPassingData;
+    }
+
     @Override
     public void run()
     {
+        isPassingData=true;
         timer = new Timer();
         timer.schedule(task, 20,20);
     }
@@ -97,10 +108,13 @@ public class DataChartManager extends Thread{
         //多条曲线
         public DataChart(LineChart mLineChart, List<String> names, List<Integer> colors) {
             this.lineChart = mLineChart;
-            leftAxis = lineChart.getAxisLeft();
             lineChart.getAxisLeft().setEnabled(false);
             xAxis = lineChart.getXAxis();
-            xAxis.setEnabled(false);
+            xAxis.setLabelCount(50,true);
+            xAxis.setDrawAxisLine(false);
+            xAxis.setDrawLabels(false);
+            xAxis.setDrawGridLines(false);
+            //xAxis.setEnabled(false);
             initLineChart();
             initLineDataSet(names, colors);
         }
@@ -189,7 +203,7 @@ public class DataChartManager extends Thread{
             for (int i = 0; i < names.size(); i++) {
                 lineDataSet = new LineDataSet(null, names.get(i));
                 lineDataSet.setColor(colors.get(i));
-                lineDataSet.setLineWidth(1.5f);
+                lineDataSet.setLineWidth(1f);
                 lineDataSet.setDrawCircles(false);
                 //lineDataSet.setCircleRadius(1.5f);
                 lineDataSet.setColor(colors.get(i));
@@ -225,7 +239,7 @@ public class DataChartManager extends Thread{
             }
             lineData.notifyDataChanged();
             lineChart.notifyDataSetChanged();
-            lineChart.setVisibleXRangeMaximum(250);
+            lineChart.setVisibleXRangeMaximum(XRangeMaximum);
             lineChart.moveViewToX(lineData.getEntryCount() - 5);
         }
         /**
@@ -243,7 +257,7 @@ public class DataChartManager extends Thread{
                 lineData.addEntry(entry, i);
                 lineData.notifyDataChanged();
                 lineChart.notifyDataSetChanged();
-                lineChart.setVisibleXRangeMaximum(250);
+                lineChart.setVisibleXRangeMaximum(XRangeMaximum);
                 lineChart.moveViewToX(lineData.getEntryCount() - 5);
             }
         }

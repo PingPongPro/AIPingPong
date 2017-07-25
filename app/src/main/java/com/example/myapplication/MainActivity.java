@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import android.graphics.Color;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,9 +22,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
+
 public class MainActivity extends AppCompatActivity{
-    private TextView textView_zhengshou;
-    private TextView textView_fanshou;
+    private TextView textView_forehand;
+    private TextView textView_backhand;
+    private TextView textView_time;
+    //时间相关
+    private SystemTimeManager systemTimeManager;
     //图像相关对象
     private ReadDataFromFile dataFile;
     private LineChart lineChart;
@@ -47,8 +53,23 @@ public class MainActivity extends AppCompatActivity{
             File.separator+"ballGame/demo_zheng.mp4";            //正手3D
     private String mediaPath_pingpang_fan= Environment.getExternalStorageDirectory().getAbsolutePath()+
             File.separator+"ballGame/demo_fan.mp4";            //反手3D
+    //  更新UI标志
+    public final static int UPDATETIME=0;
+    public final static int UPDATEHAND=1;
 
     private TimerActivity myTimer;
+    private Handler mainHandler=new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what)
+            {
+                case MainActivity.UPDATETIME:
+                    textView_time.setText("时间: "+msg.obj.toString());
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +80,9 @@ public class MainActivity extends AppCompatActivity{
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        textView_fanshou=(TextView)findViewById(R.id.textView_fan);
-        textView_zhengshou=(TextView)findViewById(R.id.textView_zheng);
+        textView_backhand =(TextView)findViewById(R.id.textView_fan);
+        textView_forehand =(TextView)findViewById(R.id.textView_zheng);
+        textView_time=(TextView)findViewById(R.id.textView_time);
         this.lineChart=(LineChart)findViewById(R.id.linechart) ;
         this.dataFile=new ReadDataFromFile(this.dataPath,true);
 
@@ -76,8 +98,38 @@ public class MainActivity extends AppCompatActivity{
 
         myTimer=new TimerActivity(this.counterPath);
         surfaceView=(SurfaceView)findViewById(R.id.surfaceView);
-        this.mediaPlayerManager=new MediaPlayerManager(this.surfaceView,mediaPath,false);
-        this.mediaPlayerManager.startVideo();
+        this.mediaPlayerManagerForReal=new MediaPlayerManager(this.surfaceView,mediaPath,false);
+        this.mediaPlayerManagerForReal.addOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(mediaPlayerManagerForReal.getPlayerSate()==true)
+                        {
+                            mediaPlayerManagerForReal.pauseVideo();
+                            mediaPlayerManager.pauseVideo();
+                            dataChartManager.setPassingData(false);
+                            systemTimeManager.pauseTimer();
+                        }
+                        else
+                        {
+                            try
+                            {
+                                mediaPlayerManagerForReal.startVideo();
+                                mediaPlayerManager.startVideo();
+                                dataChartManager.setPassingData(true);
+                                systemTimeManager.startTimer(mediaPlayerManagerForReal.getCurrentIndex());
+                            }
+                            catch(Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+        );
+        this.systemTimeManager=new SystemTimeManager();
+        this.mediaPlayerManagerForReal.startVideo();
+        this.systemTimeManager.start();
         this.myTimer.start();
         dataChartManager.start();
 
@@ -97,7 +149,6 @@ public class MainActivity extends AppCompatActivity{
         super.onResume();
         this.mediaPlayerManager.reStartVideo();
     }
-
     private class TaskForChart extends TimerTask
     {
         private List<Double> dataList=new ArrayList<Double>();
@@ -105,28 +156,51 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void run()
         {
-            runOnUiThread(
-                new Runnable()
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run()
                 {
-                    public void run() {
-                        //往图像里添加数据
+                    if(dataChartManager.isPassingData())
+                    {
                         try
                         {
                             List<Object> list=dataFile.nextData(new int[]{0,1,2},"\t");
-                            if(counter%10==0)
+                            if(!dataFile.endFlag)
                             {
-                                dataList.add(Double.valueOf(list.get(0).toString()));
-                                dataList.add(Double.valueOf(list.get(1).toString()));
-                                dataList.add(Double.valueOf(list.get(2).toString()));
-                                dataChartManager.addEntry(dataList);
-                                dataList.clear();
+                                if(counter%10==0)
+                                {
+                                    dataList.add(Double.valueOf(list.get(0).toString()));
+                                    dataList.add(Double.valueOf(list.get(1).toString()));
+                                    dataList.add(Double.valueOf(list.get(2).toString()));
+                                    dataChartManager.addEntry(dataList);
+                                    dataList.clear();
+                                }
+                                counter++;
+                                if(changed)
+                                {
+                                    try
+                                    {
+                                        textView_forehand.setText("正手: "+counter_zheng);
+                                        textView_backhand.setText("反手: "+counter_fan);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        e.printStackTrace();
+                                    }
+
+                                    changed=false;
+                                }
                             }
-                            counter++;
-                            if(changed)
+                            else
                             {
-                                textView_fanshou.setText("反手: "+counter_fan);
-                                textView_zhengshou.setText("正手: "+counter_zheng);
-                                changed=false;
+                                if(counter%10==0)
+                                {
+                                    for(int i=0;i<3;i++)
+                                        dataList.add(0.0);
+                                    dataChartManager.addEntry(dataList);
+                                    dataList.clear();
+                                }
+                                counter++;
                             }
                         }
                         catch(Exception e){
@@ -134,7 +208,7 @@ public class MainActivity extends AppCompatActivity{
                         }
                     }
                 }
-            );
+            });
         }
     }
     private class TimerActivity extends Thread
@@ -189,12 +263,6 @@ public class MainActivity extends AppCompatActivity{
             }
 
         }
-
-        /*Handler handler = new Handler() {
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-            };
-        };  */
         private class myTask extends TimerTask
         {
             @Override
@@ -228,6 +296,53 @@ public class MainActivity extends AppCompatActivity{
                 {
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+    private class SystemTimeManager extends Thread
+    {
+        private Timer timer;
+        private int totalSecond=0;
+        public void startTimer()
+        {
+            this.timer=new Timer();
+            this.timer.schedule(new timeTask(),1000,1000);
+        }
+        public void startTimer(int indexTime)
+        {
+            this.timer=new Timer();
+            this.timer.schedule(new timeTask(),1000-(indexTime%1000),1000);
+        }
+        public void pauseTimer()
+        {
+            this.timer.cancel();
+        }
+        public void resetTimer()
+        {
+            this.totalSecond=0;
+        }
+
+        @Override
+        public void run()
+        {
+            this.startTimer();
+        }
+
+        private class timeTask extends TimerTask
+        {
+            @Override
+            public void run()
+            {
+                totalSecond++;
+                int second=totalSecond%60;
+                int minite=totalSecond/60;
+                Message message=new Message();
+                message.what=MainActivity.UPDATETIME;
+                if(second<10)
+                    message.obj=minite+":0"+second;
+                else
+                    message.obj=minite+":"+second;
+                mainHandler.sendMessage(message);
             }
         }
     }
