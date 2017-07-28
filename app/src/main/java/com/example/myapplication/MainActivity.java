@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView textView_time;
     //时间相关
     private SystemTimeManager systemTimeManager;
+    private CircularRingPercentageView timerView;
     //图像相关对象
     private ReadDataFromFile dataFile;
     private LineChart lineChart;
@@ -68,8 +70,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             File.separator+"ballGame/demo_fan.mp4";            //反手3D
     //  更新UI标志
     public final static int UPDATETIME=0;
-    public final static int UPDATEHAND=1;
-
     private static final int REQUEST = 1;
 
     private TimerActivity myTimer;
@@ -79,7 +79,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             switch (msg.what)
             {
                 case MainActivity.UPDATETIME:
-                    textView_time.setText("时间: "+msg.obj.toString());
+                    Bundle bundle= msg.getData();
+                    textView_time.setText("时间: "+bundle.get("minite")+":"+bundle.get("second"));
+                    int second=Integer.valueOf(bundle.get("second").toString());
+                    timerView.setProgress(second, new CircularRingPercentageView.OnProgressScore() {
+                        @Override
+                        public void setProgressScore(float score) {
+                        }
+                    });
                     break;
             }
             super.handleMessage(msg);
@@ -87,16 +94,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_main);
+
         /*ActionBar actionBar = getSupportActionBar();
         actionBar.setLogo(R.drawable.pic1);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);*/
         try
         {
-            //shiyan
+            super.onCreate(savedInstanceState);
+            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.activity_main);
+            this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
+            timerView.setProgress(0, new CircularRingPercentageView.OnProgressScore() {
+                @Override
+                public void setProgressScore(float score) {
+                    Log.e("12", score + "");
+
+                }
+
+            });
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        try
+        {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
@@ -439,10 +462,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 int minite=totalSecond/60;
                 Message message=new Message();
                 message.what=MainActivity.UPDATETIME;
+                Bundle bundle = new Bundle();
+                bundle.putString("minite",minite+"");
                 if(second<10)
                     message.obj=minite+":0"+second;
                 else
                     message.obj=minite+":"+second;
+                bundle.putString("second",second+"");
+                message.setData(bundle);
                 mainHandler.sendMessage(message);
             }
         }
