@@ -4,6 +4,7 @@ package com.example.myapplication;
  * Created by 叶明林 on 2017/7/28.
  */
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -11,10 +12,15 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class CircularRingPercentageView extends View {
     private Paint paint;
@@ -28,7 +34,7 @@ public class CircularRingPercentageView extends View {
     private int radius;                                                 //圆环半径
     private RectF oval;
     private Paint mPaintText;
-    private int maxColorNumber = 60;                                   //圆等分数
+    private int maxColorNumber;                                   //圆等分数
     private float singlPoint = 6;
     private float lineWidth = 0f;                                       //等分线宽
     private int circleCenter;                                           //圆心
@@ -36,6 +42,32 @@ public class CircularRingPercentageView extends View {
     private boolean isLine;
     private int positionX;                                              //X轴偏移量
     private int positionY;                                              //Y轴偏移量
+    private Activity activity;
+    private long startTime=0;
+    private long saveTime=0;
+    private boolean isRunning=false;
+
+    private int minite=0;
+    private int second=0;
+    private boolean isChanged=true;
+    private void updateTime(long currentTime)
+    {
+        if((this.saveTime+currentTime-this.startTime)/1000%60!=second)
+        {
+            this.minite=(int)(this.saveTime+currentTime-this.startTime)/60000;
+            this.second=(int)(this.saveTime+currentTime-this.startTime)/1000%60;
+            this.isChanged=true;
+        }
+    }
+    public String getTime()
+    {
+        String time=minite+":";
+        if(second>=10)
+            time+=""+second;
+        else
+            time+="0"+second;
+        return time;
+    }
     /**
      * 分割的数量
      *
@@ -73,7 +105,7 @@ public class CircularRingPercentageView extends View {
     public CircularRingPercentageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.CircularRing);
-        maxColorNumber = mTypedArray.getInt(R.styleable.CircularRing_circleNumber, 60);
+        maxColorNumber = mTypedArray.getInt(R.styleable.CircularRing_circleNumber, 600);
         circleWidth = mTypedArray.getDimensionPixelOffset(R.styleable.CircularRing_circleWidth, getDpValue(180));
         roundBackgroundColor = mTypedArray.getColor(R.styleable.CircularRing_roundColor, 0xffdddddd);
         textColor = mTypedArray.getColor(R.styleable.CircularRing_circleTextColor, 0xff999999);
@@ -226,9 +258,10 @@ public class CircularRingPercentageView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+
         //背景渐变颜色
         paint.setShader(sweepGradient);
-        canvas.drawArc(oval, -90, (float) (progress * 6), false, paint);
+        canvas.drawArc(oval, -90, (float) (progress * singlPoint), false, paint);
         paint.setShader(null);
 
         //是否是线条模式
@@ -244,7 +277,20 @@ public class CircularRingPercentageView extends View {
         }
         //绘制剩下的空白区域
         paint.setColor(roundBackgroundColor);
-        canvas.drawArc(oval, -90, (float) (-(60 - progress) * 6), false, paint);
+        canvas.drawArc(oval, -90, (float) (-(maxColorNumber - progress) * singlPoint), false, paint);
+        if(isRunning)
+        {
+            long currenTime=System.currentTimeMillis();
+            this.progress=(float)((this.saveTime+currenTime-this.startTime)/100%maxColorNumber);
+            this.updateTime(currenTime);
+            if(isChanged)
+            {
+                //TODO 更新时间
+                System.out.println(getTime());
+                isChanged=false;
+            }
+            invalidate();
+        }
 
         //绘制文字刻度
         /*for (int i = 1; i <= 10; i++) {
@@ -276,5 +322,18 @@ public class CircularRingPercentageView extends View {
         progress = p;
         postInvalidate();
     }
-
+    public void start()
+    {
+        this.startTime=System.currentTimeMillis();
+        this.isRunning=true;
+    }
+    public void pause()
+    {
+        this.isRunning=false;
+        this.saveTime=System.currentTimeMillis()-this.startTime;
+    }
+    public void reset()
+    {
+        this.saveTime=0;
+    }
 }
