@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBar.setDisplayShowHomeEnabled(true);*/
         try
         {
+            //shiyan
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
