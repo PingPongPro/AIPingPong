@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.myapplication.MainActivity"
+    tools:showIn="@layout/app_bar_main">
+
+    <LinearLayout
+        style="@style/layout_full"
+        android:layout_margin="15dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-3dp">
+        <!--android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"-->
+
+        <LinearLayout
+            style="@style/layout_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
+            <!--android:layout_weight="0.15"-->
+
+            <LinearLayout
+                style="@style/layout_horizontal"
+                android:layout_weight="0.15"
+                android:orientation="vertical">
+                <!--android:layout_weight="193dp"-->
+
+                <TextView
+                    android:id="@+id/textView_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="时间:"
+                    android:textSize="25sp"/>
+
+                <TextView
+                    android:id="@+id/textView_zheng"
+                    style="@style/layout_vertical"
+                    android:layout_weight="1"
+                    android:text="正手："
+                    android:textSize="25sp" />
+                <!---->
+
+                <TextView
+                    android:id="@+id/textView_fan"
+                    style="@style/layout_vertical"
+                    android:layout_weight="1"
+                    android:text="反手："
+                    android:textSize="25sp" />
+
+                <!---->
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="20px"
+                android:layout_weight="0.15"
+                android:orientation="horizontal">
+
+                <SurfaceView
+                    android:id="@+id/surfaceView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/layout_vertical"
+            android:layout_weight="0.1"
+            android:orientation="horizontal">
+            <!--android:layout_width="match_parent"-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10px"
+                android:layout_marginLeft="35px"
+                android:layout_marginRight="35px"
+                android:layout_marginTop="10px"
+                android:layout_weight="0.45"
+                android:orientation="horizontal">
+
+                <com.balysv.materialripple.MaterialRippleLayout
+                    android:id="@+id/ripple1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.45">
+
+                    <Button
+                        android:id="@+id/accX"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:background="@drawable/button_red"
+                        android:text="X轴加速度"
+                        android:textColor="@drawable/text_color_selector"
+                        android:textSize="18sp" />
+                    <!--android:layout_weight="0.45"-->
+                </com.balysv.materialripple.MaterialRippleLayout>
+
+                <com.balysv.materialripple.MaterialRippleLayout
+                    android:id="@+id/ripple2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.45">
+
+                    <Button
+                        android:id="@+id/accY"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:background="@drawable/button_blue"
+                        android:text="Y轴加速度"
+                        android:textColor="@drawable/text_color_selector"
+                        android:textSize="18sp" />
+                </com.balysv.materialripple.MaterialRippleLayout>
+
+                <com.balysv.materialripple.MaterialRippleLayout
+                    android:id="@+id/ripple3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.45">
+
+                    <Button
+                        android:id="@+id/accZ"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:background="@drawable/button_green"
+                        android:text="Z轴加速度"
+                        android:textColor="@drawable/text_color_selector"
+                        android:textSize="18sp" />
+                </com.balysv.materialripple.MaterialRippleLayout>
+            </LinearLayout>
+
+            <!--android:layout_weight="0.49"-->
+
+            <!--android:layout_weight="0.75"-->
+        </LinearLayout>
+        //图像
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/linechart"
+            style="@style/layout_vertical"
+            android:layout_weight="0.35" />
+        <!--android:layout_weight="0.40"-->
+        //视频
+
+        <SurfaceView
+            android:id="@+id/surfaceView"
+            style="@style/layout_vertical"
+            android:layout_weight="0.35" />
+
+        <!--android:layout_weight="0.44"-->
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
