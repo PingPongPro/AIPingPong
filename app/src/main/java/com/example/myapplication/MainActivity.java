@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView textView_forehand;
     private TextView textView_backhand;
     private TextView textView_time;
+    int aaaaaaaa;
     //时间相关
     private SystemTimeManager systemTimeManager;
     private CircularRingPercentageView timerView;
