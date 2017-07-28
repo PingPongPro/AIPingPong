@@ -29,7 +29,7 @@ import java.util.Map;
 public class ExDialog extends ListActivity {
 	private List<Map<String, Object>> mData;
 	private String mDir;
-	private String DirTitle = "/";
+	private String DirTitle = "ballGame";
 	private String RootDir = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"ballGame";
 
 	@Override
@@ -64,20 +64,6 @@ public class ExDialog extends ListActivity {
 		File f = new File(mDir);
 		List files = Arrays.asList(f.listFiles());
 
-		if (!mDir.equals(RootDir)) {
-			map = new HashMap<String, Object>();
-			map.put("Name", "..");
-			map.put("Url", f.getParent());
-			map.put("img", R.drawable.folder);
-			list.add(map);
-
-			map = new HashMap<String, Object>();
-			map.put("Name", "选择当前文件夹");
-			map.put("Url", f.getAbsolutePath());
-			map.put("img", R.drawable.check);
-			list.add(map);
-		}
-
 		Collections.sort(files, new Comparator<File>() {
 			@Override
 			public int compare(File o1, File o2) {
@@ -95,10 +81,10 @@ public class ExDialog extends ListActivity {
 				map.put("Name", ((File)(files.get(i))).getName());
 				map.put("Url", ((File)(files.get(i))).getPath());
 				if (((File)(files.get(i))).isDirectory())
-					map.put("img", R.drawable.folder);
-				else
-					map.put("img", R.drawable.document);
-				list.add(map);
+				{
+					map.put("img", R.drawable.check);
+					list.add(map);
+				}
 			}
 		}
 		return list;
@@ -106,16 +92,7 @@ public class ExDialog extends ListActivity {
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		if ((Integer) mData.get(position).get("img") == R.drawable.folder) {
-			DirTitle = (String) mData.get(position).get("Name");
-			setTitle(DirTitle);
-			mDir = (String) mData.get(position).get("Url");
-			mData = getData();
-			MyAdapter adapter = new MyAdapter(this);
-			setListAdapter(adapter);
-		} else {
-			finishWithResult((String) mData.get(position).get("Url"));
-		}
+        finishWithResult((String) mData.get(position).get("Url"));
 	}
 
 	public final class ViewHolder {
