@@ -41,9 +41,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView textView_forehand;
     private TextView textView_backhand;
     private TextView textView_time;
-    int aaaaaaaa;
     //时间相关
-    private SystemTimeManager systemTimeManager;
+    //private SystemTimeManager systemTimeManager;
     private CircularRingPercentageView timerView;
     //图像相关对象
     private ReadDataFromFile dataFile;
@@ -106,14 +105,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.activity_main);
             this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
-            timerView.setProgress(0, new CircularRingPercentageView.OnProgressScore() {
+            /*timerView.setProgress(0, new CircularRingPercentageView.OnProgressScore() {
                 @Override
                 public void setProgressScore(float score) {
                     Log.e("12", score + "");
 
                 }
 
-            });
+            });*/
         }
         catch(Exception e)
         {
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             mediaPlayerManagerForReal.pauseVideo();
                             mediaPlayerManager.pauseVideo();
                             dataChartManager.setPassingData(false);
-                            systemTimeManager.pauseTimer();
+                            timerView.pause();
                         }
                         else
                         {
@@ -175,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 mediaPlayerManagerForReal.startVideo();
                                 mediaPlayerManager.startVideo();
                                 dataChartManager.setPassingData(true);
-                                systemTimeManager.startTimer(mediaPlayerManagerForReal.getCurrentIndex());
+                                timerView.start();
                             }
                             catch(Exception e)
                             {
@@ -185,9 +184,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
         );
-        this.systemTimeManager=new SystemTimeManager();
+        //this.systemTimeManager=new SystemTimeManager();
         this.mediaPlayerManagerForReal.startVideo();
-        this.systemTimeManager.start();
+        timerView.start();
+        //this.systemTimeManager.start();
         this.myTimer.start();
         dataChartManager.start();
 
@@ -421,57 +421,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 {
                     e.printStackTrace();
                 }
-            }
-        }
-    }
-    private class SystemTimeManager extends Thread
-    {
-        private Timer timer;
-        private int totalSecond=0;
-        public void startTimer()
-        {
-            this.timer=new Timer();
-            this.timer.schedule(new timeTask(),1000,1000);
-        }
-        public void startTimer(int indexTime)
-        {
-            this.timer=new Timer();
-            this.timer.schedule(new timeTask(),1000-(indexTime%1000),1000);
-        }
-        public void pauseTimer()
-        {
-            this.timer.cancel();
-        }
-        public void resetTimer()
-        {
-            this.totalSecond=0;
-        }
-
-        @Override
-        public void run()
-        {
-            this.startTimer();
-        }
-
-        private class timeTask extends TimerTask
-        {
-            @Override
-            public void run()
-            {
-                totalSecond++;
-                int second=totalSecond%60;
-                int minite=totalSecond/60;
-                Message message=new Message();
-                message.what=MainActivity.UPDATETIME;
-                Bundle bundle = new Bundle();
-                bundle.putString("minite",minite+"");
-                if(second<10)
-                    message.obj=minite+":0"+second;
-                else
-                    message.obj=minite+":"+second;
-                bundle.putString("second",second+"");
-                message.setData(bundle);
-                mainHandler.sendMessage(message);
             }
         }
     }
