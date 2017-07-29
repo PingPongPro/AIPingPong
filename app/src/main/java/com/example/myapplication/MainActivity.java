@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.activity_main);
             this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
+            this.timerView.setActivity(this);
             /*timerView.setProgress(0, new CircularRingPercentageView.OnProgressScore() {
                 @Override
                 public void setProgressScore(float score) {

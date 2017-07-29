@@ -50,6 +50,10 @@ public class CircularRingPercentageView extends View {
     private int minite=0;
     private int second=0;
     private boolean isChanged=true;
+    public void setActivity(Activity a)
+    {
+        this.activity=a;
+    }
     private void updateTime(long currentTime)
     {
         if((this.saveTime+currentTime-this.startTime)/1000%60!=second)
@@ -285,9 +289,17 @@ public class CircularRingPercentageView extends View {
             this.updateTime(currenTime);
             if(isChanged)
             {
-                //TODO 更新时间
-                System.out.println(getTime());
-                isChanged=false;
+                this.activity.runOnUiThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                //TODO 更新时间
+                                System.out.println(getTime());
+                                isChanged=false;
+                            }
+                        }
+                );
+
             }
             invalidate();
         }
