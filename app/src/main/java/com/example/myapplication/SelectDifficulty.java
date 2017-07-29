@@ -41,7 +41,7 @@ public class SelectDifficulty extends ListActivity {
         WindowManager DirWin = getWindowManager();
         Display Dis = DirWin.getDefaultDisplay();
         LayoutParams Type = getWindow().getAttributes();
-        Type.height = (int) (Dis.getHeight()*0.8);
+        Type.height = (int) (Dis.getHeight()*0.5);
         Type.width = (int) (Dis.getWidth());
         getWindow().setAttributes(Type);
     }

@@ -57,7 +57,6 @@ public class CircularRingPercentageView extends View {
         this.collapsingToolbarLayout=c;
         this.collapsingToolbarLayout.setExpandedTitleGravity(Gravity.CENTER);
         this.collapsingToolbarLayout.setExpandedTitleMarginStart(Gravity.CENTER);
-        this.collapsingToolbarLayout.setCollapsedTitleGravity(Gravity.CENTER);
     }
     private void updateTime(long currentTime)
     {
