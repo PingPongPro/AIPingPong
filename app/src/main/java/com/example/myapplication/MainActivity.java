@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -7,6 +8,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -19,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -101,45 +104,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_main);
+        this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
 
-        /*ActionBar actionBar = getSupportActionBar();
-        actionBar.setLogo(R.drawable.pic1);
-        actionBar.setDisplayUseLogoEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);*/
         try
         {
-            super.onCreate(savedInstanceState);
-            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.activity_main);
-            this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
-            this.timerView.setActivity(this);
-
-            TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
-            tabHost.setup();
-            this.tabManager=new TabManager(tabHost);
+            CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+            System.out.println(collapsingToolbar.getHeight()+" "+collapsingToolbar.getWidth());
+            this.timerView.setCollapsingToolbarLayout(collapsingToolbar);
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
-        try
-        {
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
+        Activity a=null;
+        TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
+        tabHost.setup();
+        this.tabManager=new TabManager(this,tabHost);
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
-
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         textView_backhand =(TextView)findViewById(R.id.textView_fan);
         textView_forehand =(TextView)findViewById(R.id.textView_zheng);

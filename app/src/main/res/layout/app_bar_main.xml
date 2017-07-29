@@ -17,7 +17,9 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/light_orange"
             android:fitsSystemWindows="true"
+            app:expandedTitleTextAppearance="@style/textStyle"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -32,7 +34,6 @@
                     android:id="@+id/timer"
                     android:layout_width="194dp"
                     android:layout_height="300px"
-
                     android:layout_weight="0.55" />
             </LinearLayout>
 

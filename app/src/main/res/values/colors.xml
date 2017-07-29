@@ -13,6 +13,10 @@
     <color name="indicator_3">#66D7B9</color>
 
     <color name="indicator_4">#FDBC7D</color>
+    
+    <color name="light_orange">#FF7F00</color>
+
+    <color name="orange">#EE4000</color>
     <declare-styleable name="SeekCircle">
 
         <attr name="max" format="integer" value="100" />

@@ -15,8 +15,10 @@ import android.graphics.SweepGradient;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 
 import java.util.Timer;
@@ -42,7 +44,7 @@ public class CircularRingPercentageView extends View {
     private boolean isLine;
     private int positionX;                                              //X轴偏移量
     private int positionY;                                              //Y轴偏移量
-    private Activity activity;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private long startTime=0;
     private long saveTime=0;
     private boolean isRunning=false;
@@ -50,9 +52,12 @@ public class CircularRingPercentageView extends View {
     private int minite=0;
     private int second=0;
     private boolean isChanged=true;
-    public void setActivity(Activity a)
+    public void setCollapsingToolbarLayout(CollapsingToolbarLayout c)
     {
-        this.activity=a;
+        this.collapsingToolbarLayout=c;
+        this.collapsingToolbarLayout.setExpandedTitleGravity(Gravity.CENTER);
+        this.collapsingToolbarLayout.setExpandedTitleMarginStart(Gravity.CENTER);
+        this.collapsingToolbarLayout.setCollapsedTitleGravity(Gravity.CENTER);
     }
     private void updateTime(long currentTime)
     {
@@ -65,7 +70,11 @@ public class CircularRingPercentageView extends View {
     }
     public String getTime()
     {
-        String time=minite+":";
+        String time="";
+        if(minite>=10)
+            time+=minite+":";
+        else
+            time+="0"+minite+":";
         if(second>=10)
             time+=""+second;
         else
@@ -262,7 +271,6 @@ public class CircularRingPercentageView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-
         //背景渐变颜色
         paint.setShader(sweepGradient);
         canvas.drawArc(oval, -90, (float) (progress * singlPoint), false, paint);
@@ -289,18 +297,8 @@ public class CircularRingPercentageView extends View {
             this.updateTime(currenTime);
             if(isChanged)
             {
-                this.activity.runOnUiThread(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                //TODO 更新时间
-                                activity.setTitle(getTime());
-                                isChanged=false;
-                            }
-                        }
-                );
-
-
+                this.collapsingToolbarLayout.setTitle(getTime());
+                isChanged=false;
             }
             invalidate();
         }
