@@ -67,6 +67,7 @@ public class CircularRingPercentageView extends View {
             this.isChanged=true;
         }
     }
+
     public String getTime()
     {
         String time="  ";
