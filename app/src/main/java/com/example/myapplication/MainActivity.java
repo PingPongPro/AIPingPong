@@ -114,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 timerView.pause();
             }
         });
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timerView.start();
+            }
+        });
     }
 
     @Override
