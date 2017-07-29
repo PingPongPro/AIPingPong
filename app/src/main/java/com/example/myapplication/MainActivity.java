@@ -114,12 +114,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 timerView.pause();
             }
         });
-        btnStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                timerView.start();
-            }
-        });
     }
 
     @Override
@@ -128,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         btnPause=(Button)findViewById(R.id.btnPause);
+        btnStart=(Button)findViewById(R.id.btnStart);
         this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
 
         try
