@@ -24,7 +24,7 @@ import java.util.TimerTask;
 
 public class CircularRingPercentageView extends View {
     private Paint paint;
-    private int circleWidth;                                            //圆直径
+    private int circleWidth;                                             //圆直径
     private int roundBackgroundColor;                                   //背景颜色
     private int textColor;                                               //字体颜色
     private float textSize;                                              //字体大小
@@ -34,7 +34,7 @@ public class CircularRingPercentageView extends View {
     private int radius;                                                 //圆环半径
     private RectF oval;
     private Paint mPaintText;
-    private int maxColorNumber;                                   //圆等分数
+    private int maxColorNumber;                                         //圆等分数
     private float singlPoint = 6;
     private float lineWidth = 0f;                                       //等分线宽
     private int circleCenter;                                           //圆心
@@ -50,6 +50,10 @@ public class CircularRingPercentageView extends View {
     private int minite=0;
     private int second=0;
     private boolean isChanged=true;
+    public void setActivity(Activity a)
+    {
+        this.activity=a;
+    }
     private void updateTime(long currentTime)
     {
         if((this.saveTime+currentTime-this.startTime)/1000%60!=second)
@@ -285,9 +289,18 @@ public class CircularRingPercentageView extends View {
             this.updateTime(currenTime);
             if(isChanged)
             {
-                //TODO 更新时间
-                System.out.println(getTime());
-                isChanged=false;
+                this.activity.runOnUiThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                //TODO 更新时间
+                                activity.setTitle(getTime());
+                                isChanged=false;
+                            }
+                        }
+                );
+
+
             }
             invalidate();
         }
@@ -326,6 +339,7 @@ public class CircularRingPercentageView extends View {
     {
         this.startTime=System.currentTimeMillis();
         this.isRunning=true;
+        invalidate();
     }
     public void pause()
     {

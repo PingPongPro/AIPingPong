@@ -25,6 +25,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView textView_forehand;
     private TextView textView_backhand;
     private TextView textView_time;
+
+    private TabManager tabManager;
     //时间相关
     //private SystemTimeManager systemTimeManager;
     private CircularRingPercentageView timerView;
@@ -92,6 +95,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.handleMessage(msg);
         }
     };
+    public void setTitle(String title)
+    {
+        this.setTitle(title);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -105,14 +112,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.activity_main);
             this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
-            /*timerView.setProgress(0, new CircularRingPercentageView.OnProgressScore() {
-                @Override
-                public void setProgressScore(float score) {
-                    Log.e("12", score + "");
+            this.timerView.setActivity(this);
 
-                }
-
-            });*/
+            TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
+            tabHost.setup();
+            this.tabManager=new TabManager(tabHost);
         }
         catch(Exception e)
         {
@@ -145,13 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         this.dataChartManager =new DataChartManager(this.lineChart,new TaskForChart(),
                 new String[]{"accX","accY","accZ"},new int[]{Color.RED,Color.BLUE,Color.GREEN});
-        Button accx=(Button)findViewById(R.id.accX);
-        Button accy=(Button)findViewById(R.id.accY);
-        Button accz=(Button)findViewById(R.id.accZ);
         List<View.OnClickListener> listeners=this.dataChartManager.getListeners();
-        accx.setOnClickListener(listeners.get(0));
-        accy.setOnClickListener(listeners.get(1));
-        accz.setOnClickListener(listeners.get(2));
 
         myTimer=new TimerActivity(this.counterPath);
         surfaceView=(SurfaceView)findViewById(R.id.surfaceView);
