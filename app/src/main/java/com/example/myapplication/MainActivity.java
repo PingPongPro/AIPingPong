@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Button btnStart;
     private Button btnPause;
 
-
+    private int aaaa;
     private TimerActivity myTimer;
     private Handler mainHandler=new Handler() {
         @Override
