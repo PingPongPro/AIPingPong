@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public final static int UPDATETIME=0;
     private static final int REQUEST = 1;
     private static final int REQUEST1 = 2;
+    private Button btnStart;
+    private Button btnPause;
+
 
     private TimerActivity myTimer;
     private Handler mainHandler=new Handler() {
@@ -103,11 +106,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         this.setTitle(title);
     }
+
+    private void myListener() {
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timerView.pause();
+            }
+        });
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timerView.start();
+            }
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+        btnPause=(Button)findViewById(R.id.btnPause);
+        btnStart=(Button)findViewById(R.id.btnStart);
         this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
 
         try
@@ -186,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.surfaceView_pingpang=(SurfaceView)findViewById(R.id.surfaceView2);
         this.mediaPlayerManager=new MediaPlayerManager(this.surfaceView_pingpang,mediaPath_pingpang_zheng,true);
         this.mediaPlayerManager.startVideo();
+        myListener();
     }
 
     @Override
