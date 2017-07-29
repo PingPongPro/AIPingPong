@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //  更新UI标志
     public final static int UPDATETIME=0;
     private static final int REQUEST = 1;
+    private static final int REQUEST1 = 2;
 
     private TimerActivity myTimer;
     private Handler mainHandler=new Handler() {
@@ -242,7 +243,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             intent.setClass(MainActivity.this, ExDialog.class);
             startActivityForResult(intent, REQUEST);
         } else if (id == R.id.nav_training){
-
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, SelectDifficulty.class);
+            startActivityForResult(intent, REQUEST1);
         } else if (id == R.id.nav_statistic) {
 
         }  else if (id == R.id.nav_share) {
@@ -261,6 +264,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (requestCode == REQUEST) {
                 Uri uri = intent.getData();
                 new AlertDialog.Builder(this).setMessage(" "+ uri).show();
+            }
+            else if(requestCode == REQUEST1){
+                String stmp = intent.getExtras().getString("ReturnRank");
+                new AlertDialog.Builder(this).setMessage(stmp).show();
             }
         }
     }
@@ -303,7 +310,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     {
                                         e.printStackTrace();
                                     }
-
                                     changed=false;
                                 }
                             }
