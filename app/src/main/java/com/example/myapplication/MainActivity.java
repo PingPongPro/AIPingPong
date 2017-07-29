@@ -25,6 +25,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView textView_forehand;
     private TextView textView_backhand;
     private TextView textView_time;
+
+    private TabManager tabManager;
     //时间相关
     //private SystemTimeManager systemTimeManager;
     private CircularRingPercentageView timerView;
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //  更新UI标志
     public final static int UPDATETIME=0;
     private static final int REQUEST = 1;
+    private static final int REQUEST1 = 2;
 
     private TimerActivity myTimer;
     private Handler mainHandler=new Handler() {
@@ -92,6 +96,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.handleMessage(msg);
         }
     };
+    public void setTitle(String title)
+    {
+        this.setTitle(title);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -106,14 +114,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setContentView(R.layout.activity_main);
             this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
             this.timerView.setActivity(this);
-            /*timerView.setProgress(0, new CircularRingPercentageView.OnProgressScore() {
-                @Override
-                public void setProgressScore(float score) {
-                    Log.e("12", score + "");
 
-                }
-
-            });*/
+            TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
+            tabHost.setup();
+            this.tabManager=new TabManager(tabHost);
         }
         catch(Exception e)
         {
@@ -146,13 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         this.dataChartManager =new DataChartManager(this.lineChart,new TaskForChart(),
                 new String[]{"accX","accY","accZ"},new int[]{Color.RED,Color.BLUE,Color.GREEN});
-        Button accx=(Button)findViewById(R.id.accX);
-        Button accy=(Button)findViewById(R.id.accY);
-        Button accz=(Button)findViewById(R.id.accZ);
         List<View.OnClickListener> listeners=this.dataChartManager.getListeners();
-        accx.setOnClickListener(listeners.get(0));
-        accy.setOnClickListener(listeners.get(1));
-        accz.setOnClickListener(listeners.get(2));
 
         myTimer=new TimerActivity(this.counterPath);
         surfaceView=(SurfaceView)findViewById(R.id.surfaceView);
@@ -252,7 +250,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             intent.setClass(MainActivity.this, ExDialog.class);
             startActivityForResult(intent, REQUEST);
         } else if (id == R.id.nav_training){
-
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, SelectDifficulty.class);
+            startActivityForResult(intent, REQUEST1);
         } else if (id == R.id.nav_statistic) {
 
         }  else if (id == R.id.nav_share) {
@@ -271,6 +271,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (requestCode == REQUEST) {
                 Uri uri = intent.getData();
                 new AlertDialog.Builder(this).setMessage(" "+ uri).show();
+            }
+            else if(requestCode == REQUEST1){
+                String stmp = intent.getExtras().getString("ReturnRank");
+                new AlertDialog.Builder(this).setMessage(stmp).show();
             }
         }
     }
@@ -313,7 +317,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     {
                                         e.printStackTrace();
                                     }
-
                                     changed=false;
                                 }
                             }
