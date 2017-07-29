@@ -92,5 +92,16 @@ public class ReadDataFromFile {
         this.endFlag=true;
         return null;
     }
+    public void closeAllReaders()
+    {
+        try
+        {
+            if(this.inputStreamReader!=null)
+                this.inputStreamReader.close();
+            if(this.bufferedReader!=null)
+                this.bufferedReader.close();
+        }
+        catch(Exception e){e.printStackTrace();}
+    }
     public int getNumberOfData(){return number;}
 }

@@ -1,27 +1,18 @@
 package com.example.myapplication;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -80,44 +71,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int REQUEST1 = 2;
     private Button btnStart;
     private Button btnPause;
-
-    private int aaaa;
-    private TimerActivity myTimer;
-    private Handler mainHandler=new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what)
-            {
-                case MainActivity.UPDATETIME:
-                    Bundle bundle= msg.getData();
-                    textView_time.setText("时间: "+bundle.get("minite")+":"+bundle.get("second"));
-                    int second=Integer.valueOf(bundle.get("second").toString());
-                    timerView.setProgress(second, new CircularRingPercentageView.OnProgressScore() {
-                        @Override
-                        public void setProgressScore(float score) {
-                        }
-                    });
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
-    public void setTitle(String title)
-    {
-        this.setTitle(title);
-    }
-
+    //正反计数
+    private CounterActivity counterTimer;
+    //是否已经开始
+    private boolean ifEverStarted=false;
     private void myListener() {
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timerView.pause();
+                pauseController();
             }
         });
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timerView.start();
+                if(!ifEverStarted)
+                {
+                    ifEverStarted=true;
+                    startController();
+                }
+                else
+                    restartController();
             }
         });
     }
@@ -133,15 +107,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         try
         {
-            CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-            System.out.println(collapsingToolbar.getHeight()+" "+collapsingToolbar.getWidth());
+            CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);;
             this.timerView.setCollapsingToolbarLayout(collapsingToolbar);
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
-        Activity a=null;
         TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
         tabHost.setup();
         this.tabManager=new TabManager(this,tabHost);
@@ -166,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new String[]{"accX","accY","accZ"},new int[]{Color.RED,Color.BLUE,Color.GREEN});
         List<View.OnClickListener> listeners=this.dataChartManager.getListeners();
 
-        myTimer=new TimerActivity(this.counterPath);
+        counterTimer =new CounterActivity(this.counterPath);
         surfaceView=(SurfaceView)findViewById(R.id.surfaceView);
         this.mediaPlayerManagerForReal=new MediaPlayerManager(this.surfaceView,mediaPath,false);
         this.mediaPlayerManagerForReal.addOnClickListener(
@@ -174,39 +146,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(View v) {
                         if(mediaPlayerManagerForReal.getPlayerSate()==true)
-                        {
-                            mediaPlayerManagerForReal.pauseVideo();
-                            mediaPlayerManager.pauseVideo();
-                            dataChartManager.setPassingData(false);
-                            timerView.pause();
-                        }
+                            pauseController();
                         else
-                        {
-                            try
-                            {
-                                mediaPlayerManagerForReal.startVideo();
-                                mediaPlayerManager.startVideo();
-                                dataChartManager.setPassingData(true);
-                                timerView.start();
-                            }
-                            catch(Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
+                            restartController();
                     }
                 }
         );
-        //this.systemTimeManager=new SystemTimeManager();
-        this.mediaPlayerManagerForReal.startVideo();
-        timerView.start();
-        //this.systemTimeManager.start();
-        this.myTimer.start();
-        dataChartManager.start();
-
         this.surfaceView_pingpang=(SurfaceView)findViewById(R.id.surfaceView2);
         this.mediaPlayerManager=new MediaPlayerManager(this.surfaceView_pingpang,mediaPath_pingpang_zheng,true);
-        this.mediaPlayerManager.startVideo();
+        //this.startController();
         myListener();
     }
 
@@ -355,16 +303,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
         }
     }
-    private class TimerActivity extends Thread
+    private class CounterActivity extends Thread
     {
         private ReadDataFromFile readDataFromFile;
         private Timer timer = new Timer();
         private boolean existTask=false;
-        private double lastTime=0;
+        private double lastTime=0;              //从文件中读取到的上一次时间
+        private long lastFinishedTime=0;        //上一次成功执行任务的真实时间
+        private long pauseTime=0;               //暂停的真实时间
+        private long delayTime=0;               //任务延迟时间
         private int mark=0;
         private int symbol=0;
         private List<Object>data=null;
-        public TimerActivity(String path)
+        private boolean isRunning=false;
+        public CounterActivity(String path)
         {
             this.readDataFromFile=new ReadDataFromFile(path,false);
         }
@@ -375,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 while(!this.readDataFromFile.endFlag)
                 {
-                    if(!existTask)
+                    if(!existTask&&isRunning)
                     {
                         data = this.readDataFromFile.nextData(new int[]{0, 1}, "\t");
                         if (data != null)
@@ -384,7 +336,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             this.mark = Integer.valueOf(data.get(1).toString());
                             timer.cancel();
                             timer = new Timer();
-                            timer.schedule(new myTask(), (long) ((newTaskTime - this.lastTime) * 1000));
+                            timer.schedule(new Change3DVedioTask(), (long) ((newTaskTime - this.lastTime) * 1000));
+                            this.delayTime=(long)((newTaskTime-lastTime)*1000);
                             this.lastTime = newTaskTime;
                             existTask = true;
                         }
@@ -394,20 +347,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             mediaPlayerManager.pauseVideo();
                         }
                     }
-                    // 1s后执行task,经过1s再次执行
                 }
             }
-            catch(Exception e)
-            {
-                for(int i=0;i<10;i++)
-                {
-                    //System.out.println(data.get(0)+" "+data.get(1));
-                    e.printStackTrace();
-                }
-            }
-
+            catch(Exception e){e.printStackTrace();}
         }
-        private class myTask extends TimerTask
+        public void pauseCounter()
+        {
+            if(this.isRunning)
+            {
+                this.isRunning=false;
+                this.pauseTime=System.currentTimeMillis();
+                this.timer.cancel();
+                existTask=false;
+            }
+        }
+        public void restartCounter()
+        {
+            if(!isRunning&&delayTime!=0)
+            {
+                if(this.timer!=null)
+                    this.timer.cancel();
+                this.timer=new Timer();
+                timer.schedule(new Change3DVedioTask(),this.delayTime-this.pauseTime+this.lastFinishedTime);
+                this.isRunning=true;
+                existTask=true;
+            }
+        }
+        public void startCounter()
+        {
+            this.isRunning=true;
+        }
+        public void resetCounter(String newPath)
+        {
+            pauseCounter();
+            this.readDataFromFile.closeAllReaders();
+            this.readDataFromFile=new ReadDataFromFile(newPath,false);
+            lastTime=0;
+            lastFinishedTime=0;
+            pauseTime=0;
+            delayTime=0;
+            symbol=0;
+        }
+        private class Change3DVedioTask extends TimerTask
         {
             @Override
             public void run()
@@ -434,6 +415,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                         changed=true;
                     }
+                    lastFinishedTime=System.currentTimeMillis();
                     existTask=false;
                 }
                 catch(Exception e)
@@ -442,5 +424,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
+    }
+
+    private void startController()
+    {
+        timerView.start();
+        this.counterTimer.startCounter();
+        this.counterTimer.start();
+        dataChartManager.start();
+        this.mediaPlayerManagerForReal.startVideo();
+        this.mediaPlayerManager.startVideo();
+    }
+    private void pauseController()
+    {
+        mediaPlayerManagerForReal.pauseVideo();
+        mediaPlayerManager.pauseVideo();
+        dataChartManager.setPassingData(false);
+        this.counterTimer.pauseCounter();
+        timerView.pause();
+    }
+    private void restartController()
+    {
+        mediaPlayerManagerForReal.startVideo();
+        mediaPlayerManager.startVideo();
+        this.counterTimer.restartCounter();
+        dataChartManager.setPassingData(true);
+        timerView.start();
     }
 }
