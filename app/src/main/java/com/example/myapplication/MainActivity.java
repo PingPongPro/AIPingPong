@@ -42,18 +42,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //private SystemTimeManager systemTimeManager;
     private CircularRingPercentageView timerView;
     //图像相关对象
-    private ReadDataFromFile dataFile;
+    //private ReadDataFromFile dataFile;
     private LineChart lineChart;
     private DataChartManager dataChartManager;
     private int counter_zheng=0;
     private int counter_fan=0;
-    private boolean changed=false;
+    //private boolean changed=false;
     //视频相关对象
     private SurfaceView surfaceView;
     private MediaPlayerManager mediaPlayerManagerForReal;
 
     private SurfaceView surfaceView_pingpang;
     private MediaPlayerManager mediaPlayerManager;
+    //文件名称
+    private String nameOfReal="real.mp4";
+    private String nameOfData="data.txt";
+    private String nameOfCounter="counterdata.txt";
     //文件路径
     private String mediaPath= Environment.getExternalStorageDirectory().getAbsolutePath()+
             File.separator+"ballGame/real.mp4";        // 视频路径
@@ -99,21 +103,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
         btnPause=(Button)findViewById(R.id.btnPause);
         btnStart=(Button)findViewById(R.id.btnStart);
-        this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
 
-        try
-        {
-            CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);;
-            this.timerView.setCollapsingToolbarLayout(collapsingToolbar);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);;
+        this.timerView.setCollapsingToolbarLayout(collapsingToolbar);
+
         TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
         tabHost.setup();
         this.tabManager=new TabManager(this,tabHost);
@@ -132,16 +131,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textView_forehand =(TextView)findViewById(R.id.textView_zheng);
         textView_time=(TextView)findViewById(R.id.textView_time);
         this.lineChart=(LineChart)findViewById(R.id.linechart) ;
-        this.dataFile=new ReadDataFromFile(this.dataPath,true);
 
-        this.dataChartManager =new DataChartManager(this.lineChart,new TaskForChart(),
-                new String[]{"accX","accY","accZ"},new int[]{Color.RED,Color.BLUE,Color.GREEN});
+        this.dataChartManager =new DataChartManager(this.lineChart,dataPath,
+                new String[]{"accX","accY","accZ"},new int[]{Color.RED,Color.BLUE,Color.GREEN},this);
         List<View.OnClickListener> listeners=this.dataChartManager.getListeners();
 
         counterTimer =new CounterActivity(this.counterPath);
         surfaceView=(SurfaceView)findViewById(R.id.surfaceView);
         this.mediaPlayerManagerForReal=new MediaPlayerManager(this.surfaceView,mediaPath,false);
-        this.mediaPlayerManagerForReal.addOnClickListener(
+        /*this.mediaPlayerManagerForReal.addOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -151,23 +149,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             restartController();
                     }
                 }
-        );
+        );*/
         this.surfaceView_pingpang=(SurfaceView)findViewById(R.id.surfaceView2);
         this.mediaPlayerManager=new MediaPlayerManager(this.surfaceView_pingpang,mediaPath_pingpang_zheng,true);
         //this.startController();
         myListener();
+        this.timerView.pause();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        this.mediaPlayerManager.pauseVideo();
+        this.pauseController();
+        //this.mediaPlayerManager.pauseVideo();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.mediaPlayerManager.reStartVideo();
+        if(ifEverStarted)
+            this.restartController();
+        //this.mediaPlayerManager.reStartVideo();
     }
 
     @Override
@@ -239,68 +241,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String stmp = intent.getExtras().getString("ReturnRank");
                 new AlertDialog.Builder(this).setMessage(stmp).show();
             }
-        }
-    }
-
-    private class TaskForChart extends TimerTask
-    {
-        private List<Double> dataList=new ArrayList<Double>();
-        private int counter=0;
-        @Override
-        public void run()
-        {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run()
-                {
-                    if(dataChartManager.isPassingData())
-                    {
-                        try
-                        {
-                            List<Object> list=dataFile.nextData(new int[]{0,1,2},"\t");
-                            if(!dataFile.endFlag)
-                            {
-                                if(counter%10==0)
-                                {
-                                    dataList.add(Double.valueOf(list.get(0).toString()));
-                                    dataList.add(Double.valueOf(list.get(1).toString()));
-                                    dataList.add(Double.valueOf(list.get(2).toString()));
-                                    dataChartManager.addEntry(dataList);
-                                    dataList.clear();
-                                }
-                                counter++;
-                                if(changed)
-                                {
-                                    try
-                                    {
-                                        textView_forehand.setText("正手: "+counter_zheng);
-                                        textView_backhand.setText("反手: "+counter_fan);
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        e.printStackTrace();
-                                    }
-                                    changed=false;
-                                }
-                            }
-                            else
-                            {
-                                if(counter%10==0)
-                                {
-                                    for(int i=0;i<3;i++)
-                                        dataList.add(0.0);
-                                    dataChartManager.addEntry(dataList);
-                                    dataList.clear();
-                                }
-                                counter++;
-                            }
-                        }
-                        catch(Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
         }
     }
     private class CounterActivity extends Thread
@@ -403,7 +343,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             symbol=1;
                             mediaPlayerManager.changeVideo(mediaPath_pingpang_fan);
                         }
-                        changed=true;
                     }
                     else
                     {
@@ -413,8 +352,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             symbol=0;
                             mediaPlayerManager.changeVideo(mediaPath_pingpang_zheng);
                         }
-                        changed=true;
                     }
+                    runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    textView_forehand.setText("正手: "+counter_zheng);
+                                    textView_backhand.setText("反手: "+counter_fan);
+                                }
+                            }
+                    );
                     lastFinishedTime=System.currentTimeMillis();
                     existTask=false;
                 }
@@ -439,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         mediaPlayerManagerForReal.pauseVideo();
         mediaPlayerManager.pauseVideo();
-        dataChartManager.setPassingData(false);
+        dataChartManager.pauseChart();
         this.counterTimer.pauseCounter();
         timerView.pause();
     }
@@ -448,7 +395,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mediaPlayerManagerForReal.startVideo();
         mediaPlayerManager.startVideo();
         this.counterTimer.restartCounter();
-        dataChartManager.setPassingData(true);
+        dataChartManager.startChart();
         timerView.start();
+    }
+    private void resetController(String newPath)
+    {
+        this.mediaPath=newPath+this.nameOfReal;
+        this.counterPath=newPath+this.nameOfCounter;
+        this.dataPath=newPath+this.nameOfData;
+        //TODO 文件存在检查
+        this.mediaPlayerManagerForReal.changeVideo(this.mediaPath);
+        this.counterTimer.resetCounter(this.counterPath);
+        this.dataChartManager.resetChart(this.dataPath);
     }
 }

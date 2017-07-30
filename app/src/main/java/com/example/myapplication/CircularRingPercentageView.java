@@ -361,4 +361,9 @@ public class CircularRingPercentageView extends View {
         this.startTime=0;
         this.saveTime=0;
     }
+    //TODO test
+    public boolean getState()
+    {
+        return this.isRunning;
+    }
 }
