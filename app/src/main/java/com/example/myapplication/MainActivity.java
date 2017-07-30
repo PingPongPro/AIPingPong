@@ -488,6 +488,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
                 builder.show();
+                pauseController();
                 RankString = null;
             }
         }
