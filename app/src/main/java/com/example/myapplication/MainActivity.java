@@ -162,8 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.surfaceView_pingpang.setZOrderMediaOverlay(true);
         this.surfaceView_pingpang.setAlpha(0.8f);
         this.mediaPlayerManager=new MediaPlayerManager(this.surfaceView_pingpang,mediaPath_pingpang_zheng,true);
-        
-        System.out.println(this.mediaPath);
+
         //this.startController();
         myListener();
         this.timerView.pause();
@@ -354,6 +353,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         {
                             symbol=1;
                             mediaPlayerManager.changeVideo(mediaPath_pingpang_fan);
+                            mediaPlayerManager.startVideo();
                         }
                     }
                     else
@@ -363,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         {
                             symbol=0;
                             mediaPlayerManager.changeVideo(mediaPath_pingpang_zheng);
+                            mediaPlayerManager.startVideo();
                         }
                     }
                     runOnUiThread(

@@ -134,6 +134,7 @@ public class MediaPlayerManager
             this.player.setDataSource(this.mediaPath);
             this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             this.player.prepare();
+            this.surfaceView.setBackground(this.getVedioPicture(this.mediaPath,this.currentIndex));
         }
         catch(Exception e)
         {
