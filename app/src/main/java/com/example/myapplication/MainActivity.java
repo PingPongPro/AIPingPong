@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -22,6 +23,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 
@@ -280,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private List<Object>data=null;
         private boolean isRunning=false;
         private float justTime = 0;
+        double newTaskTime;
 
         public CounterDrop(String path)
         {
@@ -294,16 +297,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     data = this.readDataFromFile.nextData(new int[]{0, 1}, "\t");
                     if (data != null)
                     {
-                        double newTaskTime = Double.valueOf(data.get(0).toString());
+                        newTaskTime = Double.valueOf(data.get(0).toString());
                         this.mark = Integer.valueOf(data.get(1).toString());
                         timer.cancel();
                         timer = new Timer();
                         justTime = (float)(newTaskTime - this.lastTime);
-
                         if(lastTime != 0)
                         {
                             timer.schedule(new CounterDrop.ChangeTimer(), (long) ((newTaskTime - this.lastTime) * 1000));
                             existTask = true;
+                        }
+                        else
+                        {
+                            try {
+                                Thread.sleep((long)(newTaskTime*1000));
+                            }catch (Exception e){
+
+                            }
                         }
                         this.delayTime=(long)((newTaskTime-lastTime)*1000);
                         this.lastTime = newTaskTime;
