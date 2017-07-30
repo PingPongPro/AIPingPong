@@ -48,6 +48,7 @@ public class CircularRingPercentageView extends View {
     private long startTime=0;
     private long saveTime=0;
     private boolean isRunning=false;
+    private boolean clearState=false;
 
     private int minite=0;
     private int second=0;
@@ -286,7 +287,10 @@ public class CircularRingPercentageView extends View {
         super.onDraw(canvas);
         //背景渐变颜色
         paint.setShader(sweepGradient);
-        canvas.drawArc(oval, -90, (float) (progress * singlPoint), false, paint);
+        if(!clearState)
+            canvas.drawArc(oval, -90, (float) (progress * singlPoint), false, paint);
+        else
+            canvas.drawArc(oval, -90, 0f, false, paint);
         paint.setShader(null);
 
         //是否是线条模式
@@ -302,8 +306,14 @@ public class CircularRingPercentageView extends View {
         }
         //绘制剩下的空白区域
         paint.setColor(roundBackgroundColor);
-        canvas.drawArc(oval, -90, (float) (-(maxColorNumber - progress) * singlPoint), false, paint);
-        if(isRunning)
+        if(!clearState)
+            canvas.drawArc(oval, -90, (float) (-(maxColorNumber - progress) * singlPoint), false, paint);
+        else
+        {
+            canvas.drawArc(oval, -90, (float) (-maxColorNumber  * singlPoint), false, paint);
+            this.collapsingToolbarLayout.setTitle("00:00");
+        }
+        if(isRunning&&!clearState)
         {
             long currenTime=System.currentTimeMillis();
             if(startTime==0)
@@ -318,7 +328,8 @@ public class CircularRingPercentageView extends View {
             }
             invalidate();
         }
-
+        if(clearState)
+            clearState=false;
         //绘制文字刻度
         /*for (int i = 1; i <= 10; i++) {
             canvas.save();// 保存当前画布
@@ -378,6 +389,8 @@ public class CircularRingPercentageView extends View {
         this.pause();
         this.startTime=0;
         this.saveTime=0;
+        clearState=true;
+        invalidate();
     }
     //TODO test
     public boolean getState()

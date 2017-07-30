@@ -82,10 +82,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //正反计数
     private CounterActivity counterTimer;
     //是否已经开始
-    private boolean ifEverStarted=false;
-
     private String RankString;//选择的难度
-
+    //标志位
+    private boolean ifEverStarted=false;            //是否已经开始
+    private boolean shouldPause=false;
+    private boolean counterEverRelease=false;       //计数器是否曾被销毁
     private void myListener() {
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (requestCode == REQUEST) {
                 this.chooseFilePath=intent.getExtras().getString("path");
                 this.resetController(this.chooseFilePath);
+                this.shouldPause=true;
                 //new AlertDialog.Builder(this).setMessage(" "+ uri).show();
             }
             else if(requestCode == REQUEST1){
@@ -314,6 +316,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 existTask=false;
             }
         }
+        public void releaseCounter()
+        {
+            counterEverRelease=true;
+            this.timer.cancel();
+            this.readDataFromFile.closeAllReaders();
+        }
         public void restartCounter()
         {
             if(!isRunning&&delayTime!=0)
@@ -329,17 +337,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public void startCounter()
         {
             this.isRunning=true;
-        }
-        public void resetCounter(String newPath)
-        {
-            pauseCounter();
-            this.readDataFromFile.closeAllReaders();
-            this.readDataFromFile=new ReadDataFromFile(newPath,false);
-            lastTime=0;
-            lastFinishedTime=0;
-            pauseTime=0;
-            delayTime=0;
-            symbol=0;
         }
         private class Change3DVedioTask extends TimerTask
         {
@@ -386,7 +383,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
-
+    public void resetCounter()
+    {
+        counter_zheng=0;
+        counter_fan=0;
+        textView_forehand.setText("正手:0");
+        textView_backhand.setText("反手:0");
+        this.counterTimer.releaseCounter();
+        this.counterTimer=new CounterActivity(this.counterPath);
+    }
     private void startController()
     {
         timerView.start();
@@ -408,7 +413,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         mediaPlayerManagerForReal.startVideo();
         mediaPlayerManager.startVideo();
-        this.counterTimer.restartCounter();
+        if(counterEverRelease)
+        {
+            this.counterTimer.startCounter();
+            this.counterTimer.start();
+            counterEverRelease=false;
+        }
+        else
+            this.counterTimer.restartCounter();
         dataChartManager.startChart();
         timerView.start();
     }
@@ -420,17 +432,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     private void resetController(String newPath)
     {
-        counter_zheng=0;
-        counter_fan=0;
-        textView_forehand.setText("正手:0");
-        textView_backhand.setText("反手:0");
         this.resetFilePath(newPath);
         //TODO 文件存在检查
-        
         this.timerView.reset();
         this.mediaPlayerManagerForReal.changeVideo(this.mediaPath);
-        //this.mediaPlayerManager.pauseVideo();
-        this.counterTimer.resetCounter(this.counterPath);
+        this.mediaPlayerManager.pauseVideo();
+        this.resetCounter();
         this.dataChartManager.resetChart(this.dataPath);
         pauseController();
     }

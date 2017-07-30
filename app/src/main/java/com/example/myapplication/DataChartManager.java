@@ -72,7 +72,8 @@ public class DataChartManager extends Thread{
     }
 
     public void setPassingData(boolean passingData) {
-        isPassingData = passingData;
+        if(isPassingData!=passingData)
+            isPassingData = passingData;
     }
     public boolean isPassingData() {
         return isPassingData;
@@ -225,7 +226,7 @@ public class DataChartManager extends Thread{
 
             preAddData(250);
         }
-        private void preAddData(int len)
+        public void preAddData(int len)
         {
             if (lineDataSets.get(0).getEntryCount() == 0) {
                 lineData = new LineData(lineDataSets);
@@ -341,18 +342,19 @@ public class DataChartManager extends Thread{
     }
     public void pauseChart()
     {
-        this.isPassingData=false;
+        setPassingData(false);
     }
     //start or restart
     public void startChart()
     {
-        this.isPassingData=true;
+        setPassingData(true);
     }
     public void resetChart(String newPath)
     {
-        this.pauseChart();
         this.dataFile.closeAllReaders();
         this.dataFile=new ReadDataFromFile(newPath,true);
+        this.pauseChart();
+        this.datachart.preAddData(250);
     }
     private class TaskForChart extends TimerTask
     {
