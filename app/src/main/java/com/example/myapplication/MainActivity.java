@@ -392,8 +392,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     private void restartController()
     {
-        mediaPlayerManagerForReal.startVideo();
-        mediaPlayerManager.startVideo();
+        mediaPlayerManagerForReal.reStartVideo();
+        mediaPlayerManager.reStartVideo();
         this.counterTimer.restartCounter();
         dataChartManager.startChart();
         timerView.start();
