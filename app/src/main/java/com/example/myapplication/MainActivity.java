@@ -370,8 +370,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             new Runnable() {
                                 @Override
                                 public void run() {
-                                    textView_forehand.setText("正手: "+counter_zheng);
-                                    textView_backhand.setText("反手: "+counter_fan);
+                                    textView_forehand.setText(""+counter_zheng);
+                                    textView_backhand.setText(""+counter_fan);
                                     gameOver();
                                 }
                             }
@@ -390,8 +390,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         counter_zheng=0;
         counter_fan=0;
-        textView_forehand.setText("正手:0");
-        textView_backhand.setText("反手:0");
+        textView_forehand.setText("0");
+        textView_backhand.setText("0");
         this.counterTimer.releaseCounter();
         this.counterTimer=new CounterActivity(this.counterPath);
     }

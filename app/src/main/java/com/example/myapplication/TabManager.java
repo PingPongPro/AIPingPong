@@ -22,7 +22,7 @@ import java.util.List;
 public class TabManager{
     private TabHost tabHost;
     private Activity activity;
-    private List<TextView> textViewList=new ArrayList<TextView>(3);
+    private List<TextView> textViewList=new ArrayList<TextView>(2);
     //调用次数和textViewL的容量一致
     private View composeLayout(String s, int i)
     {
@@ -67,13 +67,7 @@ public class TabManager{
             e.printStackTrace();
         }
 
-        View view1=composeLayout("参数",R.drawable.chart);
-        TabHost.TabSpec page2 = tabHost.newTabSpec("tab2")
-                .setIndicator(view1)//
-                .setContent(R.id.tab2);
-        tabHost.addTab(page2);
-
-        view1=composeLayout("视频模型",R.drawable.video);
+        View view1=composeLayout("视频模型",R.drawable.video);
         TabHost.TabSpec page3 = tabHost.newTabSpec("tab3")
                 .setIndicator(view1)//
                 .setContent(R.id.tab3);
