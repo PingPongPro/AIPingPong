@@ -80,7 +80,7 @@ public class CircularRingPercentageView extends View {
             else if(minite == 5)
                 return 3;
         }
-        return 1;
+        return 0;
     }
 
     public String getTime()
