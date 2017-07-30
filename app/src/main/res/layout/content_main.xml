@@ -47,32 +47,6 @@
                         android:layout_marginLeft="30px"
                         android:layout_weight="0.3">
 
-                        <RelativeLayout
-
-                            android:id="@+id/tab3"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
-                            <SurfaceView
-                                android:id="@+id/surfaceView"
-                                style="@style/layout_horizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="210dp"
-                                android:layout_weight="0.7"
-                                android:layout_alignParentTop="true" />
-
-                            <SurfaceView
-                                android:id="@+id/surfaceView2"
-                                style="@style/layout_horizontal"
-                                android:layout_width="140dp"
-                                android:layout_height="100dp"
-                                android:layout_alignBottom="@+id/surfaceView"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_weight="0.3" />
-
-                        </RelativeLayout>
 
                         <LinearLayout
                             android:id="@+id/tab1"
@@ -120,6 +94,32 @@
 
                         </LinearLayout>
 
+                        <RelativeLayout
+
+                            android:id="@+id/tab3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <SurfaceView
+                                android:id="@+id/surfaceView"
+                                style="@style/layout_horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="210dp"
+                                android:layout_weight="0.7"
+                                android:layout_alignParentTop="true" />
+
+                            <SurfaceView
+                                android:id="@+id/surfaceView2"
+                                style="@style/layout_horizontal"
+                                android:layout_width="140dp"
+                                android:layout_height="100dp"
+                                android:layout_alignBottom="@+id/surfaceView"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_weight="0.3" />
+
+                        </RelativeLayout>
                     </FrameLayout>
                 </LinearLayout>
             </TabHost>
