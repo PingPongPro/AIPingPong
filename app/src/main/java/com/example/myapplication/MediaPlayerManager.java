@@ -128,13 +128,20 @@ public class MediaPlayerManager
         player.release();
         try
         {
+            if(!isSurfaceCreated)
+            {
+                this.surfaceHolder=surfaceView.getHolder();
+                this.surfaceHolder.addCallback(new MyCallBack());
+                surfaceHolder.setFixedSize(100,100);
+            }
             player=new MediaPlayer();
-            player.setDisplay(surfaceHolder);
             player.setLooping(this.isLoop);
             this.player.setDataSource(this.mediaPath);
             this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             this.player.prepare();
-            this.surfaceView.setBackground(this.getVedioPicture(this.mediaPath,this.currentIndex));
+            player.setDisplay(surfaceHolder);
+            if(this.isLoop)
+                player.start();
         }
         catch(Exception e)
         {
@@ -152,6 +159,11 @@ public class MediaPlayerManager
             return this.player.isPlaying();
         return false;
     }
+
+    public String getMediaPath() {
+        return mediaPath;
+    }
+
     private class MyCallBack implements SurfaceHolder.Callback {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {

@@ -30,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -144,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new String[]{"accX","accY","accZ"},new int[]{Color.RED,Color.BLUE,Color.GREEN},this);
         List<View.OnClickListener> listeners=this.dataChartManager.getListeners();
 
-        counterTimer =new CounterActivity(this.counterPath);
         surfaceView=(SurfaceView)findViewById(R.id.surfaceView);
         this.mediaPlayerManagerForReal=new MediaPlayerManager(this.surfaceView,mediaPath,false);
         /*this.mediaPlayerManagerForReal.addOnClickListener(
@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.surfaceView_pingpang.setAlpha(0.8f);
         this.mediaPlayerManager=new MediaPlayerManager(this.surfaceView_pingpang,mediaPath_pingpang_zheng,true);
 
+        counterTimer =new CounterActivity(this.counterPath);
         //this.startController();
         myListener();
         this.timerView.pause();
@@ -275,6 +276,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public CounterActivity(String path)
         {
             this.readDataFromFile=new ReadDataFromFile(path,false);
+            if(mediaPlayerManager.getMediaPath().equals(mediaPath_pingpang_fan))
+                this.symbol=1;
+            else
+                this.symbol=0;
         }
         @Override
         public void run()
@@ -300,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         else
                         {
                             readDataFromFile.endFlag = true;
+                            timerView.pause();
                             mediaPlayerManager.pauseVideo();
                         }
                     }
@@ -353,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         {
                             symbol=1;
                             mediaPlayerManager.changeVideo(mediaPath_pingpang_fan);
-                            mediaPlayerManager.startVideo();
+                            //mediaPlayerManager.startVideo();
                         }
                     }
                     else
