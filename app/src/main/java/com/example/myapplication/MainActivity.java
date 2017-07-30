@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView textView_forehand;
     private TextView textView_backhand;
     private TextView textView_time;
+    private TextView textView_drop;
 
     private TabManager tabManager;
     //时间相关
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String nameOfReal="real.mp4";
     private String nameOfData="data.txt";
     private String nameOfCounter="counterdata.txt";
+    private String nameOfDrop="dropdata.txt";
     //文件路径
     private String mediaPath= Environment.getExternalStorageDirectory().getAbsolutePath()+
             File.separator+"ballGame/real.mp4";        // 视频路径
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             File.separator+"ballGame/demo_zheng.mp4";            //正手3D
     private String mediaPath_pingpang_fan= Environment.getExternalStorageDirectory().getAbsolutePath()+
             File.separator+"ballGame/demo_fan.mp4";            //反手3D
+    private String dropPath= Environment.getExternalStorageDirectory().getAbsolutePath()+
+            File.separator+"ballGame/dropdata.txt";
     //  更新UI标志
     public final static int UPDATETIME=0;
     private static final int REQUEST = 1;
@@ -81,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Button btnPause;
     //正反计数
     private CounterActivity counterTimer;
+    private CounterDrop counterDrop;
     //是否已经开始
     private String RankString;//选择的难度
     //标志位
@@ -107,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +120,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.resetFilePath(this.chooseFilePath);
         btnPause=(Button)findViewById(R.id.btnPause);
         btnStart=(Button)findViewById(R.id.btnStart);
-
         this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);;
         this.timerView.setCollapsingToolbarLayout(collapsingToolbar);
@@ -137,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         textView_backhand =(TextView)findViewById(R.id.textView_fan);
         textView_forehand =(TextView)findViewById(R.id.textView_zheng);
-        textView_time=(TextView)findViewById(R.id.textView_time);
+        textView_drop=(TextView)findViewById(R.id.textView_time);
         this.lineChart=(LineChart)findViewById(R.id.linechart) ;
 
         this.dataChartManager =new DataChartManager(this.lineChart,dataPath,
@@ -145,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         List<View.OnClickListener> listeners=this.dataChartManager.getListeners();
 
         counterTimer =new CounterActivity(this.counterPath);
+        counterDrop = new CounterDrop(this.dropPath);
+
         surfaceView=(SurfaceView)findViewById(R.id.surfaceView);
         this.mediaPlayerManagerForReal=new MediaPlayerManager(this.surfaceView,mediaPath,false);
         /*this.mediaPlayerManagerForReal.addOnClickListener(
@@ -259,6 +264,71 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
+
+    private class CounterDrop extends Thread
+    {
+        private ReadDataFromFile readDataFromFile;
+        private Timer timer = new Timer();
+        private boolean existTask=false;
+        private double lastTime=0;              //从文件中读取到的上一次时间
+        private long lastFinishedTime=0;        //上一次成功执行任务的真实时间
+        private long pauseTime=0;               //暂停的真实时间
+        private long delayTime=0;               //任务延迟时间
+        private int mark=0;
+        private int symbol=0;
+        private List<Object>data=null;
+        private boolean isRunning=false;
+        double newTaskTime=0;
+        public CounterDrop(String path)
+        {
+            this.readDataFromFile=new ReadDataFromFile(path,false);
+        }
+        @Override
+        public void run(){
+            while(!this.readDataFromFile.endFlag)
+            {
+                if(!existTask&&isRunning)
+                {
+                    data = this.readDataFromFile.nextData(new int[]{0, 1}, "\t");
+                    if (data != null)
+                    {
+                        newTaskTime = Double.valueOf(data.get(0).toString());
+                        this.mark = Integer.valueOf(data.get(1).toString());
+                        timer.cancel();
+                        timer = new Timer();
+                        timer.schedule(new CounterDrop.ChangeTimer(), (long) ((newTaskTime - this.lastTime) * 1000));
+                        this.delayTime=(long)((newTaskTime-lastTime)*1000);
+                        this.lastTime = newTaskTime;
+                        existTask = true;
+                    }
+                    else
+                    {
+                        readDataFromFile.endFlag = true;
+                    }
+                }
+            }
+        }
+        private class ChangeTimer extends TimerTask
+        {
+            @Override
+            public void run()
+            {
+                runOnUiThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                textView_drop.setText(""+ newTaskTime);
+                            }
+                        }
+                );
+            }
+        }
+        public void startCounter()
+        {
+            this.isRunning=true;
+        }
+    }
+
     private class CounterActivity extends Thread
     {
         private ReadDataFromFile readDataFromFile;
@@ -400,6 +470,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         timerView.start();
         this.counterTimer.startCounter();
         this.counterTimer.start();
+        this.counterDrop.startCounter();
+        this.counterDrop.start();
         dataChartManager.start();
         this.mediaPlayerManagerForReal.startVideo();
         this.mediaPlayerManager.startVideo();
@@ -432,6 +504,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.mediaPath=newPath+File.separator+this.nameOfReal;
         this.counterPath=newPath+File.separator+this.nameOfCounter;
         this.dataPath=newPath+File.separator+this.nameOfData;
+        this.dropPath=newPath+File.separator+this.nameOfDrop;
     }
     private void resetController(String newPath)
     {
