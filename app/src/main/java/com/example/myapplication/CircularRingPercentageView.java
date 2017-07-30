@@ -52,6 +52,7 @@ public class CircularRingPercentageView extends View {
     private int minite=0;
     private int second=0;
     private boolean isChanged=true;
+    public int timeOfRank = 0;
     public void setCollapsingToolbarLayout(CollapsingToolbarLayout c)
     {
         this.collapsingToolbarLayout=c;
@@ -66,6 +67,19 @@ public class CircularRingPercentageView extends View {
             this.second=(int)(this.saveTime+currentTime-this.startTime)/1000%60;
             this.isChanged=true;
         }
+    }
+
+    public int getTimeByInt(){
+        if(second == 0)
+        {
+            if(minite == 1)
+                return 1;
+            else if(minite == 3)
+                return 2;
+            else if(minite == 5)
+                return 3;
+        }
+        return 0;
     }
 
     public String getTime()
@@ -298,6 +312,7 @@ public class CircularRingPercentageView extends View {
             this.updateTime(currenTime);
             if(isChanged)
             {
+                timeOfRank = getTimeByInt();
                 this.collapsingToolbarLayout.setTitle(getTime());
                 isChanged=false;
             }

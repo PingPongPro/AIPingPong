@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DataChartManager dataChartManager;
     private int counter_zheng=0;
     private int counter_fan=0;
+    private int totalCounter = 0;
     //private boolean changed=false;
     //视频相关对象
     private SurfaceView surfaceView;
@@ -79,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CounterActivity counterTimer;
     //是否已经开始
     private boolean ifEverStarted=false;
+
+    private String RankString;//选择的难度
+
     private void myListener() {
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,8 +243,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new AlertDialog.Builder(this).setMessage(" "+ uri).show();
             }
             else if(requestCode == REQUEST1){
-                String stmp = intent.getExtras().getString("ReturnRank");
-                new AlertDialog.Builder(this).setMessage(stmp).show();
+                RankString = intent.getExtras().getString("ReturnRank");
+                new AlertDialog.Builder(this).setMessage(RankString).show();
+
             }
         }
     }
@@ -408,4 +414,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.counterTimer.resetCounter(this.counterPath);
         this.dataChartManager.resetChart(this.dataPath);
     }
+
+    private char rankJudge(int time, int total){
+        if(total < time * 20)
+            return 'E';
+        else if(total < time * 40)
+            return 'D';
+        else if (total < time * 60)
+            return 'C';
+        else if (total < time * 80)
+            return 'B';
+        else if (total < time * 100)
+            return 'A';
+        else
+            return 'S';
+    }
+
+    private void gameOver(){
+        if(RankString != null){
+            if(RankString.equals("" + timerView.timeOfRank)){
+                AlertDialog.Builder builder;
+                totalCounter = counter_fan + counter_zheng;
+                builder = new AlertDialog.Builder(this);
+                builder.setTitle("评级结果");
+                builder.setMessage("在"+timerView.timeOfRank +"分钟内颠球总数为：" + totalCounter + '\n' + "您的评级结果为：" + rankJudge(timerView.timeOfRank , totalCounter));
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setPositiveButton("记录结果", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+            }
+            RankString = null;
+        }
+    }
+
 }
