@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
         );*/
         this.surfaceView_pingpang=(SurfaceView)findViewById(R.id.surfaceView2);
+        this.surfaceView_pingpang.setZOrderMediaOverlay(true);
         this.mediaPlayerManager=new MediaPlayerManager(this.surfaceView_pingpang,mediaPath_pingpang_zheng,true);
         System.out.println(this.mediaPath);
         //this.startController();
