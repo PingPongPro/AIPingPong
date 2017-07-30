@@ -333,6 +333,9 @@ public class CircularRingPercentageView extends View {
         progress = p;
         postInvalidate();
     }
+    public void setZero(){
+        
+    }
     public void start()
     {
         this.startTime=System.currentTimeMillis();
