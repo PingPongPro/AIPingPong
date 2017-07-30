@@ -1,27 +1,18 @@
 package com.example.myapplication;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceView;
@@ -51,18 +42,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //private SystemTimeManager systemTimeManager;
     private CircularRingPercentageView timerView;
     //图像相关对象
-    private ReadDataFromFile dataFile;
+    //private ReadDataFromFile dataFile;
     private LineChart lineChart;
     private DataChartManager dataChartManager;
     private int counter_zheng=0;
     private int counter_fan=0;
-    private boolean changed=false;
+    //private boolean changed=false;
     //视频相关对象
     private SurfaceView surfaceView;
     private MediaPlayerManager mediaPlayerManagerForReal;
 
     private SurfaceView surfaceView_pingpang;
     private MediaPlayerManager mediaPlayerManager;
+    //文件名称
+    private String nameOfReal="real.mp4";
+    private String nameOfData="data.txt";
+    private String nameOfCounter="counterdata.txt";
     //文件路径
     private String mediaPath= Environment.getExternalStorageDirectory().getAbsolutePath()+
             File.separator+"ballGame/real.mp4";        // 视频路径
@@ -80,44 +75,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int REQUEST1 = 2;
     private Button btnStart;
     private Button btnPause;
-
-
-    private TimerActivity myTimer;
-    private Handler mainHandler=new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what)
-            {
-                case MainActivity.UPDATETIME:
-                    Bundle bundle= msg.getData();
-                    textView_time.setText("时间: "+bundle.get("minite")+":"+bundle.get("second"));
-                    int second=Integer.valueOf(bundle.get("second").toString());
-                    timerView.setProgress(second, new CircularRingPercentageView.OnProgressScore() {
-                        @Override
-                        public void setProgressScore(float score) {
-                        }
-                    });
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
-    public void setTitle(String title)
-    {
-        this.setTitle(title);
-    }
-
+    //正反计数
+    private CounterActivity counterTimer;
+    //是否已经开始
+    private boolean ifEverStarted=false;
     private void myListener() {
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timerView.pause();
+                pauseController();
             }
         });
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timerView.start();
+                if(!ifEverStarted)
+                {
+                    ifEverStarted=true;
+                    startController();
+                }
+                else
+                    restartController();
             }
         });
     }
@@ -125,23 +103,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
         btnPause=(Button)findViewById(R.id.btnPause);
         btnStart=(Button)findViewById(R.id.btnStart);
-        this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
 
-        try
-        {
-            CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-            System.out.println(collapsingToolbar.getHeight()+" "+collapsingToolbar.getWidth());
-            this.timerView.setCollapsingToolbarLayout(collapsingToolbar);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        Activity a=null;
+        this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);;
+        this.timerView.setCollapsingToolbarLayout(collapsingToolbar);
+
         TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
         tabHost.setup();
         this.tabManager=new TabManager(this,tabHost);
@@ -160,66 +131,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textView_forehand =(TextView)findViewById(R.id.textView_zheng);
         textView_time=(TextView)findViewById(R.id.textView_time);
         this.lineChart=(LineChart)findViewById(R.id.linechart) ;
-        this.dataFile=new ReadDataFromFile(this.dataPath,true);
 
-        this.dataChartManager =new DataChartManager(this.lineChart,new TaskForChart(),
-                new String[]{"accX","accY","accZ"},new int[]{Color.RED,Color.BLUE,Color.GREEN});
+        this.dataChartManager =new DataChartManager(this.lineChart,dataPath,
+                new String[]{"accX","accY","accZ"},new int[]{Color.RED,Color.BLUE,Color.GREEN},this);
         List<View.OnClickListener> listeners=this.dataChartManager.getListeners();
 
-        myTimer=new TimerActivity(this.counterPath);
+        counterTimer =new CounterActivity(this.counterPath);
         surfaceView=(SurfaceView)findViewById(R.id.surfaceView);
         this.mediaPlayerManagerForReal=new MediaPlayerManager(this.surfaceView,mediaPath,false);
-        this.mediaPlayerManagerForReal.addOnClickListener(
+        /*this.mediaPlayerManagerForReal.addOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(mediaPlayerManagerForReal.getPlayerSate()==true)
-                        {
-                            mediaPlayerManagerForReal.pauseVideo();
-                            mediaPlayerManager.pauseVideo();
-                            dataChartManager.setPassingData(false);
-                            timerView.pause();
-                        }
+                            pauseController();
                         else
-                        {
-                            try
-                            {
-                                mediaPlayerManagerForReal.startVideo();
-                                mediaPlayerManager.startVideo();
-                                dataChartManager.setPassingData(true);
-                                timerView.start();
-                            }
-                            catch(Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
+                            restartController();
                     }
                 }
-        );
-        //this.systemTimeManager=new SystemTimeManager();
-        this.mediaPlayerManagerForReal.startVideo();
-        timerView.start();
-        //this.systemTimeManager.start();
-        this.myTimer.start();
-        dataChartManager.start();
-
+        );*/
         this.surfaceView_pingpang=(SurfaceView)findViewById(R.id.surfaceView2);
         this.mediaPlayerManager=new MediaPlayerManager(this.surfaceView_pingpang,mediaPath_pingpang_zheng,true);
-        this.mediaPlayerManager.startVideo();
+        //this.startController();
         myListener();
+        this.timerView.pause();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        this.mediaPlayerManager.pauseVideo();
+        this.pauseController();
+        //this.mediaPlayerManager.pauseVideo();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.mediaPlayerManager.reStartVideo();
+        if(ifEverStarted)
+            this.restartController();
+        //this.mediaPlayerManager.reStartVideo();
     }
 
     @Override
@@ -293,78 +243,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
-
-    private class TaskForChart extends TimerTask
-    {
-        private List<Double> dataList=new ArrayList<Double>();
-        private int counter=0;
-        @Override
-        public void run()
-        {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run()
-                {
-                    if(dataChartManager.isPassingData())
-                    {
-                        try
-                        {
-                            List<Object> list=dataFile.nextData(new int[]{0,1,2},"\t");
-                            if(!dataFile.endFlag)
-                            {
-                                if(counter%10==0)
-                                {
-                                    dataList.add(Double.valueOf(list.get(0).toString()));
-                                    dataList.add(Double.valueOf(list.get(1).toString()));
-                                    dataList.add(Double.valueOf(list.get(2).toString()));
-                                    dataChartManager.addEntry(dataList);
-                                    dataList.clear();
-                                }
-                                counter++;
-                                if(changed)
-                                {
-                                    try
-                                    {
-                                        textView_forehand.setText("正手: "+counter_zheng);
-                                        textView_backhand.setText("反手: "+counter_fan);
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        e.printStackTrace();
-                                    }
-                                    changed=false;
-                                }
-                            }
-                            else
-                            {
-                                if(counter%10==0)
-                                {
-                                    for(int i=0;i<3;i++)
-                                        dataList.add(0.0);
-                                    dataChartManager.addEntry(dataList);
-                                    dataList.clear();
-                                }
-                                counter++;
-                            }
-                        }
-                        catch(Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-        }
-    }
-    private class TimerActivity extends Thread
+    private class CounterActivity extends Thread
     {
         private ReadDataFromFile readDataFromFile;
         private Timer timer = new Timer();
         private boolean existTask=false;
-        private double lastTime=0;
+        private double lastTime=0;              //从文件中读取到的上一次时间
+        private long lastFinishedTime=0;        //上一次成功执行任务的真实时间
+        private long pauseTime=0;               //暂停的真实时间
+        private long delayTime=0;               //任务延迟时间
         private int mark=0;
         private int symbol=0;
         private List<Object>data=null;
-        public TimerActivity(String path)
+        private boolean isRunning=false;
+        public CounterActivity(String path)
         {
             this.readDataFromFile=new ReadDataFromFile(path,false);
         }
@@ -375,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 while(!this.readDataFromFile.endFlag)
                 {
-                    if(!existTask)
+                    if(!existTask&&isRunning)
                     {
                         data = this.readDataFromFile.nextData(new int[]{0, 1}, "\t");
                         if (data != null)
@@ -384,7 +276,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             this.mark = Integer.valueOf(data.get(1).toString());
                             timer.cancel();
                             timer = new Timer();
-                            timer.schedule(new myTask(), (long) ((newTaskTime - this.lastTime) * 1000));
+                            timer.schedule(new Change3DVedioTask(), (long) ((newTaskTime - this.lastTime) * 1000));
+                            this.delayTime=(long)((newTaskTime-lastTime)*1000);
                             this.lastTime = newTaskTime;
                             existTask = true;
                         }
@@ -394,20 +287,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             mediaPlayerManager.pauseVideo();
                         }
                     }
-                    // 1s后执行task,经过1s再次执行
                 }
             }
-            catch(Exception e)
-            {
-                for(int i=0;i<10;i++)
-                {
-                    //System.out.println(data.get(0)+" "+data.get(1));
-                    e.printStackTrace();
-                }
-            }
-
+            catch(Exception e){e.printStackTrace();}
         }
-        private class myTask extends TimerTask
+        public void pauseCounter()
+        {
+            if(this.isRunning)
+            {
+                this.isRunning=false;
+                this.pauseTime=System.currentTimeMillis();
+                this.timer.cancel();
+                existTask=false;
+            }
+        }
+        public void restartCounter()
+        {
+            if(!isRunning&&delayTime!=0)
+            {
+                if(this.timer!=null)
+                    this.timer.cancel();
+                this.timer=new Timer();
+                timer.schedule(new Change3DVedioTask(),this.delayTime-this.pauseTime+this.lastFinishedTime);
+                this.isRunning=true;
+                existTask=true;
+            }
+        }
+        public void startCounter()
+        {
+            this.isRunning=true;
+        }
+        public void resetCounter(String newPath)
+        {
+            pauseCounter();
+            this.readDataFromFile.closeAllReaders();
+            this.readDataFromFile=new ReadDataFromFile(newPath,false);
+            lastTime=0;
+            lastFinishedTime=0;
+            pauseTime=0;
+            delayTime=0;
+            symbol=0;
+        }
+        private class Change3DVedioTask extends TimerTask
         {
             @Override
             public void run()
@@ -422,7 +343,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             symbol=1;
                             mediaPlayerManager.changeVideo(mediaPath_pingpang_fan);
                         }
-                        changed=true;
                     }
                     else
                     {
@@ -432,8 +352,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             symbol=0;
                             mediaPlayerManager.changeVideo(mediaPath_pingpang_zheng);
                         }
-                        changed=true;
                     }
+                    runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    textView_forehand.setText("正手: "+counter_zheng);
+                                    textView_backhand.setText("反手: "+counter_fan);
+                                }
+                            }
+                    );
+                    lastFinishedTime=System.currentTimeMillis();
                     existTask=false;
                 }
                 catch(Exception e)
@@ -442,5 +371,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
+    }
+
+    private void startController()
+    {
+        timerView.start();
+        this.counterTimer.startCounter();
+        this.counterTimer.start();
+        dataChartManager.start();
+        this.mediaPlayerManagerForReal.startVideo();
+        this.mediaPlayerManager.startVideo();
+    }
+    private void pauseController()
+    {
+        mediaPlayerManagerForReal.pauseVideo();
+        mediaPlayerManager.pauseVideo();
+        dataChartManager.pauseChart();
+        this.counterTimer.pauseCounter();
+        timerView.pause();
+    }
+    private void restartController()
+    {
+        mediaPlayerManagerForReal.reStartVideo();
+        mediaPlayerManager.reStartVideo();
+        this.counterTimer.restartCounter();
+        dataChartManager.startChart();
+        timerView.start();
+    }
+    private void resetController(String newPath)
+    {
+        this.mediaPath=newPath+this.nameOfReal;
+        this.counterPath=newPath+this.nameOfCounter;
+        this.dataPath=newPath+this.nameOfData;
+        //TODO 文件存在检查
+        this.mediaPlayerManagerForReal.changeVideo(this.mediaPath);
+        this.counterTimer.resetCounter(this.counterPath);
+        this.dataChartManager.resetChart(this.dataPath);
     }
 }

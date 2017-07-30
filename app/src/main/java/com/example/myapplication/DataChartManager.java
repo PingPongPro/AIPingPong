@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;
@@ -35,9 +36,13 @@ public class DataChartManager extends Thread{
     private TimerTask task;
     private boolean isPassingData=false;
     private final int XRangeMaximum=100;
-    public DataChartManager(LineChart chart,TimerTask timerTask,String[] name,int[] color)
+    private Activity activity;
+    private ReadDataFromFile dataFile;
+    public DataChartManager(LineChart chart,String dataPath,String[] name,int[] color,Activity a)
     {
-        this.task=timerTask;
+        this.activity=a;
+        this.dataFile=new ReadDataFromFile(dataPath,true);
+        this.task=new TaskForChart();
         //TODO 图像名称
         for(int i=0;i<name.length;i++)
             this.dataName.add(name[i]);
@@ -64,10 +69,6 @@ public class DataChartManager extends Thread{
     public List<View.OnClickListener> getListeners()
     {
         return this.listeners;
-    }
-    public void addEntry(List<Double> dataList)
-    {
-        this.datachart.addEntry(dataList);
     }
 
     public void setPassingData(boolean passingData) {
@@ -336,6 +337,69 @@ public class DataChartManager extends Thread{
             description.setText(str);
             lineChart.setDescription(description);
             lineChart.invalidate();
+        }
+    }
+    public void pauseChart()
+    {
+        this.isPassingData=false;
+    }
+    //start or restart
+    public void startChart()
+    {
+        this.isPassingData=true;
+    }
+    public void resetChart(String newPath)
+    {
+        this.pauseChart();
+        this.dataFile.closeAllReaders();
+        this.dataFile=new ReadDataFromFile(newPath,true);
+    }
+    private class TaskForChart extends TimerTask
+    {
+        private List<Double> dataList=new ArrayList<Double>();
+        private int counter=0;
+        @Override
+        public void run()
+        {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    if(isPassingData)
+                    {
+                        try
+                        {
+                            List<Object> list=dataFile.nextData(new int[]{0,1,2},"\t");
+                            if(!dataFile.endFlag)
+                            {
+                                if(counter%10==0)
+                                {
+                                    dataList.add(Double.valueOf(list.get(0).toString()));
+                                    dataList.add(Double.valueOf(list.get(1).toString()));
+                                    dataList.add(Double.valueOf(list.get(2).toString()));
+                                    datachart.addEntry(dataList);
+                                    dataList.clear();
+                                }
+                                counter++;
+                            }
+                            else
+                            {
+                                if(counter%10==0)
+                                {
+                                    for(int i=0;i<3;i++)
+                                        dataList.add(0.0);
+                                    datachart.addEntry(dataList);
+                                    dataList.clear();
+                                }
+                                counter++;
+                            }
+                        }
+                        catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
         }
     }
 

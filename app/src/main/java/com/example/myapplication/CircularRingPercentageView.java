@@ -270,7 +270,6 @@ public class CircularRingPercentageView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         //背景渐变颜色
         paint.setShader(sweepGradient);
         canvas.drawArc(oval, -90, (float) (progress * singlPoint), false, paint);
@@ -293,6 +292,8 @@ public class CircularRingPercentageView extends View {
         if(isRunning)
         {
             long currenTime=System.currentTimeMillis();
+            if(startTime==0)
+                startTime=currenTime;
             this.progress=(float)((this.saveTime+currenTime-this.startTime)/100%maxColorNumber);
             this.updateTime(currenTime);
             if(isChanged)
@@ -338,17 +339,34 @@ public class CircularRingPercentageView extends View {
     }
     public void start()
     {
-        this.startTime=System.currentTimeMillis();
-        this.isRunning=true;
-        invalidate();
+        if(!this.isRunning)
+        {
+            long keep=System.currentTimeMillis();
+            if(this.startTime!=0)
+                this.saveTime+=keep-this.startTime;
+            this.startTime=keep;
+            this.isRunning=true;
+            invalidate();
+        }
     }
     public void pause()
     {
-        this.isRunning=false;
-        this.saveTime=System.currentTimeMillis()-this.startTime;
+        if(this.isRunning)
+        {
+            this.isRunning=false;
+            this.saveTime+=System.currentTimeMillis()-this.startTime;
+            this.startTime=0;
+        }
     }
     public void reset()
     {
+        this.pause();
+        this.startTime=0;
         this.saveTime=0;
+    }
+    //TODO test
+    public boolean getState()
+    {
+        return this.isRunning;
     }
 }

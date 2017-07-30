@@ -10,7 +10,6 @@
 
     <LinearLayout
         style="@style/layout_full"
-        android:layout_margin="15dp"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="-3dp">
@@ -44,6 +43,8 @@
                         android:id="@android:id/tabcontent"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="30px"
+                        android:layout_marginLeft="30px"
                         android:layout_weight="0.3">
 
                         <LinearLayout
@@ -95,19 +96,21 @@
                             android:id="@+id/tab3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical">
+                            android:orientation="horizontal">
 
                             <SurfaceView
                                 android:id="@+id/surfaceView"
-                                style="@style/layout_vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="228dp" />
+                                style="@style/layout_horizontal"
+                                android:layout_width="0px"
+                                android:layout_height="228dp"
+                                android:layout_weight="0.7"/>
 
                             <SurfaceView
                                 android:id="@+id/surfaceView2"
-                                android:layout_width="match_parent"
-                                android:layout_height="144dp"
-                                android:layout_weight="0.93" />
+                                style="@style/layout_horizontal"
+                                android:layout_width="0px"
+                                android:layout_height="228dp"
+                                android:layout_weight="0.3" />
                         </LinearLayout>
                     </FrameLayout>
                 </LinearLayout>
