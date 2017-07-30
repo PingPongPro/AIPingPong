@@ -51,7 +51,6 @@ public class MediaPlayerManager
         }
         return result;
     }
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public MediaPlayerManager(SurfaceView surfaceView1, String path, boolean loop)
     {
         this.isLoop=loop;
@@ -98,11 +97,13 @@ public class MediaPlayerManager
             e.printStackTrace();
         }
     }
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    //视频开始或暂停后恢复调用
     public void startVideo()
     {
-        this.surfaceView.setBackground(null);
-        player.start();
+        if(surfaceView.getBackground()!=null)
+            this.surfaceView.setBackground(null);
+        if(this.player.isPlaying()==false)
+            player.start();
     }
     public void pauseVideo()
     {
@@ -112,6 +113,7 @@ public class MediaPlayerManager
             this.player.pause();
         }
     }
+    //视频从后台恢复调用
     public void reStartVideo()
     {
         if(!isSurfaceCreated)
@@ -132,7 +134,7 @@ public class MediaPlayerManager
             this.player.setDataSource(this.mediaPath);
             this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             this.player.prepare();
-            player.seekTo(this.currentIndex);
+            player.pause();
         }
         catch(Exception e)
         {

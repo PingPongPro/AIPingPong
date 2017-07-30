@@ -32,6 +32,7 @@ public class ReadDataFromFile {
         try {
             String encoding="GBK";
             File file=new File(this.dataPath);
+            System.out.println(file.isFile()+" "+file.exists()+this.dataPath);
             if(file.isFile() && file.exists()){ //判断文件是否存在
                 this.inputStreamReader = new InputStreamReader(
                         new FileInputStream(file),encoding);//考虑到编码格式

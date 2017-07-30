@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SurfaceView surfaceView_pingpang;
     private MediaPlayerManager mediaPlayerManager;
     //文件名称
+    private String chooseFilePath=Environment.getExternalStorageDirectory().getAbsolutePath()+
+            File.separator+"ballGame/default";
     private String nameOfReal="real.mp4";
     private String nameOfData="data.txt";
     private String nameOfCounter="counterdata.txt";
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-
+        this.resetFilePath(this.chooseFilePath);
         btnPause=(Button)findViewById(R.id.btnPause);
         btnStart=(Button)findViewById(R.id.btnStart);
 
@@ -152,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         );*/
         this.surfaceView_pingpang=(SurfaceView)findViewById(R.id.surfaceView2);
         this.mediaPlayerManager=new MediaPlayerManager(this.surfaceView_pingpang,mediaPath_pingpang_zheng,true);
+        System.out.println(this.mediaPath);
         //this.startController();
         myListener();
         this.timerView.pause();
@@ -234,8 +237,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode,Intent intent) {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST) {
-                Uri uri = intent.getData();
-                new AlertDialog.Builder(this).setMessage(" "+ uri).show();
+                this.chooseFilePath=intent.getExtras().getString("path");
+                this.resetController(this.chooseFilePath);
+                //new AlertDialog.Builder(this).setMessage(" "+ uri).show();
             }
             else if(requestCode == REQUEST1){
                 String stmp = intent.getExtras().getString("ReturnRank");
@@ -392,20 +396,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     private void restartController()
     {
-        mediaPlayerManagerForReal.reStartVideo();
-        mediaPlayerManager.reStartVideo();
+        mediaPlayerManagerForReal.startVideo();
+        mediaPlayerManager.startVideo();
         this.counterTimer.restartCounter();
         dataChartManager.startChart();
         timerView.start();
     }
+    private void resetFilePath(String newPath)
+    {
+        this.mediaPath=newPath+File.separator+this.nameOfReal;
+        this.counterPath=newPath+File.separator+this.nameOfCounter;
+        this.dataPath=newPath+File.separator+this.nameOfData;
+    }
     private void resetController(String newPath)
     {
-        this.mediaPath=newPath+this.nameOfReal;
-        this.counterPath=newPath+this.nameOfCounter;
-        this.dataPath=newPath+this.nameOfData;
+        counter_zheng=0;
+        counter_fan=0;
+        textView_forehand.setText("正手:0");
+        textView_backhand.setText("反手:0");
+        this.resetFilePath(newPath);
         //TODO 文件存在检查
+        
+        this.timerView.reset();
         this.mediaPlayerManagerForReal.changeVideo(this.mediaPath);
+        //this.mediaPlayerManager.pauseVideo();
         this.counterTimer.resetCounter(this.counterPath);
         this.dataChartManager.resetChart(this.dataPath);
+        pauseController();
     }
 }

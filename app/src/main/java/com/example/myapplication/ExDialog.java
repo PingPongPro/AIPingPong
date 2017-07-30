@@ -136,7 +136,7 @@ public class ExDialog extends ListActivity {
 
 	private void finishWithResult(String path) {
 		Intent intent = new Intent();
-		intent.setDataAndType(Uri.fromFile(new File(path)),"URL");
+		intent.putExtra("path",path);
 		setResult(RESULT_OK, intent);
 		finish();
 	}
