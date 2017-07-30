@@ -40,7 +40,7 @@
 
         <activity
             android:name=".SelectDifficulty"
-            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog.NoActionBar">
+            android:theme="@android:style/Theme.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
