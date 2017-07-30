@@ -55,10 +55,10 @@ public class TabManager{
         try
         {
             this.activity=a;
-            View view1=composeLayout("曲线图",R.drawable.chart);
-            TabHost.TabSpec page1 = tabHost.newTabSpec("tab1")
+            View view1=composeLayout("视频模型",R.drawable.video);
+            TabHost.TabSpec page1 = tabHost.newTabSpec("tab3")
                     .setIndicator(view1)//
-                    .setContent(R.id.tab1);
+                    .setContent(R.id.tab3);
 
             tabHost.addTab(page1);
         }
@@ -67,10 +67,10 @@ public class TabManager{
             e.printStackTrace();
         }
 
-        View view1=composeLayout("视频模型",R.drawable.video);
-        TabHost.TabSpec page3 = tabHost.newTabSpec("tab3")
+        View view1=composeLayout("曲线图",R.drawable.chart);
+        TabHost.TabSpec page3 = tabHost.newTabSpec("tab1")
                 .setIndicator(view1)//
-                .setContent(R.id.tab3);
+                .setContent(R.id.tab1);
         tabHost.addTab(page3);
         tabhost.setOnTabChangedListener(
                 new TabHost.OnTabChangeListener() {

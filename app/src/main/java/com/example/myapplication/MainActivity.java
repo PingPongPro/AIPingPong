@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -147,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 new String[]{"accX","accY","accZ"},new int[]{Color.RED,Color.BLUE,Color.GREEN},this);
         List<View.OnClickListener> listeners=this.dataChartManager.getListeners();
 
-        counterTimer =new CounterActivity(this.counterPath);
         counterDrop = new CounterDrop(this.dropPath);
 
         surfaceView=(SurfaceView)findViewById(R.id.surfaceView);
@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.surfaceView_pingpang.setAlpha(0.8f);
         this.mediaPlayerManager=new MediaPlayerManager(this.surfaceView_pingpang,mediaPath_pingpang_zheng,true);
 
+        counterTimer =new CounterActivity(this.counterPath);
         //this.startController();
         myListener();
         this.timerView.pause();
@@ -278,7 +279,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private int symbol=0;
         private List<Object>data=null;
         private boolean isRunning=false;
-        double newTaskTime=0;
+        private float justTime = 0;
+
         public CounterDrop(String path)
         {
             this.readDataFromFile=new ReadDataFromFile(path,false);
@@ -292,14 +294,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     data = this.readDataFromFile.nextData(new int[]{0, 1}, "\t");
                     if (data != null)
                     {
-                        newTaskTime = Double.valueOf(data.get(0).toString());
+                        double newTaskTime = Double.valueOf(data.get(0).toString());
                         this.mark = Integer.valueOf(data.get(1).toString());
                         timer.cancel();
                         timer = new Timer();
-                        timer.schedule(new CounterDrop.ChangeTimer(), (long) ((newTaskTime - this.lastTime) * 1000));
+                        justTime = (float)(newTaskTime - this.lastTime);
+
+                        if(lastTime != 0)
+                        {
+                            timer.schedule(new CounterDrop.ChangeTimer(), (long) ((newTaskTime - this.lastTime) * 1000));
+                            existTask = true;
+                        }
                         this.delayTime=(long)((newTaskTime-lastTime)*1000);
                         this.lastTime = newTaskTime;
-                        existTask = true;
                     }
                     else
                     {
@@ -317,10 +324,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new Runnable() {
                             @Override
                             public void run() {
-                                textView_drop.setText(""+ newTaskTime);
+                                textView_drop.setText(""+ justTime);
                             }
                         }
                 );
+                existTask=false;
             }
         }
         public void startCounter()
@@ -345,6 +353,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public CounterActivity(String path)
         {
             this.readDataFromFile=new ReadDataFromFile(path,false);
+            if(mediaPlayerManager.getMediaPath().equals(mediaPath_pingpang_fan))
+                this.symbol=1;
+            else
+                this.symbol=0;
         }
         @Override
         public void run()
@@ -370,6 +382,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         else
                         {
                             readDataFromFile.endFlag = true;
+                            timerView.pause();
                             mediaPlayerManager.pauseVideo();
                         }
                     }
@@ -423,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         {
                             symbol=1;
                             mediaPlayerManager.changeVideo(mediaPath_pingpang_fan);
-                            mediaPlayerManager.startVideo();
+                            //mediaPlayerManager.startVideo();
                         }
                     }
                     else

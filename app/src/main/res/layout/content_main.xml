@@ -136,7 +136,7 @@
                     android:gravity="top"
                     android:paddingTop="5dp"
                     android:paddingLeft="20dp"
-                    android:text="154"
+                    android:text="0"
                     android:textAlignment="center"
                     android:textColor="@color/color_gray"
                     android:textSize="20dp" />
@@ -173,7 +173,7 @@
                     android:textAlignment="center"
                     android:textColor="@color/color_gray"
                     android:textSize="20dp"
-                    android:text="00：00" />
+                    android:text="0s" />
             </LinearLayout>
 
             <LinearLayout
@@ -203,13 +203,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="top"
+                    android:gravity="bottom"
                     android:paddingRight="20dp"
                     android:paddingBottom="5dp"
                     android:textAlignment="center"
                     android:textColor="@color/color_gray"
                     android:textSize="20dp"
-                    android:text="TextView" />
+                    android:text="0" />
             </LinearLayout>
         </LinearLayout>
 
