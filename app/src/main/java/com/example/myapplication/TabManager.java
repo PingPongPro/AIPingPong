@@ -28,7 +28,7 @@ public class TabManager{
     {
         LinearLayout layout = new LinearLayout(this.activity);
         layout.setGravity(Gravity.CENTER);
-        layout.setBackgroundColor(Color.rgb(255,127,0));
+        layout.setBackgroundColor(Color.parseColor("#f08f4a"));
         layout.setOrientation(LinearLayout.VERTICAL);
         ImageView imageview = new ImageView(this.activity);
         imageview.setImageResource(i);
@@ -92,7 +92,7 @@ public class TabManager{
                                 TextView tv= textViewList.get(i);
                                 tv.setTextColor(Color.parseColor("#000000"));
                             }
-                            tabWidget.getChildAt(tabhost.getCurrentTab()).setBackgroundColor(Color.parseColor("#ff7f00"));
+                            tabWidget.getChildAt(tabhost.getCurrentTab()).setBackgroundColor(Color.parseColor("#f08f4a"));
                             TextView tv= textViewList.get(tabhost.getCurrentTab());
                             tv.setTextColor(Color.parseColor("#ffffff"));
                         }
