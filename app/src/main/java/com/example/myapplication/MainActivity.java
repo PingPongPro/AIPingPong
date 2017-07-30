@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             else if(requestCode == REQUEST1){
                 RankString = intent.getExtras().getString("ReturnRank");
-                new AlertDialog.Builder(this).setMessage(RankString).show();
+                //new AlertDialog.Builder(this).setMessage(RankString).show();
 
             }
         }
@@ -369,6 +369,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 public void run() {
                                     textView_forehand.setText("正手: "+counter_zheng);
                                     textView_backhand.setText("反手: "+counter_fan);
+                                    gameOver();
                                 }
                             }
                     );
@@ -453,6 +454,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 totalCounter = counter_fan + counter_zheng;
                 builder = new AlertDialog.Builder(this);
                 builder.setTitle("评级结果");
+
                 builder.setMessage("在"+timerView.timeOfRank +"分钟内颠球总数为：" + totalCounter + '\n' + "您的评级结果为：" + rankJudge(timerView.timeOfRank , totalCounter));
                 builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
@@ -460,14 +462,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     }
                 });
-                builder.setPositiveButton("记录结果", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("记录结果", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 });
+                builder.show();
+                RankString = null;
             }
-            RankString = null;
         }
     }
 
