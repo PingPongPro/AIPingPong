@@ -16,8 +16,8 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:background="@color/light_orange"
+            android:layout_height="match_parent"
+            android:background="@drawable/main_backcolor"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/textStyle"
@@ -25,7 +25,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="match_parent"
                 android:gravity="center"
                 android:weightSum="1">
 
@@ -33,9 +33,9 @@
                     android:id="@+id/btnStart"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:background="@drawable/player"
                     android:layout_alignBottom="@+id/timer"
-                    android:layout_toStartOf="@+id/timer" />
+                    android:layout_toStartOf="@+id/timer"
+                    android:background="@drawable/player" />
 
                 <com.example.myapplication.CircularRingPercentageView
                     android:id="@+id/timer"
@@ -47,10 +47,10 @@
                     android:id="@+id/btnPause"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:background="@drawable/pause"
                     android:layout_alignBottom="@+id/timer"
+                    android:layout_toEndOf="@+id/timer"
                     android:layout_toRightOf="@+id/timer"
-                    android:layout_toEndOf="@+id/timer" />
+                    android:background="@drawable/pause" />
 
             </RelativeLayout>
 
