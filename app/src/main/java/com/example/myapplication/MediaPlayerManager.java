@@ -134,7 +134,6 @@ public class MediaPlayerManager
             this.player.setDataSource(this.mediaPath);
             this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             this.player.prepare();
-            player.pause();
         }
         catch(Exception e)
         {
