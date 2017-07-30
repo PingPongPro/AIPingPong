@@ -177,8 +177,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        if(ifEverStarted)
+        if(ifEverStarted&&!shouldPause)
             this.restartController();
+        else
+            shouldPause=false;
         //this.mediaPlayerManager.reStartVideo();
     }
 
@@ -381,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
-    public void resetCounter()
+    private void resetCounter()
     {
         counter_zheng=0;
         counter_fan=0;
