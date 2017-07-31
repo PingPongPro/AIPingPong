@@ -3,6 +3,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_bluetooth"
+            android:icon="@drawable/bluetooth"
+            android:title="连接蓝牙" />
+        <item
             android:id="@+id/nav_file"
             android:icon="@drawable/file"
             android:title="选择文件" />

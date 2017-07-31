@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView textView_backhand;
     private TextView textView_time;
     private TextView textView_drop;
+    //蓝牙选项
+    private MenuItem blueToothItem;
 
     private TabManager tabManager;
     //时间相关
@@ -84,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public final static int UPDATETIME=0;
     private static final int REQUEST = 1;
     private static final int REQUEST1 = 2;
+    private static final int REQUEST_BULETOOTH=3;
     private Button btnStart;
     private Button btnPause;
     //正反计数
@@ -206,6 +210,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater=this.getMenuInflater();
+        inflater.inflate(R.menu.activity_main_drawer,menu);
+        //menu.findItem(R.id.nav_bluetooth).setChecked(true);
+        this.blueToothItem=menu.findItem(R.id.nav_bluetooth);
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -230,8 +238,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_file) {
+        if(id == R.id.nav_bluetooth)
+        {
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, BlueToothManager.class);
+            startActivityForResult(intent, REQUEST_BULETOOTH);
+        }
+        else if (id == R.id.nav_file) {
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, ExDialog.class);
             startActivityForResult(intent, REQUEST);
@@ -264,6 +277,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 RankString = intent.getExtras().getString("ReturnRank");
                 //new AlertDialog.Builder(this).setMessage(RankString).show();
 
+            }
+            else if(requestCode == REQUEST_BULETOOTH)
+            {
+                try
+                {
+                    System.out.println(blueToothItem.getTitle());
+                    final String serviceName=intent.getExtras().getString("serviceName");
+                    System.out.println(serviceName);
+                    blueToothItem.setTitle(serviceName);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
     }
