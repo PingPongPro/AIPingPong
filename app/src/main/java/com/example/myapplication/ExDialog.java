@@ -45,7 +45,7 @@ public class ExDialog extends ListActivity {
 			setListAdapter(adapter);
 		}catch (Exception e)
 		{
-			e.printStackTrace();
+
 		}
 
 

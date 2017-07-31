@@ -397,7 +397,7 @@ public class DataChartManager extends Thread{
                             }
                         }
                         catch(Exception e){
-                            e.printStackTrace();
+
                         }
                     }
                 }

@@ -405,7 +405,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             }
-            catch(Exception e){e.printStackTrace();}
+            catch(Exception e){
+
+            }
         }
         public void pauseCounter()
         {
@@ -430,7 +432,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(this.timer!=null)
                     this.timer.cancel();
                 this.timer=new Timer();
-                timer.schedule(new Change3DVedioTask(),this.delayTime-this.pauseTime+this.lastFinishedTime);
+                try{
+                    timer.schedule(new Change3DVedioTask(),this.delayTime-this.pauseTime+this.lastFinishedTime);
+                }catch (Exception e){
+                }
+
                 this.isRunning=true;
                 existTask=true;
             }
@@ -481,7 +487,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 catch(Exception e)
                 {
-                    e.printStackTrace();
+
                 }
             }
         }
@@ -554,15 +560,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private char rankJudge(int time, int total){
-        if(total < time * 20)
+        if(total < time * 30)
             return 'E';
-        else if(total < time * 40)
+        else if(total < time * 60)
             return 'D';
-        else if (total < time * 60)
+        else if (total < time * 90)
             return 'C';
-        else if (total < time * 80)
+        else if (total < time * 120)
             return 'B';
-        else if (total < time * 100)
+        else if (total < time * 150)
             return 'A';
         else
             return 'S';
