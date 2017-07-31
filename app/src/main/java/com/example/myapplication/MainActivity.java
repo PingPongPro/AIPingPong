@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(id == R.id.nav_bluetooth)
         {
             Intent intent = new Intent();
-            intent.setClass(MainActivity.this, BlueToothManager.class);
+            intent.setClass(MainActivity.this, DeviceScanActivity.class);
             startActivityForResult(intent, REQUEST_BULETOOTH);
         }
         else if (id == R.id.nav_file) {
