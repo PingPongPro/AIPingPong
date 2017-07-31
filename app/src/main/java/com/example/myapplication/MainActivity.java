@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             intent.setClass(MainActivity.this, SelectDifficulty.class);
             startActivityForResult(intent, REQUEST1);
         } else if (id == R.id.nav_statistic) {
-
+            //数据统计
         }  else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
