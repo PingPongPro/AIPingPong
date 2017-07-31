@@ -140,6 +140,7 @@ public class MediaPlayerManager
             this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             this.player.prepare();
             player.setDisplay(surfaceHolder);
+            this.surfaceView.setBackground(this.getVedioPicture(this.mediaPath,this.currentIndex));
             if(this.isLoop)
                 player.start();
         }
