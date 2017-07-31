@@ -38,15 +38,15 @@ public class MediaPlayerManager
                 retriever.setDataSource(pathName); 
                 result=new BitmapDrawable(retriever.getFrameAtTime());
         } catch(IllegalArgumentException e) {
-                 e.printStackTrace();  
+
         } catch (RuntimeException e) {
-                e.printStackTrace();  
+
         } 
         finally {
             try {
                 retriever.release();
                 } catch (RuntimeException e) {
-                   e.printStackTrace();  
+
             }
         }
         return result;
@@ -94,7 +94,7 @@ public class MediaPlayerManager
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+
         }
     }
     //视频开始或暂停后恢复调用
@@ -148,7 +148,7 @@ public class MediaPlayerManager
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+
         }
     }
     public void relesePlayer()

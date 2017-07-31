@@ -64,7 +64,7 @@ public class TabManager{
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+
         }
 
         View view1=composeLayout("曲线图",R.drawable.chart);
@@ -92,7 +92,7 @@ public class TabManager{
                         }
                         catch(Exception e)
                         {
-                            e.printStackTrace();
+
                         }
 
                     }

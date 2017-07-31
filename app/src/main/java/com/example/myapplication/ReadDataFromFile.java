@@ -46,7 +46,6 @@ public class ReadDataFromFile {
             }
         } catch (Exception e) {
             System.out.println("读取文件内容出错");
-            e.printStackTrace();
         }
         return false;
     }
@@ -63,7 +62,6 @@ public class ReadDataFromFile {
         }
         catch (Exception e) {
             System.out.println("解析数据出错");
-            e.printStackTrace();
         }
         this.endFlag=true;
         return 0;
@@ -88,7 +86,6 @@ public class ReadDataFromFile {
         }
         catch (Exception e) {
             System.out.println("解析数据出错");
-            e.printStackTrace();
         }
         this.endFlag=true;
         return null;
@@ -102,7 +99,9 @@ public class ReadDataFromFile {
             if(this.bufferedReader!=null)
                 this.bufferedReader.close();
         }
-        catch(Exception e){e.printStackTrace();}
+        catch(Exception e){
+
+        }
     }
     public int getNumberOfData(){return number;}
 }

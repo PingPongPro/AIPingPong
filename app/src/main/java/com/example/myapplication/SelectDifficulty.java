@@ -36,7 +36,7 @@ public class SelectDifficulty extends ListActivity {
             setListAdapter(adapter);
         }catch (Exception e)
         {
-            e.printStackTrace();
+
         }
         WindowManager DirWin = getWindowManager();
         Display Dis = DirWin.getDefaultDisplay();

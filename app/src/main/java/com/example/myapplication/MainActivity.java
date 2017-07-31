@@ -372,6 +372,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             this.isRunning=true;
         }
+        public void resetCounter()
+        {
+            this.timer.cancel();
+            this.readDataFromFile.closeAllReaders();
+            justTime = 0;
+            textView_drop.setText("0");
+        }
     }
 
     private class CounterActivity extends Thread
@@ -425,7 +432,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             }
-            catch(Exception e){e.printStackTrace();}
+            catch(Exception e){
+
+            }
         }
         public void pauseCounter()
         {
@@ -450,7 +459,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(this.timer!=null)
                     this.timer.cancel();
                 this.timer=new Timer();
-                timer.schedule(new Change3DVedioTask(),this.delayTime-this.pauseTime+this.lastFinishedTime);
+                try{
+                    timer.schedule(new Change3DVedioTask(),this.delayTime-this.pauseTime+this.lastFinishedTime);
+                }catch (Exception e){
+                }
+
                 this.isRunning=true;
                 existTask=true;
             }
@@ -501,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 catch(Exception e)
                 {
-                    e.printStackTrace();
+
                 }
             }
         }
@@ -513,6 +526,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textView_forehand.setText("0");
         textView_backhand.setText("0");
         this.counterTimer.releaseCounter();
+        this.counterDrop.resetCounter();
+        this.counterDrop=new CounterDrop(this.dropPath);
         this.counterTimer=new CounterActivity(this.counterPath);
     }
     private void startController()
@@ -542,6 +557,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             this.counterTimer.startCounter();
             this.counterTimer.start();
+            this.counterDrop.startCounter();
+            this.counterDrop.start();
             counterEverRelease=false;
         }
         else
@@ -561,6 +578,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.resetFilePath(newPath);
         //TODO 文件存在检查
         this.timerView.reset();
+        this.counterDrop.resetCounter();
         this.mediaPlayerManagerForReal.changeVideo(this.mediaPath);
         this.mediaPlayerManager.pauseVideo();
         this.resetCounter();
@@ -569,15 +587,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private char rankJudge(int time, int total){
-        if(total < time * 20)
+        if(total < time * 30)
             return 'E';
-        else if(total < time * 40)
+        else if(total < time * 60)
             return 'D';
-        else if (total < time * 60)
+        else if (total < time * 90)
             return 'C';
-        else if (total < time * 80)
+        else if (total < time * 120)
             return 'B';
-        else if (total < time * 100)
+        else if (total < time * 150)
             return 'A';
         else
             return 'S';
@@ -607,6 +625,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 builder.show();
                 pauseController();
                 RankString = null;
+                timerView.timeOfRank = 0;
             }
         }
     }
