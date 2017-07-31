@@ -135,14 +135,16 @@ public class MediaPlayerManager
                 surfaceHolder.setFixedSize(100,100);
             }
             player=new MediaPlayer();
+            player.setVolume(0,0);
             player.setLooping(this.isLoop);
             this.player.setDataSource(this.mediaPath);
             this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             this.player.prepare();
             player.setDisplay(surfaceHolder);
-            this.surfaceView.setBackground(this.getVedioPicture(this.mediaPath,this.currentIndex));
             if(this.isLoop)
-                player.start();
+                startVideo();
+            else
+                this.surfaceView.setBackground(this.getVedioPicture(this.mediaPath,this.currentIndex));
         }
         catch(Exception e)
         {
