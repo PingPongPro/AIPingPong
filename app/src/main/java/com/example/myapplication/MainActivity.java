@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -36,7 +39,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private TextView textView_forehand;
     private TextView textView_backhand;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView textView_drop;
     //蓝牙选项
     private MenuItem blueToothItem;
+    private String blueToothItemTitle="";
+    private TextView textView_blueTooth;
 
     private TabManager tabManager;
     //时间相关
@@ -178,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //this.startController();
         myListener();
         this.timerView.pause();
+
     }
 
     @Override
@@ -212,9 +217,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater=this.getMenuInflater();
         inflater.inflate(R.menu.activity_main_drawer,menu);
-        //menu.findItem(R.id.nav_bluetooth).setChecked(true);
         this.blueToothItem=menu.findItem(R.id.nav_bluetooth);
         getMenuInflater().inflate(R.menu.main, menu);
+        //this.blueToothItem.setTitle("连接蓝牙");
+        //invalidateOptionsMenu();
+        this.textView_blueTooth=(TextView)findViewById(R.id.textView_blueTooth);
         return true;
     }
 
@@ -265,7 +272,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    protected void onActivityResult(int requestCode, int resultCode,Intent intent) {
+    private Handler handler=new Handler()
+    {
+          public void handleMessage(Message msg)
+          {
+              blueToothItem.setTitle(blueToothItemTitle);
+          }
+    };
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST) {
                 this.chooseFilePath=intent.getExtras().getString("path");
@@ -284,8 +299,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 {
                     System.out.println(blueToothItem.getTitle());
                     final String serviceName=intent.getExtras().getString("serviceName");
-                    System.out.println(serviceName);
-                    blueToothItem.setTitle(serviceName);
+                    //this.blueToothItem.setTitle("已连接蓝牙设备:"+serviceName);
+                    this.textView_blueTooth.setText("已连接蓝牙设备:"+serviceName);
+                    invalidateOptionsMenu();
+                    //Message msg=new Message();
+                    //handler.sendMessage(msg);
                 }
                 catch(Exception e)
                 {
