@@ -345,6 +345,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             this.isRunning=true;
         }
+        public void resetCounter()
+        {
+            this.timer.cancel();
+            this.readDataFromFile.closeAllReaders();
+            justTime = 0;
+            textView_drop.setText("0");
+        }
     }
 
     private class CounterActivity extends Thread
@@ -486,6 +493,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         textView_forehand.setText("0");
         textView_backhand.setText("0");
         this.counterTimer.releaseCounter();
+        this.counterDrop.resetCounter();
+        this.counterDrop=new CounterDrop(this.dropPath);
         this.counterTimer=new CounterActivity(this.counterPath);
     }
     private void startController()
@@ -515,6 +524,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             this.counterTimer.startCounter();
             this.counterTimer.start();
+            this.counterDrop.startCounter();
+            this.counterDrop.start();
             counterEverRelease=false;
         }
         else
@@ -534,6 +545,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.resetFilePath(newPath);
         //TODO 文件存在检查
         this.timerView.reset();
+        this.counterDrop.resetCounter();
         this.mediaPlayerManagerForReal.changeVideo(this.mediaPath);
         this.mediaPlayerManager.pauseVideo();
         this.resetCounter();
@@ -580,6 +592,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 builder.show();
                 pauseController();
                 RankString = null;
+                timerView.timeOfRank = 0;
             }
         }
     }
