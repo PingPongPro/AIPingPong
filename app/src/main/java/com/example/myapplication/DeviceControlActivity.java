@@ -77,6 +77,10 @@ public class DeviceControlActivity extends Activity {
             }
             // Automatically connects to the device upon successful start-up initialization.
             mBluetoothLeService.connect(mDeviceAddress);
+            Intent aa = new Intent();
+            aa.putExtra("serviceName","Bluetooth_ML");
+            setResult(303 ,aa);
+            finish();
         }
 
         @Override

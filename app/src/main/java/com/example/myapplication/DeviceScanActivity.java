@@ -49,7 +49,7 @@ public class DeviceScanActivity extends ListActivity {
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private Handler mHandler;
-
+private String NAME;
     private static final int REQUEST_ENABLE_BT = 1;
     private static final long SCAN_PERIOD = 10000;
 
@@ -127,6 +127,12 @@ public class DeviceScanActivity extends ListActivity {
             finish();
             return;
         }
+        else if(requestCode == 303){
+            Intent bb = new Intent();
+            bb.putExtra("serviceName",NAME);
+            setResult(304 ,bb);
+            finish();
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -143,13 +149,14 @@ public class DeviceScanActivity extends ListActivity {
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
         if (device == null) return;
         final Intent intent = new Intent(this, DeviceControlActivity.class);
+        NAME = device.getName();
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
         intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         if (mScanning) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
         }
-        startActivity(intent);
+        startActivityForResult(intent ,303);
     }
 
     private void scanLeDevice(final boolean enable) {

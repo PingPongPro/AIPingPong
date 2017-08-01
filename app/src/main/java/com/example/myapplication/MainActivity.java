@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, DeviceScanActivity.class);
-            startActivityForResult(intent, REQUEST_BULETOOTH);
+            startActivityForResult(intent, 304);
         }
         else if (id == R.id.nav_file) {
             Intent intent = new Intent();
@@ -281,6 +281,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     };
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if(resultCode == 304)
+        {
+            try
+            {
+                System.out.println(blueToothItem.getTitle());
+                final String serviceName=intent.getExtras().getString("serviceName");
+                //this.blueToothItem.setTitle("已连接蓝牙设备:"+serviceName);
+                this.textView_blueTooth.setText("已连接蓝牙设备:"+serviceName);
+                invalidateOptionsMenu();
+                //Message msg=new Message();
+                //handler.sendMessage(msg);
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST) {
                 this.chooseFilePath=intent.getExtras().getString("path");
@@ -293,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //new AlertDialog.Builder(this).setMessage(RankString).show();
 
             }
-            else if(requestCode == REQUEST_BULETOOTH)
+            else if(requestCode == 304)
             {
                 try
                 {
