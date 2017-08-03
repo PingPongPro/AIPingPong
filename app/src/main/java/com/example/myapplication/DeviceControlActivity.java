@@ -241,7 +241,7 @@ public class DeviceControlActivity extends Activity {
         if (data != null) {
             System.out.println("counter: "+counter);
             counter++;
-            if(counter%6==0)
+            if((counter-1)%6==0)
                 mDataField.setText(data);
             else
                 mDataField.setText(mDataField.getText()+" "+data);
