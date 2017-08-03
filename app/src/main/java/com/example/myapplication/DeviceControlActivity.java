@@ -185,7 +185,7 @@ public class DeviceControlActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mGattUpdateReceiver);
+        //unregisterReceiver(mGattUpdateReceiver);
     }
 
     @Override
@@ -232,11 +232,15 @@ public class DeviceControlActivity extends Activity {
             }
         });
     }
-
+    private int counter=0;
     private void displayData(String data) {
         if (data != null) {
-            System.out.println(data);
-            mDataField.setText(data);
+            System.out.println("counter: "+counter);
+            counter++;
+            if(counter%6==0)
+                mDataField.setText(data);
+            else
+                mDataField.setText(mDataField.getText()+" "+data);
         }
     }
 
