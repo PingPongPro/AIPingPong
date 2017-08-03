@@ -235,6 +235,7 @@ public class DeviceControlActivity extends Activity {
 
     private void displayData(String data) {
         if (data != null) {
+            System.out.println(data);
             mDataField.setText(data);
         }
     }
