@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.Menu;
@@ -35,6 +36,8 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +64,7 @@ public class DeviceControlActivity extends Activity {
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
     private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
+    private WriteDataToFile writeDataToFile;
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
@@ -108,7 +112,10 @@ public class DeviceControlActivity extends Activity {
                 // Show all the supported services and characteristics on the user interface.
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                //TODO
+                String data=intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+                displayData(data);
+                writeDataToFile.write(data);
             }
         }
     };
@@ -156,6 +163,11 @@ public class DeviceControlActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gatt_services_characteristics);
+
+        //TODO
+        String path= Environment.getExternalStorageDirectory().getAbsolutePath()+
+                File.separator+"ballGame/testdata.txt";
+        this.writeDataToFile=new WriteDataToFile(path);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
@@ -235,9 +247,8 @@ public class DeviceControlActivity extends Activity {
     private int counter=0;
     private void displayData(String data) {
         if (data != null) {
-            System.out.println("counter: "+counter);
             counter++;
-            if((counter-1)%6==0)
+            if(counter%6==0&&counter!=0)
                 mDataField.setText(data);
             else
                 mDataField.setText(mDataField.getText()+" "+data);
@@ -308,5 +319,37 @@ public class DeviceControlActivity extends Activity {
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         return intentFilter;
+    }
+}
+//写入txt
+class WriteDataToFile
+{
+    private String filePath;
+    public WriteDataToFile(String path)
+    {
+        this.filePath=path;
+        try
+        {
+            File file =new File(path);
+            if(!file.exists())
+                file.createNewFile();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public void write(String value)
+    {
+        try
+        {
+            FileWriter fileWriter=new FileWriter(this.filePath,true);
+            fileWriter.write(value+" ");
+            fileWriter.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }
