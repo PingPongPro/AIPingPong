@@ -150,7 +150,7 @@ private String NAME;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
         }
-        startActivityForResult(intent ,303);
+        startActivity(intent);
     }
 
     private void scanLeDevice(final boolean enable) {

@@ -71,6 +71,22 @@ public class DeviceControlActivity extends Activity {
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
+    //传入字符串处理
+    private int STRING_TIMES = 0;//字符串计数\
+
+    private double ACCELCONSTANT = 1671.84;
+    private double GRYOCONSTANT = 32.8;
+
+    public double ACCL_X = 0;
+    public double ACCL_Y = 0;
+    public double ACCL_Z = 0;
+    public double GRYO_X = 0;
+    public double GRYO_Y = 0;
+    public double GRYO_Z = 0;
+
+    public String fullData = null;//构成完整字符串
+    //传入字符串处理变量到此结束
+
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -116,12 +132,76 @@ public class DeviceControlActivity extends Activity {
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 //TODO
                 String data=intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
-                displayData(data);
-                writeDataToFile.write(data);
+                DataManage(data);
+                if(STRING_TIMES == 0)
+                {
+                    System.out.println(ACCL_X);
+                    System.out.println(ACCL_Y);
+                    System.out.println(ACCL_Z);
+                    System.out.println(GRYO_X);
+                    System.out.println(GRYO_Y);
+                    System.out.println(GRYO_Z);
+                }
+                //writeDataToFile.write(fullData);
             }
         }
     };
+    public void DataManage(String data){
+        if(STRING_TIMES == 0){
+            STRING_TIMES = 1;
+            fullData = data;
+        }
+        else if(STRING_TIMES == 1){
+            STRING_TIMES = 0;
+            fullData += data;
+            for(int i = 2; i < 14; i = i + 4) {
+                String tmp = null;
+                int tmpInt = 0;
+                for(int j = 0; j < 4; j++){
+                    tmp += fullData.charAt(i + j);
+                }
+                System.out.println(tmp);
+                try {
+                    tmpInt = Integer.parseInt(tmp,16);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
+                if(i == 2){
+                    ACCL_X = tmpInt/ACCELCONSTANT;
+                }
+                else if(i == 6){
+                    ACCL_Y = tmpInt/ACCELCONSTANT;
+                }
+                else if(i == 10){
+                    ACCL_Z = tmpInt/ACCELCONSTANT;
+                }
+            }
+            for(int i = 14; i < 26; i = i + 4) {
+                String tmp = null;
+
+                int tmpInt = 0;
+                for(int j = 0; j < 4; j++){
+                    tmp += fullData.charAt(i + j);
+                }
+                System.out.println(tmp);
+                try {
+                    tmpInt = Integer.parseInt(tmp,16);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                if(i  == 14){
+                    GRYO_X = tmpInt/GRYOCONSTANT;
+                }
+                else if(i == 18){
+                    GRYO_Y = tmpInt/GRYOCONSTANT;
+                }
+                else if(i == 22){
+                    GRYO_Z = tmpInt/GRYOCONSTANT;
+                }
+            }
+        }
+    }
     // If a given GATT characteristic is selected, check for supported features.  This sample
     // demonstrates 'Read' and 'Notify' features.  See
     // http://d.android.com/reference/android/bluetooth/BluetoothGatt.html for the complete
