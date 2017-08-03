@@ -17,7 +17,9 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -284,6 +286,8 @@ public class DeviceControlActivity extends Activity {
             ArrayList<BluetoothGattCharacteristic> charas =
                     new ArrayList<BluetoothGattCharacteristic>();
 
+            List<BluetoothGattDescriptor> a =
+                    new ArrayList<BluetoothGattDescriptor>();
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
                 charas.add(gattCharacteristic);
