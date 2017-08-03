@@ -127,12 +127,6 @@ private String NAME;
             finish();
             return;
         }
-        else if(requestCode == 303){
-            Intent bb = new Intent();
-            bb.putExtra("serviceName",NAME);
-            setResult(304 ,bb);
-            finish();
-        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
