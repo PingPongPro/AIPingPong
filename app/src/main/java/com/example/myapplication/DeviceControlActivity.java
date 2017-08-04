@@ -141,8 +141,13 @@ public class DeviceControlActivity extends Activity {
                     System.out.println(GRYO_X);
                     System.out.println(GRYO_Y);
                     System.out.println(GRYO_Z);
+                    writeDataToFile.write(ACCL_X + " ");
+                    writeDataToFile.write(ACCL_Y + " ");
+                    writeDataToFile.write(ACCL_Z + " ");
+                    writeDataToFile.write(GRYO_X + " ");
+                    writeDataToFile.write(GRYO_Y + " ");
+                    writeDataToFile.write(GRYO_Z + "\n");
                 }
-                //writeDataToFile.write(fullData);
             }
         }
     };
@@ -160,7 +165,6 @@ public class DeviceControlActivity extends Activity {
                 for(int j = 0; j < 4; j++){
                     tmp += fullData.charAt(i + j);
                 }
-                System.out.println(tmp);
                 try {
                     tmpInt = (short)Integer.parseInt(tmp,16);
                 }catch (Exception e){
@@ -276,7 +280,7 @@ public class DeviceControlActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        //unregisterReceiver(mGattUpdateReceiver);
+        unregisterReceiver(mGattUpdateReceiver);
     }
 
     @Override
@@ -425,7 +429,7 @@ class WriteDataToFile
         try
         {
             FileWriter fileWriter=new FileWriter(this.filePath,true);
-            fileWriter.write(value+" ");
+            fileWriter.write(value);
             fileWriter.close();
         }
         catch(Exception e)
