@@ -74,8 +74,8 @@ public class DeviceControlActivity extends Activity {
     //传入字符串处理
     private int STRING_TIMES = 0;//字符串计数\
 
-    private double ACCELCONSTANT = 1671.84;
-    private double GRYOCONSTANT = 32.8;
+    private double ACCELCONSTANT = 4096;
+    private double GRYOCONSTANT = 16.4;
 
     public double ACCL_X = 0;
     public double ACCL_Y = 0;
@@ -155,18 +155,17 @@ public class DeviceControlActivity extends Activity {
             STRING_TIMES = 0;
             fullData += data;
             for(int i = 2; i < 14; i = i + 4) {
-                String tmp = null;
+                String tmp = "";
                 int tmpInt = 0;
                 for(int j = 0; j < 4; j++){
                     tmp += fullData.charAt(i + j);
                 }
                 System.out.println(tmp);
                 try {
-                    tmpInt = Integer.parseInt(tmp,16);
+                    tmpInt = (short)Integer.parseInt(tmp,16);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-
                 if(i == 2){
                     ACCL_X = tmpInt/ACCELCONSTANT;
                 }
@@ -178,15 +177,13 @@ public class DeviceControlActivity extends Activity {
                 }
             }
             for(int i = 14; i < 26; i = i + 4) {
-                String tmp = null;
-
+                String tmp = "";
                 int tmpInt = 0;
-                for(int j = 0; j < 4; j++){
+                for(int j = 0; j < 4; j++) {
                     tmp += fullData.charAt(i + j);
                 }
-                System.out.println(tmp);
                 try {
-                    tmpInt = Integer.parseInt(tmp,16);
+                    tmpInt = (short)Integer.parseInt(tmp,16);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
