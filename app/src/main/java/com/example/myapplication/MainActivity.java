@@ -305,12 +305,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 try
                 {
                     System.out.println(blueToothItem.getTitle());
-                    final String serviceName=intent.getExtras().getString("serviceName");
-                    //this.blueToothItem.setTitle("已连接蓝牙设备:"+serviceName);
+                    final String serviceName=intent.getExtras().getString("Name");
                     this.textView_blueTooth.setText("已连接蓝牙设备:"+serviceName);
                     invalidateOptionsMenu();
-                    //Message msg=new Message();
-                    //handler.sendMessage(msg);
                 }
                 catch(Exception e)
                 {
