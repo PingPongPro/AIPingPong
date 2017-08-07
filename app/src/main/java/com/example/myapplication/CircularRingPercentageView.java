@@ -42,8 +42,6 @@ public class CircularRingPercentageView extends View {
     private int circleCenter;                                           //圆心
     private SweepGradient sweepGradient;
     private boolean isLine;
-    private int positionX;                                              //X轴偏移量
-    private int positionY;                                              //Y轴偏移量
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private long startTime=0;
     private long saveTime=0;
