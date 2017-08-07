@@ -135,12 +135,16 @@ public class DeviceControlActivity extends Activity {
                 DataManage(data);
                 if(STRING_TIMES == 0)
                 {
-                    System.out.println(ACCL_X);
-                    System.out.println(ACCL_Y);
-                    System.out.println(ACCL_Z);
-                    System.out.println(GRYO_X);
-                    System.out.println(GRYO_Y);
-                    System.out.println(GRYO_Z);
+                    ACCL_X=0.9994*ACCL_X+0.1179;
+                    ACCL_Y=0.9941*ACCL_Y+0.1169;
+                    ACCL_Z=0.9917*ACCL_Z+0.2290;
+                    System.out.println("x: "+ACCL_X);
+                    System.out.println("y: "+ACCL_Y);
+                    System.out.println("z: "+ACCL_Z);
+                    System.out.println("result: "+Math.sqrt(ACCL_X*ACCL_X+ACCL_Y*ACCL_Y+ACCL_Z*ACCL_Z));
+//                    System.out.println(GRYO_X);
+//                    System.out.println(GRYO_Y);
+//                    System.out.println(GRYO_Z);
                     writeDataToFile.write(ACCL_X + " ");
                     writeDataToFile.write(ACCL_Y + " ");
                     writeDataToFile.write(ACCL_Z + " ");

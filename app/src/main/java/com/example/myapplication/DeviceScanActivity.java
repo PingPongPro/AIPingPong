@@ -27,11 +27,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -71,6 +73,13 @@ private String NAME;
             finish();
             return;
         }
+
+        WindowManager DirWin = getWindowManager();
+        Display Dis = DirWin.getDefaultDisplay();
+        WindowManager.LayoutParams Type = getWindow().getAttributes();
+        Type.height = (int) (Dis.getHeight()*0.8);
+        Type.width = (int) (Dis.getWidth());
+        getWindow().setAttributes(Type);
     }
 
     @Override
