@@ -25,6 +25,7 @@ public class SampleGattAttributes {
     private static HashMap<String, String> attributes = new HashMap();
     public static String HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb";
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
+    public static String BlueTooth_ML = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
 
     public static String DATA = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
     public static String DATA_DESCRIPTOR="00002902-0000-1000-8000-00805f9b34fb";
