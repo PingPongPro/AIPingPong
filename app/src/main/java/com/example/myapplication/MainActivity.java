@@ -1,11 +1,21 @@
 package com.example.myapplication;
 
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
@@ -25,6 +35,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.SimpleExpandableListAdapter;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +45,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -103,6 +115,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean ifEverStarted=false;            //是否已经开始
     private boolean shouldPause=false;
     private boolean counterEverRelease=false;       //计数器是否曾被销毁
+    //蓝牙相关
+    private String mDeviceName;
+    private String mDeviceAddress;
+    private BluetoothLeService mBluetoothLeService;
+    private boolean mConnected = false;
+    private BluetoothGattCharacteristic mNotifyCharacteristic;
+    BluetoothGattCharacteristic mGattCharacteristics;
+
     private void myListener() {
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +143,78 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
+    private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                mConnected = true;
+            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+                mConnected = false;
+                textView_blueTooth.setText("未连接蓝牙");
+            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+                // Show all the supported services and characteristics on the user interface.
+                ReadDataFromCharacteristic();
+            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+                //TODO
+                String data=intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+                System.out.println(data);
+            }
+        }
+    };
+
+    public void FindBlueToothList(List<BluetoothGattService> gattServices){
+        if (gattServices == null) return;
+        for (BluetoothGattService gattService : gattServices) {
+            if(gattService.getUuid().toString().equals("6e400001-b5a3-f393-e0a9-e50e24dcca9e")){
+                mGattCharacteristics = gattService.getCharacteristics().get(0);
+                break;
+            }
+        }
+    }
+
+    public void ReadDataFromCharacteristic(){
+        FindBlueToothList(mBluetoothLeService.getSupportedGattServices());
+        if (mGattCharacteristics != null) {
+            final BluetoothGattCharacteristic characteristic = mGattCharacteristics;
+            final int charaProp = characteristic.getProperties();
+            if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+                // If there is an active notification on a characteristic, clear
+                // it first so it doesn't update the data field on the user interface.
+                if (mNotifyCharacteristic != null) {
+                    mBluetoothLeService.setCharacteristicNotification(
+                            mNotifyCharacteristic, false);
+                    mNotifyCharacteristic = null;
+                }
+                mBluetoothLeService.readCharacteristic(characteristic);
+            }
+            if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+                mNotifyCharacteristic = characteristic;
+                mBluetoothLeService.setCharacteristicNotification(
+                        characteristic, true);
+            }
+        }
+    }
+
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+            if (!mBluetoothLeService.initialize()) {
+//                Log.e(TAG, "Unable to initialize Bluetooth");
+            }
+            // Automatically connects to the device upon successful start-up initialization.
+            mBluetoothLeService.connect(mDeviceAddress);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeService = null;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onPause() {
         super.onPause();
         this.pauseController();
+        unregisterReceiver(mGattUpdateReceiver);
         //this.mediaPlayerManager.pauseVideo();
     }
 
@@ -199,7 +292,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             this.restartController();
         else
             shouldPause=false;
+
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        if (mBluetoothLeService != null) {
+            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+            //Log.d(TAG, "Connect request result=" + result);
+        }
         //this.mediaPlayerManager.reStartVideo();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(mConnected == true)
+            unbindService(mServiceConnection);
     }
 
     @Override
@@ -247,15 +353,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         if(id == R.id.nav_bluetooth)
         {
-            try
-            {
+            if(mConnected == false){
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, DeviceScanActivity.class);
                 startActivityForResult(intent, REQUEST_BULETOOTH);
             }
-            catch(Exception e)
-            {
-                e.printStackTrace();
+            else{
+                mConnected = false;
+                unbindService(mServiceConnection);
+                mBluetoothLeService = null;
+                textView_blueTooth.setText("未连接蓝牙");
             }
         }
         else if (id == R.id.nav_file) {
@@ -305,12 +412,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 try
                 {
                     System.out.println(blueToothItem.getTitle());
-                    final String serviceName=intent.getExtras().getString("serviceName");
-                    //this.blueToothItem.setTitle("已连接蓝牙设备:"+serviceName);
-                    this.textView_blueTooth.setText("已连接蓝牙设备:"+serviceName);
+                    mDeviceName = intent.getExtras().getString("Name");
+                    mDeviceAddress = intent.getExtras().getString("Address");
+
+                    Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+                    bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+                    this.textView_blueTooth.setText("已连接蓝牙设备:" + mDeviceName);
                     invalidateOptionsMenu();
-                    //Message msg=new Message();
-                    //handler.sendMessage(msg);
                 }
                 catch(Exception e)
                 {
@@ -653,6 +762,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 timerView.timeOfRank = 0;
             }
         }
+    }
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        return intentFilter;
     }
 
 }
