@@ -304,6 +304,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        if(mConnected == true)
+            unbindService(mServiceConnection);
     }
 
     @Override
@@ -359,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             else{
                 mConnected = false;
                 unbindService(mServiceConnection);
+                mBluetoothLeService = null;
                 textView_blueTooth.setText("未连接蓝牙");
             }
         }
