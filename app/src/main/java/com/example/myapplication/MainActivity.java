@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String mDeviceName;
     private String mDeviceAddress;
     private BluetoothLeService mBluetoothLeService;
-    private boolean CollectionRequest = false;
     private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
     BluetoothGattCharacteristic mGattCharacteristics;
@@ -303,6 +302,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        unbindService(mServiceConnection);
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -347,15 +352,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         if(id == R.id.nav_bluetooth)
         {
-            try
-            {
+            if(mConnected == false){
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, DeviceScanActivity.class);
                 startActivityForResult(intent, REQUEST_BULETOOTH);
             }
-            catch(Exception e)
-            {
-                e.printStackTrace();
+            else{
+                mConnected = false;
+                unbindService(mServiceConnection);
+                textView_blueTooth.setText("未连接蓝牙");
             }
         }
         else if (id == R.id.nav_file) {
@@ -407,7 +412,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     System.out.println(blueToothItem.getTitle());
                     mDeviceName = intent.getExtras().getString("Name");
                     mDeviceAddress = intent.getExtras().getString("Address");
-                    CollectionRequest = true;
 
                     Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
                     bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);

@@ -5,7 +5,7 @@
         <item
             android:id="@+id/nav_bluetooth"
             android:icon="@drawable/bluetooth"
-            android:title="连接蓝牙" />
+            android:title="连接/断开蓝牙" />
         <item
             android:id="@+id/nav_file"
             android:icon="@drawable/file"
