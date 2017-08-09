@@ -4,60 +4,100 @@ package com.example.myapplication;
  * Created by 叶明林 on 2017/7/28.
  */
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.SweepGradient;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class CircularRingPercentageView extends View {
+    //总体变量
+    private float viewCenterX;
+    private float viewCenterY;
     private Paint paint;
-    private int circleWidth;                                             //圆直径
-    private int roundBackgroundColor;                                   //背景颜色
-    private int textColor;                                               //字体颜色
-    private float textSize;                                              //字体大小
-    private float roundWidth;                                           //环宽度
-    private float progress = 0;                                         //当前着色数
+    private Paint textPaint;
+    private int circleWidth=getDpValue(220);                                         //圆直径
+    private int roundBackgroundColor= Color.parseColor("#FFB90F");                 //背景颜色
+    private int barColor=Color.WHITE;
+    private int textColor=0xff999999;                                               //字体颜色
+    private float textSize= getDpValue(8);                                          //字体大小
+    private float roundWidth=getDpValue(5);                                         //环宽度
+    private float backGroundWith=circleWidth+getDpValue(7);                       //背景圆直径
+    private float progress = 0;                                                     //当前着色数
+    private float newProgress =0;
+    private float holeRadius=getDpValue(6);
+    private int holeColor=Color.WHITE;
     private int[] colors = {0xffff4639, 0xffCDD513, 0xff3CDF5F};
-    private int radius;                                                 //圆环半径
+    private int radius;                                                             //圆环半径
     private RectF oval;
     private Paint mPaintText;
-    private int maxColorNumber;                                         //圆等分数
-    private float singlPoint = 6;
-    private float lineWidth = 0f;                                       //等分线宽
-    private int circleCenter;                                           //圆心
+    private int maxColorNumber=600;                                                //圆等分数
+    private float singlPoint = 6;                                                  //最小角，数值上等于360/maxColorNumber
+    private int circleCenter;                                                      //圆心
+    private LinearGradient linearGradient;
     private SweepGradient sweepGradient;
-    private boolean isLine;
     private CollapsingToolbarLayout collapsingToolbarLayout;
+    //文字绘制
+    private Rect targetRect_Top = null;
+    private Rect targetRect_Middle = null;
+    private Rect targetRect_Bottom = null;
+    private String textTop="0";
+    private String textMiddle="0";
+    private String textBottom="0";
+    //计时变量
     private long startTime=0;
     private long saveTime=0;
     private boolean isRunning=false;
-    private boolean clearState=false;
-
     private int minite=0;
     private int second=0;
     private boolean isChanged=true;
     public int timeOfRank = 0;
-    public void setCollapsingToolbarLayout(CollapsingToolbarLayout c)
+    //今日击球变量
+    private int nowCount=0;
+    private int totalCount=1;
+    //更新模式选择
+    private int currentMode=-1;
+    public final static int TIMER=0;               //计时界面
+    public final static int BALLGAME=1;            //颠球界面
+    public final static int DAILYTASK=2;           //今日击球界面
+    //进度条选择
+    private int currentBarMode=0;
+    public final static int GRADUAL=0;
+    public final static int REAL=1;
+    public void updateTextMiddle(int value)
     {
-        this.collapsingToolbarLayout=c;
-        this.collapsingToolbarLayout.setExpandedTitleGravity(Gravity.CENTER);
-        this.collapsingToolbarLayout.setExpandedTitleMarginStart(Gravity.CENTER);
-        this.collapsingToolbarLayout.setTitle(getTime());
+        switch (currentMode)
+        {
+            case BALLGAME:
+                this.textMiddle=value+"";
+                break;
+            case DAILYTASK:
+                this.nowCount=value;
+                this.textMiddle=value+"";
+                updateProgress();
+                break;
+        }
+    }
+    public void updateTextBottom(int value)
+    {
+        switch (currentMode)
+        {
+            case DAILYTASK:
+                this.totalCount=value;
+                this.textBottom=value+"次";
+                updateProgress();
+                invalidate();
+                break;
+        }
     }
     private void updateTime(long currentTime)
     {
@@ -67,6 +107,36 @@ public class CircularRingPercentageView extends View {
             this.second=(int)(this.saveTime+currentTime-this.startTime)/1000%60;
             this.isChanged=true;
         }
+        switch (currentMode)
+        {
+            case BALLGAME:
+                this.textBottom=this.getTime()+"/点击"+(isRunning?"暂停":"开始");
+                break;
+            case TIMER:
+                this.textMiddle=this.getTime();
+                this.textBottom="点击"+(isRunning?"暂停":"开始");
+                break;
+        }
+    }
+    public String getTime()
+    {
+        String time="";
+        if(minite>=10)
+            time+=minite+":";
+        else
+            time+="0"+minite+":";
+        if(second>=10)
+            time+=""+second;
+        else
+            time+="0"+second;
+        return time;
+    }
+    /*public void setCollapsingToolbarLayout(CollapsingToolbarLayout c)
+    {
+        this.collapsingToolbarLayout=c;
+        this.collapsingToolbarLayout.setExpandedTitleGravity(Gravity.CENTER);
+        this.collapsingToolbarLayout.setExpandedTitleMarginStart(Gravity.CENTER);
+        //this.collapsingToolbarLayout.setTitle(getTime());
     }
 
     public int getTimeByInt(){
@@ -80,46 +150,55 @@ public class CircularRingPercentageView extends View {
                 return 3;
         }
         return 0;
-    }
+    }*/
 
-    public String getTime()
-    {
-        String time="  ";
-        if(minite>=10)
-            time+=minite+":";
-        else
-            time+="0"+minite+":";
-        if(second>=10)
-            time+=""+second;
-        else
-            time+="0"+second;
-        return time;
-    }
-    /**
-     * 分割的数量
-     *
-     * @param maxColorNumber 数量
-     */
-    public void setMaxColorNumber(int maxColorNumber) {
+    /*public void setMaxColorNumber(int maxColorNumber) {
         this.maxColorNumber = maxColorNumber;
         singlPoint = (float) 360 / (float) maxColorNumber;
         invalidate();
-    }
+    }*/
 
-    /**
-     * 是否是线条
-     *
-     * @param line true 是 false否
-     */
-    public void setLine(boolean line) {
-        isLine = line;
+    public void setMode(int mode)
+    {
+        if(currentMode != -1)
+            return ;
+        currentMode = mode;
+        switch (currentMode)
+        {
+            case TIMER:
+                this.textTop="当前时间";
+                this.textMiddle="00:00";
+                this.textBottom="点击"+(isRunning?"暂停":"开始");
+                this.currentBarMode= CircularRingPercentageView.GRADUAL;
+                break;
+            case BALLGAME:
+                this.textTop="当前颠球";
+                this.textBottom="00:00/点击开始";
+                this.currentBarMode= CircularRingPercentageView.GRADUAL;
+                break;
+            case DAILYTASK:
+                this.textTop="今日击球";
+                this.textBottom=this.totalCount+"次";
+                this.currentBarMode= CircularRingPercentageView.REAL;
+                break;
+        }
         invalidate();
     }
-
-    public int getCircleWidth() {
-        return circleWidth;
+    public void sweepGradientInit()
+    {
+        //渐变颜色
+        sweepGradient = new SweepGradient(this.circleWidth / 2, this.circleWidth / 2, colors, null);
+        //旋转 不然是从0度开始渐变
+        Matrix matrix = new Matrix();
+        matrix.setRotate(-90, this.circleWidth / 2, this.circleWidth / 2);
+        sweepGradient.setLocalMatrix(matrix);
     }
-
+    private void initLinearGradient()
+    {
+        this.linearGradient=new LinearGradient
+                (this.circleCenter,0,this.circleCenter,
+                        this.circleCenter+radius,Color.parseColor("#FF7F00"),Color.parseColor("#FF4500"), Shader.TileMode.MIRROR);
+    }
     public CircularRingPercentageView(Context context) {
         this(context, null);
     }
@@ -129,20 +208,10 @@ public class CircularRingPercentageView extends View {
     }
 
 
-    public CircularRingPercentageView(Context context, AttributeSet attrs, int defStyle) {
+    public CircularRingPercentageView(Context context, AttributeSet attrs, int defStyle)
+    {
         super(context, attrs, defStyle);
-        TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.CircularRing);
-        maxColorNumber = mTypedArray.getInt(R.styleable.CircularRing_circleNumber, 600);
-        circleWidth = mTypedArray.getDimensionPixelOffset(R.styleable.CircularRing_circleWidth, getDpValue(180));
-        roundBackgroundColor = mTypedArray.getColor(R.styleable.CircularRing_roundColor, 0xffdddddd);
-        textColor = mTypedArray.getColor(R.styleable.CircularRing_circleTextColor, 0xff999999);
-        roundWidth = mTypedArray.getDimension(R.styleable.CircularRing_circleRoundWidth, 40);
-        textSize = mTypedArray.getDimension(R.styleable.CircularRing_circleTextSize, getDpValue(8));
-        colors[0] = mTypedArray.getColor(R.styleable.CircularRing_circleColor1, 0xffff4639);
-        colors[1] = mTypedArray.getColor(R.styleable.CircularRing_circleColor2, 0xffcdd513);
-        colors[2] = mTypedArray.getColor(R.styleable.CircularRing_circleColor3, 0xff3cdf5f);
         initView();
-        mTypedArray.recycle();
     }
     /**
      * 空白出颜色背景
@@ -165,43 +234,6 @@ public class CircularRingPercentageView extends View {
         mPaintText.setColor(textColor);
         invalidate();
     }
-
-    /**
-     * 刻度字体大小
-     *
-     * @param textSize
-     */
-    public void setTextSize(float textSize) {
-        this.textSize = textSize;
-        mPaintText.setTextSize(textSize);
-        invalidate();
-    }
-
-    /**
-     * 渐变颜色
-     *
-     * @param colors
-     */
-    public void setColors(int[] colors) {
-        if (colors.length < 2) {
-            throw new IllegalArgumentException("colors length < 2");
-        }
-        this.colors = colors;
-        sweepGradientInit();
-        invalidate();
-    }
-
-
-    /**
-     * 间隔角度大小
-     *
-     * @param lineWidth
-     */
-    public void setLineWidth(float lineWidth) {
-        this.lineWidth = lineWidth;
-        invalidate();
-    }
-
 
     private int getDpValue(int w) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, w, getContext().getResources().getDisplayMetrics());
@@ -239,128 +271,150 @@ public class CircularRingPercentageView extends View {
             roundWidth = circleCenter;
         }
         setRoundWidth(roundWidth);
-        sweepGradient = new SweepGradient(this.circleWidth / 2, this.circleWidth / 2, colors, null);
-        //旋转 不然是从0度开始渐变
-        Matrix matrix = new Matrix();
-        matrix.setRotate(-90, this.circleWidth / 2, this.circleWidth / 2);
-        sweepGradient.setLocalMatrix(matrix);
     }
 
-    /**
-     * 渐变初始化
-     */
-    public void sweepGradientInit()
+
+    public void initView()
     {
-        //渐变颜色
-        sweepGradient = new SweepGradient(this.circleWidth / 2, this.circleWidth / 2, colors, null);
-        //旋转 不然是从0度开始渐变
-        Matrix matrix = new Matrix();
-        matrix.setRotate(-90, this.circleWidth / 2, this.circleWidth / 2);
-        sweepGradient.setLocalMatrix(matrix);
-    }
-
-    public void initView() {
-
         circleCenter = circleWidth / 2;//半径
         singlPoint = (float) 360 / (float) maxColorNumber;
         radius = (int) (circleCenter - roundWidth / 2); // 圆环的半径
-        sweepGradientInit();
-        mPaintText = new Paint();
+        /*mPaintText = new Paint();
         mPaintText.setColor(textColor);
         mPaintText.setTextAlign(Paint.Align.CENTER);
         mPaintText.setTextSize(textSize);
-        mPaintText.setAntiAlias(true);
+        mPaintText.setAntiAlias(true);*/
 
-        paint = new Paint();
-        paint.setColor(roundBackgroundColor);
+        paint = new Paint(this.barColor);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(roundWidth);
         paint.setAntiAlias(true);
-
-        // 用于定义的圆弧的形状和大小的界限
-        oval = new RectF(circleCenter - radius, circleCenter - radius, circleCenter + radius, circleCenter + radius);
-
+        initLinearGradient();
+        textPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextAlign(Paint.Align.CENTER);
     }
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //背景渐变颜色
-        paint.setShader(sweepGradient);
-        if(!clearState)
-            canvas.drawArc(oval, -90, (float) (progress * singlPoint), false, paint);
-        else
-            canvas.drawArc(oval, -90, 0f, false, paint);
-        paint.setShader(null);
-
-        //是否是线条模式
-        if (!isLine) {
-            float start = -90f;
-            float p = ((float) maxColorNumber / (float) 100);
-            p = (int) (progress * p);
-            for (int i = 0; i < p; i++) {
-                paint.setColor(roundBackgroundColor);
-                canvas.drawArc(oval, start + singlPoint - lineWidth, lineWidth, false, paint); // 绘制间隔快
-                start = (start + singlPoint);
-            }
+        //View中心坐标
+        if(this.viewCenterX==0||viewCenterY==0)
+        {
+            viewCenterX=(float)getWidth()/2;
+            viewCenterY=(float)getHeight()/2;
+            targetRect_Top = new Rect((int)(viewCenterX-getDpValue(30)), (int)(viewCenterY-radius/2-getDpValue(10)), (int)(viewCenterX+getDpValue(30)), (int)(viewCenterY-radius/2+getDpValue(10)));
+            targetRect_Middle = new Rect((int)(viewCenterX-radius), (int)(viewCenterY-getDpValue(30)), (int)(viewCenterX+radius), (int)(viewCenterY+getDpValue(40)));
+            targetRect_Bottom = new Rect((int)(viewCenterX-getDpValue(30)), (int)(viewCenterY+getDpValue(60)), (int)(viewCenterX+getDpValue(30)), (int)(viewCenterY+getDpValue(70)));
         }
-        //绘制剩下的空白区域
+        //画背景圆
+        Paint myPaint=new Paint();
+        myPaint.setShader(this.linearGradient);
+        canvas.drawCircle(viewCenterX,viewCenterY,this.backGroundWith/2,myPaint);
+        if(oval==null)
+            oval = new RectF(viewCenterX - radius, viewCenterY - radius,
+                    viewCenterX + radius, viewCenterY + radius);
         paint.setColor(roundBackgroundColor);
-        if(!clearState)
-            canvas.drawArc(oval, -90, (float) (-(maxColorNumber - progress) * singlPoint), false, paint);
-        else
+        switch (this.currentBarMode)
         {
-            canvas.drawArc(oval, -90, (float) (-maxColorNumber  * singlPoint), false, paint);
-            this.collapsingToolbarLayout.setTitle("00:00");
+            case GRADUAL:
+                //进度条背景
+                canvas.drawArc(oval, -90, 360, false, paint);
+                //画进度条
+                paint.setColor(Color.WHITE);
+                for(int i=(int)(progress-255*2)>=0?(int)(progress-255*2):0;i<=(int)progress;i++)
+                {
+                    paint.setAlpha((int)((2*255-progress+i)/2));//(int)progress-i>255?0:255-(int)progress+i
+                    canvas.drawArc(oval, -90+(i*singlPoint),singlPoint, false, paint);
+                }
+                break;
+            case REAL:
+                //进度条背景
+                canvas.drawArc(oval, -90, (float) (-(maxColorNumber - progress%maxColorNumber) * singlPoint), false, paint);
+                //画进度条
+                paint.setColor(Color.WHITE);
+                canvas.drawArc(oval, -90, (float) (progress%maxColorNumber * singlPoint), false, paint);
+                break;
         }
-        if(isRunning&&!clearState)
-        {
-            long currenTime=System.currentTimeMillis();
-            if(startTime==0)
-                startTime=currenTime;
-            this.progress=(float)((this.saveTime+currenTime-this.startTime)/100%maxColorNumber);
-            this.updateTime(currenTime);
-            if(isChanged)
-            {
-                timeOfRank = getTimeByInt();
-                this.collapsingToolbarLayout.setTitle(getTime());
-                isChanged=false;
-            }
-            invalidate();
-        }
-        if(clearState)
-            clearState=false;
+        //更新progress
+        updateProgress();
+        //画圆点
+        Paint paint1=new Paint();
+        paint1.setColor(this.holeColor);
+        float holeCenterX=(float)(viewCenterX+radius*Math.sin(progress*singlPoint*Math.PI/180));
+        float holeCenterY=(float)(viewCenterY-radius*Math.cos(progress*singlPoint*Math.PI/180));
+        canvas.drawCircle(holeCenterX,holeCenterY,this.holeRadius,paint1);
+        //中间信息显示部分
         //绘制文字刻度
-        /*for (int i = 1; i <= 10; i++) {
-            canvas.save();// 保存当前画布
-            canvas.rotate(360 / 10 * i, circleCenter, circleCenter);
-            canvas.drawText(i * 10 + "", circleCenter, circleCenter - radius + roundWidth / 2 + getDpValue(4) + textSize, mPaintText);
-            canvas.restore();//
-        }*/
+        textPaint.setStrokeWidth(3);
+        textPaint.setTextSize(radius/6);
+        //paint.setColor(Color.CYAN);
+        //canvas.drawRect(targetRect, paint);
+        Paint.FontMetricsInt fontMetrics = textPaint.getFontMetricsInt();
+        int baseline = (targetRect_Top.bottom + targetRect_Top.top - fontMetrics.bottom - fontMetrics.top) / 2;
+        canvas.drawText(textTop, targetRect_Top.centerX(), baseline, textPaint);
+
+//        Paint paint2=new Paint();
+//        paint.setColor(Color.CYAN);
+//        canvas.drawRect(targetRect_Middle, paint2);
+        textPaint.setStrokeWidth(3);
+        textPaint.setTextSize(2*radius/3);
+        fontMetrics = textPaint.getFontMetricsInt();
+        baseline = (targetRect_Middle.bottom + targetRect_Middle.top - fontMetrics.bottom - fontMetrics.top) / 2;
+        canvas.drawText(textMiddle, targetRect_Middle.centerX(), baseline, textPaint);
+
+        if(currentMode==TIMER)
+            textBottom="点击"+(isRunning?"暂停":"开始");
+        else if(currentMode == BALLGAME)
+            textBottom=getTime()+"/点击"+(isRunning?"暂停":"开始");
+
+        textPaint.setStrokeWidth(3);
+        textPaint.setTextSize(radius/6);
+        fontMetrics = textPaint.getFontMetricsInt();
+        baseline = (targetRect_Bottom.bottom + targetRect_Bottom.top - fontMetrics.bottom - fontMetrics.top) / 2;
+        canvas.drawText(textBottom, targetRect_Bottom.centerX(), baseline, textPaint);
+
+        textPaint.setStrokeWidth(1);
+        canvas.drawLine(viewCenterX-radius/2, viewCenterY+getDpValue(55),viewCenterX+radius/2,viewCenterY+getDpValue(55),textPaint);
     }
-
-
-    OnProgressScore onProgressScore;
-
-    public interface OnProgressScore {
-        void setProgressScore(float score);
-
-    }
-
-    public synchronized void setProgress(final float p) {
-        progress = p;
-        postInvalidate();
-    }
-
-    /**
-     * @param p
-     */
-    public synchronized void setProgress(final float p, OnProgressScore onProgressScore) {
-        this.onProgressScore = onProgressScore;
-        progress = p;
-        postInvalidate();
-    }
-    public void setZero(){
-        
+    private void updateProgress()
+    {
+        switch (this.currentMode)
+        {
+            case TIMER:
+            case BALLGAME:
+                if(isRunning)
+                {
+                    long currenTime=System.currentTimeMillis();
+                    if(startTime==0)
+                        startTime=currenTime;
+                    this.progress=(float)((this.saveTime+currenTime-this.startTime)/100);
+                    this.updateTime(currenTime);
+                    if(isChanged)
+                    {
+                        //timeOfRank = getTimeByInt();
+                        //this.collapsingToolbarLayout.setTitle(getTime());
+                        isChanged=false;
+                    }
+                    invalidate();
+                }
+                break;
+            case DAILYTASK:
+                System.out.println(progress+" "+(maxColorNumber*this.nowCount/this.totalCount));
+                if(progress<maxColorNumber*this.nowCount/this.totalCount)
+                {
+                    long currenTime=System.currentTimeMillis();
+                    if(startTime==0)
+                        startTime=currenTime;
+                    this.progress+=(float)((this.saveTime+currenTime-this.startTime)/100);
+                    invalidate();
+                }
+                else
+                {
+                    this.startTime=0;
+                    this.saveTime=0;
+                }
+                break;
+        }
     }
     public void start()
     {
@@ -381,6 +435,7 @@ public class CircularRingPercentageView extends View {
             this.isRunning=false;
             this.saveTime+=System.currentTimeMillis()-this.startTime;
             this.startTime=0;
+            invalidate();
         }
     }
     public void reset()
@@ -388,7 +443,7 @@ public class CircularRingPercentageView extends View {
         this.pause();
         this.startTime=0;
         this.saveTime=0;
-        clearState=true;
+        this.progress=0;
         invalidate();
     }
     //TODO test
