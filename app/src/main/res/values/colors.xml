@@ -19,6 +19,9 @@
     <color name="light_orange">#FF7F00</color>
 
     <color name="orange">#EE4000</color>
+    <color name="color_eeeeee">#EEEEEE</color>
+    <color name="color_f1a75a">#f1a75a</color>
+    <color name="color_D9D9D9">#D9D9D9</color>
     <declare-styleable name="SeekCircle">
 
         <attr name="max" format="integer" value="100" />

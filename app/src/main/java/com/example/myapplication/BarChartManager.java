@@ -25,12 +25,12 @@ public class BarChartManager {
     {
         this.barChart=chart;
         barChart.getDescription().setEnabled(false);
-        barChart.setBackgroundColor(Color.parseColor("#D9D9D9"));           //背景颜色
         barChart.getXAxis().setDrawAxisLine(true);                          //显示x轴
         barChart.getXAxis().setAxisLineColor(Color.parseColor("#FF8C00")); //设置x轴颜色
         barChart.getXAxis().setAxisLineWidth(2f);                           //设置x轴宽度
         barChart.getXAxis().setLabelCount(21);
         barChart.getXAxis().setTextColor(Color.parseColor("#FF8C00"));
+        barChart.getXAxis().setTextSize(12);
         barChart.getXAxis().setDrawGridLines(false);
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         barChart.getAxisLeft().setEnabled(false);

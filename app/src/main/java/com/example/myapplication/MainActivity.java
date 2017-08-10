@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnStart=(Button)findViewById(R.id.btnStart);
         this.timerView=(CircularRingPercentageView)findViewById(R.id.timer);
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);;
-        this.timerView.setCollapsingToolbarLayout(collapsingToolbar);
+        //this.timerView.setCollapsingToolbarLayout(collapsingToolbar);
 
         TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
         tabHost.setup();
