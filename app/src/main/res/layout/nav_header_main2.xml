@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:background="@drawable/side_nav_bar"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/textView_blueTooth"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="21dp"
+        android:layout_weight="0.61"
+        android:gravity="bottom"
+        android:text="未连接蓝牙" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView_blueTooth">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:srcCompat="@drawable/main_icon"
+            android:layout_marginStart="20dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView"
+            android:layout_below="@+id/textView"
+            android:text="xxxxxx"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="150dp"
+            android:layout_height="23dp"
+            android:text="用户123456"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="18dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/imageView"
+            android:layout_marginStart="19dp" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

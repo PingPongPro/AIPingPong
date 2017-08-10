@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.myapplication.Main2Activity"
+    tools:showIn="@layout/app_bar_main2">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout"
+        android:weightSum="1">
+
+        <Button
+            android:id="@+id/btnData"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_weight="0.5"
+            android:background="#EEEEEE"
+            android:text="数据统计"
+            android:textColor="#F06A4A" />
+
+        <Button
+            android:id="@+id/btnTendency"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_weight="0.5"
+            android:background="#EEEEEE"
+            android:text="训练走势"
+            android:textColor="#F06A4A" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:background="@drawable/main_backcolor">
+
+        <com.example.myapplication.CircularRingPercentageView
+            android:id="@+id/timer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        style="@style/layout_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#f06b4a"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            style="@style/layout_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_xunlianshijian"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="训练时间"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/textView_TrainingTime"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:paddingTop="5dp"
+                android:text="0s"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/layout_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_pingjunjiqiu"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="14dp"
+                android:text="平均击球" />
+
+            <TextView
+                android:id="@+id/textView_AvgBallNum"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="14dp"
+                android:text="0个/min" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/layout_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_zuidasudu"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="14dp"
+                android:text="最大速度" />
+
+            <TextView
+                android:id="@+id/textView_MaxSpeed"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="14dp"
+                android:text="0个/min" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnChooseMode"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="288.5dp"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_selector_deep"
+        android:text="选择模式/开始"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

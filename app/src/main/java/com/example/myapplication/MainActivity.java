@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.drm.DrmStore;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int REQUEST = 1;
     private static final int REQUEST1 = 2;
     private static final int REQUEST_BULETOOTH=3;
+    private static final int REQUEST_PLAYBACK = 4;
     private Button btnStart;
     private Button btnPause;
     //正反计数
@@ -378,7 +380,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }  else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, PlayBack.class);
+            startActivityForResult(intent, REQUEST_PLAYBACK);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.main_layout);
