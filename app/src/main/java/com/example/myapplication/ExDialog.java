@@ -48,8 +48,6 @@ public class ExDialog extends ListActivity {
 
 		}
 
-
-
 		WindowManager DirWin = getWindowManager();
 		Display Dis = DirWin.getDefaultDisplay();
 		LayoutParams Type = getWindow().getAttributes();

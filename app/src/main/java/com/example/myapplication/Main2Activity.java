@@ -193,7 +193,18 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
-
+    private void myListener() {
+        btnData.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.setClass(Main2Activity.this, DataStatisticsActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        );
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -216,7 +227,6 @@ public class Main2Activity extends AppCompatActivity
             btnChooseMode.setCompoundDrawables(START,null,null,null);
         }
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -225,6 +235,8 @@ public class Main2Activity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        myListener();
     }
 
     @Override

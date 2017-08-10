@@ -197,7 +197,7 @@ public class CircularRingPercentageView extends View {
     {
         this.linearGradient=new LinearGradient
                 (this.circleCenter,0,this.circleCenter,
-                        this.circleCenter+radius,Color.parseColor("#FF7F00"),Color.parseColor("#FF4500"), Shader.TileMode.MIRROR);
+                        this.circleCenter+radius,Color.parseColor("#D2691E"),Color.parseColor("#CD3700"), Shader.TileMode.MIRROR);
     }
     public CircularRingPercentageView(Context context) {
         this(context, null);
@@ -291,7 +291,7 @@ public class CircularRingPercentageView extends View {
         paint.setAntiAlias(true);
         initLinearGradient();
         textPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.WHITE);
+        textPaint.setColor(Color.parseColor("#EEEEEE"));
         textPaint.setTextAlign(Paint.Align.CENTER);
     }
     @Override
