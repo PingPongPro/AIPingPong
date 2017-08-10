@@ -19,22 +19,22 @@
         android:weightSum="1">
 
         <Button
-            android:id="@+id/btnStatistic"
+            android:id="@+id/btnData"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_weight="0.5"
             android:background="#EEEEEE"
             android:text="数据统计"
-            android:textColor="#F06A4A"/>
+            android:textColor="#F06A4A" />
 
         <Button
-            android:id="@+id/btnTraining"
+            android:id="@+id/btnTendency"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_weight="0.5"
             android:background="#EEEEEE"
-            android:textColor="#F06A4A"
-            android:text="训练走势" />
+            android:text="训练走势"
+            android:textColor="#F06A4A" />
 
     </LinearLayout>
 

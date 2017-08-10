@@ -7,7 +7,7 @@
             android:icon="@drawable/bluetooth"
             android:title="连接/断开蓝牙" />
         <item
-            android:id="@+id/nav_training"
+            android:id="@+id/nav_data"
             android:icon="@drawable/training"
             android:title="导出数据" />
         <item
@@ -15,7 +15,7 @@
             android:icon="@drawable/file"
             android:title="文件管理" />
         <item
-            android:id="@+id/nav_statistic"
+            android:id="@+id/nav_settings"
             android:icon="@drawable/graphic"
             android:title="设置" />
     </group>
