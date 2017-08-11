@@ -44,6 +44,7 @@ public class CircularRingPercentageView extends View {
     private float singlPoint = 6;                                                  //最小角，数值上等于360/maxColorNumber
     private int circleCenter;                                                      //圆心
     private LinearGradient linearGradient;
+    private LinearGradient BackgroundLinerGradient;
     private SweepGradient sweepGradient;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     //文字绘制
@@ -193,12 +194,6 @@ public class CircularRingPercentageView extends View {
         matrix.setRotate(-90, this.circleWidth / 2, this.circleWidth / 2);
         sweepGradient.setLocalMatrix(matrix);
     }
-    private void initLinearGradient()
-    {
-        this.linearGradient=new LinearGradient
-                (this.circleCenter,0,this.circleCenter,
-                        this.circleCenter+radius,Color.parseColor("#D2691E"),Color.parseColor("#CD3700"), Shader.TileMode.MIRROR);
-    }
     public CircularRingPercentageView(Context context) {
         this(context, null);
     }
@@ -289,7 +284,10 @@ public class CircularRingPercentageView extends View {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(roundWidth);
         paint.setAntiAlias(true);
-        initLinearGradient();
+        this.linearGradient=new LinearGradient
+                (this.circleCenter,0,this.circleCenter,
+                        this.circleCenter+radius,Color.parseColor("#DC8D2A"),
+                        Color.parseColor("#D54C2A"), Shader.TileMode.MIRROR);
         textPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.parseColor("#EEEEEE"));
         textPaint.setTextAlign(Paint.Align.CENTER);
@@ -313,12 +311,17 @@ public class CircularRingPercentageView extends View {
         if(oval==null)
             oval = new RectF(viewCenterX - radius, viewCenterY - radius,
                     viewCenterX + radius, viewCenterY + radius);
-        paint.setColor(roundBackgroundColor);
+        //进度条背景
+        this.BackgroundLinerGradient=new LinearGradient
+                (this.viewCenterX,this.viewCenterY-radius,this.viewCenterX,
+                        this.viewCenterY+radius,Color.parseColor("#f19956"),
+                        Color.parseColor("#f06b4a"), Shader.TileMode.MIRROR);
+        paint.setShader(this.BackgroundLinerGradient);
+        canvas.drawArc(oval, -90, 360, false, paint);
+        paint.setShader(null);
         switch (this.currentBarMode)
         {
             case GRADUAL:
-                //进度条背景
-                canvas.drawArc(oval, -90, 360, false, paint);
                 //画进度条
                 paint.setColor(Color.WHITE);
                 for(int i=(int)(progress-255*2)>=0?(int)(progress-255*2):0;i<=(int)progress;i++)
@@ -329,7 +332,7 @@ public class CircularRingPercentageView extends View {
                 break;
             case REAL:
                 //进度条背景
-                canvas.drawArc(oval, -90, (float) (-(maxColorNumber - progress%maxColorNumber) * singlPoint), false, paint);
+                //canvas.drawArc(oval, -90, (float) (-(maxColorNumber - progress%maxColorNumber) * singlPoint), false, paint);
                 //画进度条
                 paint.setColor(Color.WHITE);
                 canvas.drawArc(oval, -90, (float) (progress%maxColorNumber * singlPoint), false, paint);

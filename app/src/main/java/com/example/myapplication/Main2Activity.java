@@ -225,6 +225,22 @@ public class Main2Activity extends AppCompatActivity
             btnData.setCompoundDrawables(null,DATA,null,null);
             btnTendency.setCompoundDrawables(null,TENDENCY,null,null);
             btnChooseMode.setCompoundDrawables(START,null,null,null);
+
+            timerView=(CircularRingPercentageView)findViewById(R.id.timer);
+            timerView.setMode(CircularRingPercentageView.DAILYTASK);
+            timerView.updateTextBottom(150);
+            timerView.updateTextMiddle(100);
+            timerView.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(timerView.getState())
+                                timerView.pause();
+                            else
+                                timerView.start();
+                        }
+                    }
+            );
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
