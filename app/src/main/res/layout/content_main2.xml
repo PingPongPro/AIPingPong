@@ -171,7 +171,7 @@
         android:layout_width="288.5dp"
         android:layout_height="50dp"
         android:background="@drawable/btn_selector_deep"
-        android:text="选择模式/开始"
+        android:text="选择模式/开始           "
         android:layout_below="@+id/linearLayout2"
         android:layout_centerHorizontal="true" />
 
