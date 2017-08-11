@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80000000"
+    tools:context="com.example.myapplication.ModeChoose">
+
+    <Button
+        android:id="@+id/btnBallGame"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="288.5dp"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_selector_light"
+        android:text="颠球"
+        android:textColor="#EEEEEE"
+        android:layout_marginBottom="38dp"
+        android:layout_above="@+id/btnFight"
+        android:layout_alignStart="@+id/btnFight" />
+    <Button
+        android:id="@+id/btnFight"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="288.5dp"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_selector_mid"
+        android:text="实战"
+        android:textColor="#EEEEEE"
+        android:layout_marginBottom="41dp"
+        android:layout_above="@+id/btnPlayBack"
+        android:layout_centerHorizontal="true" />
+    <Button
+        android:id="@+id/btnPlayBack"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="288.5dp"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_selector_deep"
+        android:text="回放模式"
+        android:textColor="#EEEEEE"
+        tools:layout_editor_absoluteY="324dp"
+        tools:layout_editor_absoluteX="48dp"
+        android:layout_marginBottom="194dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
