@@ -98,6 +98,7 @@ public class Main2Activity extends AppCompatActivity
         } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
             mConnected = false;
             textView_blueTooth.setText("未连接蓝牙");
+
         } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
             // Show all the supported services and characteristics on the user interface.
             ReadDataFromCharacteristic();

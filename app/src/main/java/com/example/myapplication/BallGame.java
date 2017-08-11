@@ -8,13 +8,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.widget.Button;
 
 import java.util.List;
 
 public class BallGame extends AppCompatActivity {
+
+    private Button btnClearBack;
+
 
     private String mDeviceName;
     private String mDeviceAddress;
@@ -93,6 +99,19 @@ public class BallGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ball_game);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_BallGame);
+        setSupportActionBar(toolbar);
+
+        Intent intent = getIntent();
+        mDeviceName = intent.getStringExtra("DeviceName");
+        mDeviceAddress = intent.getStringExtra("DeviceAddress");
+
+        btnClearBack = (Button)findViewById(R.id.btnClearBack);
+        Drawable STOP = getResources().getDrawable(R.drawable.stop);
+        STOP.setBounds(60, 0, 160, 100);
+        btnClearBack.setCompoundDrawables(STOP,null,null,null);
+
     }
     @Override
     protected void onPause() {
