@@ -11,7 +11,7 @@
 
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/linearLayoutMain2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -172,7 +172,7 @@
         android:layout_height="50dp"
         android:background="@drawable/btn_selector_deep"
         android:text="选择模式/开始           "
-        android:layout_below="@+id/linearLayout2"
+        android:layout_below="@+id/linearLayoutMain2"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
