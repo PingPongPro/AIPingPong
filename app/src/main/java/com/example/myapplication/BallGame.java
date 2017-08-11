@@ -27,9 +27,9 @@ public class BallGame extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-//                mConnected = true;
+                mConnected = true;
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-//                mConnected = false;
+                mConnected = false;
 //                textView_blueTooth.setText("未连接蓝牙");
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
@@ -116,9 +116,8 @@ public class BallGame extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        if(mConnected == true)
-            unbindService(mServiceConnection);
     }
+
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);

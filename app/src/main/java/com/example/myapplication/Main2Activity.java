@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuInflater;
 import android.view.SurfaceView;
 import android.view.View;
@@ -203,9 +204,17 @@ public class Main2Activity extends AppCompatActivity
         btnChooseMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(Main2Activity.this, ModeChoose.class);
-                startActivity(intent);
+                if(mConnected == false){
+                    new AlertDialog.Builder(Main2Activity.this).setMessage("未检测到蓝牙，请连接蓝牙").show();
+                }
+                else
+                {
+                    Intent intent = new Intent();
+                    intent.setClass(Main2Activity.this, ModeChoose.class);
+                    intent.putExtra("DeviceName", mDeviceName);
+                    intent.putExtra("DeviceAddress", mDeviceAddress);
+                    startActivity(intent);
+                }
             }
         });
     }
