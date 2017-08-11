@@ -6,7 +6,7 @@
     <!-- 矩形的圆角弧度 -->
     <corners android:radius="16dp" />
     <!-- 矩形的填充色 -->
-    <solid android:color="#F06A4A" />
+    <solid android:color="#F19956" />
     <stroke
         android:width="8dp"
         android:color="#33DDDDDD"/>

@@ -12,8 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.MenuInflater;
 import android.view.SurfaceView;
 import android.view.View;
@@ -27,8 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.github.mikephil.charting.charts.LineChart;
 
 import java.io.File;
 import java.util.List;
@@ -195,15 +191,23 @@ public class Main2Activity extends AppCompatActivity
 
     private void myListener() {
         btnData.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setClass(Main2Activity.this, DataStatisticsActivity.class);
-                        startActivity(intent);
-                    }
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setClass(Main2Activity.this, DataStatisticsActivity.class);
+                    startActivity(intent);
                 }
+            }
         );
+        btnChooseMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(Main2Activity.this, ModeChoose.class);
+                startActivity(intent);
+            }
+        });
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
