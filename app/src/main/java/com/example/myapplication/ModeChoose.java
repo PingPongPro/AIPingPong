@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,19 +18,28 @@ public class ModeChoose extends Activity {
         btnBallGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(ModeChoose.this, BallGame.class);
+                startActivity(intent);
+                finish();
             }
         });
         btnFight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(ModeChoose.this, FightActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
         btnPlayBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(ModeChoose.this, PlayBack.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

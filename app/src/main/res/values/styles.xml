@@ -22,6 +22,7 @@
             <item name="android:textSize">130px</item>  
             <item name="android:textColor">#ffffff</item> 
     </style>
+
     <style name="Toolbal.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">
             18sp
