@@ -102,6 +102,10 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ComboBoxActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
     </application>
 
 </manifest>

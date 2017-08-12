@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -41,6 +42,8 @@ public class TrainingDataActivity extends AppCompatActivity {
     private CombinedChartManager combinedChartManager_week;
     private CombinedChartManager combinedChartManager_month;
     private CombinedChartManager combinedChartManager_year;
+
+    private final int SELECTWEEK=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,6 +216,18 @@ public class TrainingDataActivity extends AppCompatActivity {
                         }
                     }
             );
+
+            TextView textView=(TextView)findViewById(R.id.textView_chartTitle2);
+            textView.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent =new Intent();
+                            intent.setClass(TrainingDataActivity.this,ComboBoxActivity.class);
+                            startActivityForResult(intent,SELECTWEEK);
+                        }
+                    }
+            );
         }
         catch(Exception e)
         {
@@ -265,5 +280,16 @@ public class TrainingDataActivity extends AppCompatActivity {
     private float sp2px(float spValue) {
         final float fontScale = this.getResources().getDisplayMetrics().scaledDensity;
         return (spValue * fontScale + 0.5f);
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (resultCode == RESULT_OK)
+        {
+            if (requestCode == SELECTWEEK)
+            {
+                final String message=intent.getExtras().getString("String");
+                final TextView textView=(TextView)findViewById(R.id.textView_chartTitle2);
+                textView.setText(message);
+            }
+        }
     }
 }
