@@ -130,7 +130,6 @@ public class TrainingDataActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             String text="";
                             int size=0;
-                            System.out.println(combinedChartManager_day.getDataDescription());
                             if(combinedChartManager_day.getDataDescription().equals("时间"))
                             {
                                 setDataForManager("击球数",combinedChartManager_day);

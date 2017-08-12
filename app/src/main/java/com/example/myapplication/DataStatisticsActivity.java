@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -43,9 +45,9 @@ public class DataStatisticsActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //Resources resources=this.getResources();
-        //Drawable drawable=resources.getDrawable(R.drawable.bluetooth);
-        //getSupportActionBar().setHomeAsUpIndicator(drawable);
+        Resources resources=this.getResources();
+        Drawable drawable=resources.getDrawable(R.drawable.back_white);
+        getSupportActionBar().setHomeAsUpIndicator(drawable);
         toolbar.setNavigationOnClickListener(
                 new View.OnClickListener()
                 {
@@ -65,10 +67,8 @@ public class DataStatisticsActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
         Button button_fore=(Button)findViewById(R.id.button_fore);
         Button button_back=(Button)findViewById(R.id.button_back);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //Resources resources=this.getResources();
-        //Drawable drawable=resources.getDrawable(R.drawable.bluetooth);
-        //button_back.setBackground(drawable);
+        Drawable drawable1=resources.getDrawable(R.drawable.back_black);
+        button_back.setBackground(drawable1);
 
         button_fore.setOnClickListener(
                 new View.OnClickListener() {
@@ -101,7 +101,9 @@ public class DataStatisticsActivity extends AppCompatActivity {
             TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
             tabHost.setup();
 
-            //TabRender.TabHostRender(new String[]{"比赛报告","每日报告"},new int[]{R.id.tab1, R.id.tab2},tabHost,this);
+            TabRender.TabHostRender(new int[]{R.id.tab1, R.id.tab2},
+                    new int[]{R.drawable.contest,R.drawable.contest_click,
+                            R.drawable.dayreport,R.drawable.dayreport_click},tabHost,this);
         }
         catch(Exception e)
         {
