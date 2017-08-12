@@ -38,7 +38,6 @@ public class TrainingDataActivity extends AppCompatActivity {
     private ArcProgress arcProgress;
     private ArcProgress arcProgress1;
 
-    private CombinedChartManager combinedChartManager_day;
     private CombinedChartManager combinedChartManager_week;
     private CombinedChartManager combinedChartManager_month;
     private CombinedChartManager combinedChartManager_year;
@@ -74,14 +73,8 @@ public class TrainingDataActivity extends AppCompatActivity {
 //            for(int i=1;i<=19;i++)
 //                floatList.add(random.nextFloat()*50);
 //            barChartManager.setData(floatList);
-
-            CombinedChart combinedChart =(CombinedChart) findViewById(R.id.combinedChart1);
-            combinedChartManager_day=new CombinedChartManager(combinedChart);
             List<Float> floatList=new ArrayList<Float>();
             Random random=new Random();
-            for(int i=1;i<=24;i++)
-                floatList.add(random.nextFloat()*50);
-            combinedChartManager_day.setData("击球数",floatList);
 
             floatList.clear();
             CombinedChart combinedChart2 =(CombinedChart) findViewById(R.id.combinedChart2);
@@ -108,8 +101,8 @@ public class TrainingDataActivity extends AppCompatActivity {
             TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
             tabHost.setup();
 
-            TabRender.TabHostRender(new int[]{R.id.tab1, R.id.tab2, R.id.tab3, R.id.tab4},
-                    new int[]{R.drawable.day,R.drawable.day_click,R.drawable.week,R.drawable.week_click,
+            TabRender.TabHostRender(new int[]{R.id.tab2, R.id.tab3, R.id.tab4},
+                    new int[]{R.drawable.week,R.drawable.week_click,
                             R.drawable.month,R.drawable.month_click,R.drawable.year,R.drawable.year_click,},tabHost,this);
 
             arcProgress=(ArcProgress) findViewById(R.id.arcProgress1);
@@ -121,39 +114,6 @@ public class TrainingDataActivity extends AppCompatActivity {
             arcProgress1.setMode(ArcProgress.HITCOUNTER);
             arcProgress1.setTask(150);
             arcProgress1.updateMiddle(100);
-
-            final TextView textView=(TextView)findViewById(R.id.textView_change1);
-            initTextView(textView);
-            textView.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String text="";
-                            int size=0;
-                            if(combinedChartManager_day.getDataDescription().equals("时间"))
-                            {
-                                setDataForManager("击球数",combinedChartManager_day);
-                                text="击球数/时间";
-                                size=3;
-                            }
-                            else
-                            {
-                                setDataForManager("时间",combinedChartManager_day);
-                                text="时间/击球数";
-                                size=2;
-                            }
-                            Spannable spannable=new SpannableString(text);
-                            //spannable.setSpan(new TypefaceSpan("monospace"),0,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#f1a75a")),
-                                    0,size,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#AAAAAA")),
-                                    size+1,6,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(14)),0,size,0);
-                            spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(12)),size+1,6,0);
-                            textView.setText(spannable);
-                        }
-                    }
-            );
 
             final TextView textView2=(TextView)findViewById(R.id.textView_change2);
             initTextView(textView2);

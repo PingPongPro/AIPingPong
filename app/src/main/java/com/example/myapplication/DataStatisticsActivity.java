@@ -69,6 +69,8 @@ public class DataStatisticsActivity extends AppCompatActivity {
         Button button_back=(Button)findViewById(R.id.button_back);
         Drawable drawable1=resources.getDrawable(R.drawable.back_black);
         button_back.setBackground(drawable1);
+        Drawable drawable2=resources.getDrawable(R.drawable.back_black2);
+        button_fore.setBackground(drawable2);
 
         button_fore.setOnClickListener(
                 new View.OnClickListener() {
