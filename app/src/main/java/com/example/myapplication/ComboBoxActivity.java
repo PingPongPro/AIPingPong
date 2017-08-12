@@ -23,7 +23,9 @@ import java.util.List;
 
 public class ComboBoxActivity extends Activity {
     List<Button> buttonList=new ArrayList<Button>();
-
+    public static final int WEEK=0;
+    public static final int MONTH=0;
+    public static final int YEAR=0;
     public void myListener(){
     }
 
@@ -31,6 +33,7 @@ public class ComboBoxActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Thread.setDefaultUncaughtExceptionHandler(new myException());
         ScrollView scrollView =new ScrollView(this);
         scrollView.setBackgroundColor(Color.parseColor("#80000000"));
         LinearLayout linearLayout=new LinearLayout(this);
@@ -38,10 +41,19 @@ public class ComboBoxActivity extends Activity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         List<String> stringList=new ArrayList<String>();
         //传入数据
-        stringList.add("1月28日");
-        stringList.add("3月2日");
-        for(int i=1;i<=15;i++)
-            stringList.add("5月27日");
+        Intent intent=getIntent();
+        Bundle bundle=intent.getExtras();
+        int Mode=bundle.getInt("Mode");
+        switch (Mode)
+        {
+            case WEEK:
+                int number=bundle.getInt("Number");
+                for(int i=1;i<=number;i++)
+                {
+                    stringList.add("第"+i+"周");
+                }
+                break;
+        }
         //
         for(int i=0;i<stringList.size();i++)
         {

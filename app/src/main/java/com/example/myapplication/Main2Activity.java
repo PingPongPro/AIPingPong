@@ -226,9 +226,8 @@ public class Main2Activity extends AppCompatActivity
         setContentView(R.layout.activity_main2);
 
         databaseService =new DatabaseService(this,"bill");
-        databaseService.InsertDataToDailyRecord("2017-8-10",12,12,12,12);
-        databaseService.InsertDataToDailyRecord(10,10,10,10);
-
+        //databaseService.InsertDataToDailyRecord("2017-8-10",12,12,12,12);
+        //databaseService.InsertDataToDailyRecord(10,10,10,10);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

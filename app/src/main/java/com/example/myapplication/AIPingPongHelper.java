@@ -19,7 +19,7 @@ public class AIPingPongHelper extends SQLiteOpenHelper {
     {
         final String struct=
                 "(user_id varchar(20)," +
-                    "day date NOT NULL,"+//  date(CURRENT_TIME,'localtime')//DEFAULT
+                    "day date DEFAULT (DATE ('now','localtime')),"+//  date(CURRENT_TIME,'localtime')//DEFAULT
                     "hit integer DEFAULT 0," +
                     "aver_speed float DEFAULT 0," +
                     "max_speed float DEFAULT 0," +

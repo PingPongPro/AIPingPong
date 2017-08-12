@@ -224,6 +224,8 @@ public class TrainingDataActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             Intent intent =new Intent();
                             intent.setClass(TrainingDataActivity.this,ComboBoxActivity.class);
+                            intent.putExtra("Mode",ComboBoxActivity.WEEK);
+                            intent.putExtra("Number",DateTool.calculateWeekNumber());
                             startActivityForResult(intent,SELECTWEEK);
                         }
                     }
