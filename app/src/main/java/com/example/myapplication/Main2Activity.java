@@ -32,6 +32,7 @@ import java.util.List;
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static DatabaseService databaseService;
     private Button btnData;
     private Button btnTendency;
     private Button btnChooseMode;
@@ -223,6 +224,12 @@ public class Main2Activity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        databaseService =new DatabaseService(this,"bill");
+        databaseService.InsertDataToDailyRecord("2017-8-10",12,12,12,12);
+        databaseService.InsertDataToDailyRecord(10,10,10,10);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

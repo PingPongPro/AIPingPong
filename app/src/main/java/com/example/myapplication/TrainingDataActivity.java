@@ -286,6 +286,7 @@ public class TrainingDataActivity extends AppCompatActivity {
         {
             if (requestCode == SELECTWEEK)
             {
+                Main2Activity.databaseService.getAllFromDailyRecord();
                 final String message=intent.getExtras().getString("String");
                 final TextView textView=(TextView)findViewById(R.id.textView_chartTitle2);
                 textView.setText(message);
