@@ -24,6 +24,8 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -79,28 +81,28 @@ public class TrainingDataActivity extends AppCompatActivity {
             Random random=new Random();
             for(int i=1;i<=24;i++)
                 floatList.add(random.nextFloat()*50);
-            combinedChartManager_day.setData("时间",floatList);
+            combinedChartManager_day.setData("击球数",floatList);
 
             floatList.clear();
             CombinedChart combinedChart2 =(CombinedChart) findViewById(R.id.combinedChart2);
             combinedChartManager_week=new CombinedChartManager(combinedChart2);
             for(int i=1;i<=7;i++)
                 floatList.add(random.nextFloat()*50);
-            combinedChartManager_week.setData("时间",floatList);
+            combinedChartManager_week.setData("击球数",floatList);
 
             floatList.clear();
             CombinedChart combinedChart3 =(CombinedChart) findViewById(R.id.combinedChart3);
             combinedChartManager_month=new CombinedChartManager(combinedChart3);
             for(int i=1;i<=30;i++)
                 floatList.add(random.nextFloat()*50);
-            combinedChartManager_month.setData("时间",floatList);
+            combinedChartManager_month.setData("击球数",floatList);
 
             floatList.clear();
             CombinedChart combinedChart4 =(CombinedChart) findViewById(R.id.combinedChart4);
             combinedChartManager_year=new CombinedChartManager(combinedChart4);
             for(int i=1;i<=12;i++)
                 floatList.add(random.nextFloat()*50);
-            combinedChartManager_year.setData("时间",floatList);
+            combinedChartManager_year.setData("击球数",floatList);
 
 
             TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
@@ -121,41 +123,134 @@ public class TrainingDataActivity extends AppCompatActivity {
             arcProgress1.updateMiddle(100);
 
             final TextView textView=(TextView)findViewById(R.id.textView_change1);
+            initTextView(textView);
             textView.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            changeText(combinedChartManager_day,textView);
+                            String text="";
+                            int size=0;
+                            System.out.println(combinedChartManager_day.getDataDescription());
+                            if(combinedChartManager_day.getDataDescription().equals("时间"))
+                            {
+                                setDataForManager("击球数",combinedChartManager_day);
+                                text="击球数/时间";
+                                size=3;
+                            }
+                            else
+                            {
+                                setDataForManager("时间",combinedChartManager_day);
+                                text="时间/击球数";
+                                size=2;
+                            }
+                            Spannable spannable=new SpannableString(text);
+                            //spannable.setSpan(new TypefaceSpan("monospace"),0,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#f1a75a")),
+                                    0,size,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#AAAAAA")),
+                                    size+1,6,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(14)),0,size,0);
+                            spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(12)),size+1,6,0);
+                            textView.setText(spannable);
                         }
                     }
             );
 
             final TextView textView2=(TextView)findViewById(R.id.textView_change2);
-            textView.setOnClickListener(
+            initTextView(textView2);
+            textView2.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            changeText(combinedChartManager_week,textView2);
+                            String text="";
+                            int size=0;
+                            if(combinedChartManager_week.getDataDescription().equals("时间"))
+                            {
+                                setDataForManager("击球数",combinedChartManager_week);
+                                text="击球数/时间";
+                                size=3;
+                            }
+                            else
+                            {
+                                setDataForManager("时间",combinedChartManager_week);
+                                text="时间/击球数";
+                                size=2;
+                            }
+                            Spannable spannable=new SpannableString(text);
+                            //spannable.setSpan(new TypefaceSpan("monospace"),0,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#f1a75a")),
+                                    0,size,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#AAAAAA")),
+                                    size+1,6,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(14)),0,size,0);
+                            spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(12)),size+1,6,0);
+                            textView2.setText(spannable);
                         }
                     }
             );
 
             final TextView textView3=(TextView)findViewById(R.id.textView_change3);
-            textView.setOnClickListener(
+            initTextView(textView3);
+            textView3.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            changeText(combinedChartManager_month,textView3);
+                            String text="";
+                            int size=0;
+                            if(combinedChartManager_month.getDataDescription().equals("时间"))
+                            {
+                                setDataForManager("击球数",combinedChartManager_month);
+                                text="击球数/时间";
+                                size=3;
+                            }
+                            else
+                            {
+                                setDataForManager("时间",combinedChartManager_month);
+                                text="时间/击球数";
+                                size=2;
+                            }
+                            Spannable spannable=new SpannableString(text);
+                            //spannable.setSpan(new TypefaceSpan("monospace"),0,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#f1a75a")),
+                                    0,size,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#AAAAAA")),
+                                    size+1,6,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(14)),0,size,0);
+                            spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(12)),size+1,6,0);
+                            textView3.setText(spannable);
                         }
                     }
             );
 
             final TextView textView4=(TextView)findViewById(R.id.textView_change4);
-            textView.setOnClickListener(
+            initTextView(textView4);
+            textView4.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            changeText(combinedChartManager_year,textView4);
+                            String text="";
+                            int size=0;
+                            if(combinedChartManager_year.getDataDescription().equals("时间"))
+                            {
+                                setDataForManager("击球数",combinedChartManager_year);
+                                text="击球数/时间";
+                                size=3;
+                            }
+                            else
+                            {
+                                setDataForManager("时间",combinedChartManager_year);
+                                text="时间/击球数";
+                                size=2;
+                            }
+                            Spannable spannable=new SpannableString(text);
+                            //spannable.setSpan(new TypefaceSpan("monospace"),0,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#f1a75a")),
+                                    0,size,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#AAAAAA")),
+                                    size+1,6,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(14)),0,size,0);
+                            spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(12)),size+1,6,0);
+                            textView4.setText(spannable);
                         }
                     }
             );
@@ -166,30 +261,17 @@ public class TrainingDataActivity extends AppCompatActivity {
         }
 
     }
-    private void changeText(CombinedChartManager combinedChartManager,TextView textView)
+    private void initTextView(TextView textView)
     {
-        String text="";
-        int size=0;
-        if(combinedChartManager.getDataDescription().equals("时间"))
-        {
-            setDataForManager("击球数",combinedChartManager);
-            text="击球数/时间";
-            size=3;
-        }
-        else
-        {
-            setDataForManager("时间",combinedChartManager);
-            text="时间/击球数";
-            size=2;
-        }
-        Spannable spannable=new SpannableString(text);
+        final String message="击球数/时间";
+        Spannable spannable=new SpannableString(message);
         //spannable.setSpan(new TypefaceSpan("monospace"),0,2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#f1a75a")),
-                0,size,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                0,3,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#AAAAAA")),
-                size+1,6,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(14)),0,size,0);
-        spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(12)),size+1,6,0);
+                4,6,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(14)),0,3,0);
+        spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(12)),4,6,0);
         textView.setText(spannable);
     }
     private void setDataForManager(String descripton,CombinedChartManager combinedChartManager)
