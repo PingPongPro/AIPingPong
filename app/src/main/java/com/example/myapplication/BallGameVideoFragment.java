@@ -8,15 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link BallGameVideoFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link BallGameVideoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class BallGameVideoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
