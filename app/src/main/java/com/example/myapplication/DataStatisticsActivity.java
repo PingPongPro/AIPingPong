@@ -101,7 +101,7 @@ public class DataStatisticsActivity extends AppCompatActivity {
             TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
             tabHost.setup();
 
-            TabRender.TabHostRender(new String[]{"比赛报告","每日报告"},new int[]{R.id.tab1, R.id.tab2},tabHost,this);
+            //TabRender.TabHostRender(new String[]{"比赛报告","每日报告"},new int[]{R.id.tab1, R.id.tab2},tabHost,this);
         }
         catch(Exception e)
         {

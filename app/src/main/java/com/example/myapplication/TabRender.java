@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TabHost;
@@ -16,25 +18,15 @@ import java.util.List;
  */
 
 public class TabRender {
-    public static void TabHostRender(String[] titles,int[]  pageIDs,final TabHost tabHost,final Activity activity)
+    public static void TabHostRender(int[]  pageIDs, final int images[], final TabHost tabHost, final Activity activity)
     {
-        if(titles.length!=pageIDs.length)
+        if(images.length/2!=pageIDs.length)
             return ;
-        final List<TextView> textViewList=new ArrayList<TextView>();
-        for(int i=0;i<titles.length;i++)
+        final Resources resources = activity .getResources();
+        for(int i=0;i<pageIDs.length;i++)
         {
-            TextView textView=new TextView(activity);
-            //Resources resources=activity.getResources();
-            //Drawable drawable=resources.getDrawable(R.drawable.shape_corner);
-            //textView.setBackground(drawable);
-            textView.setGravity(Gravity.CENTER);
-            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            textView.setTextSize(12);
-            textView.setText(titles[i]);
-            textViewList.add(textView);
-
-            TabHost.TabSpec page = tabHost.newTabSpec(titles[i])
-                    .setIndicator(textView)
+            TabHost.TabSpec page = tabHost.newTabSpec(i+"")
+                    .setIndicator(new TextView(activity))
                     .setContent(pageIDs[i]);
             tabHost.addTab(page);
         }
@@ -48,13 +40,14 @@ public class TabRender {
                             TabWidget tabWidget=tabHost.getTabWidget();
                             for(int i=0;i<maxCount;i++)
                             {
-                                tabWidget.getChildAt(i).setBackgroundColor(Color.parseColor("#ffffff"));
-                                TextView tv= textViewList.get(i);
-                                tv.setTextColor(Color.parseColor("#F1A75A"));
+                                if(i==tabHost.getCurrentTab())
+                                    continue;
+                                Drawable drawable=resources.getDrawable(images[2*i]);
+                                tabWidget.getChildAt(i).setBackground(drawable);
                             }
-                            tabWidget.getChildAt(tabHost.getCurrentTab()).setBackgroundColor(Color.parseColor("#F1A75A"));
-                            TextView tv= textViewList.get(tabHost.getCurrentTab());
-                            tv.setTextColor(Color.parseColor("#ffffff"));
+                            int currenIndex=tabHost.getCurrentTab();
+                            Drawable drawable =resources.getDrawable(images[2*currenIndex+1]);
+                            tabWidget.getChildAt(currenIndex).setBackground(drawable);
                         }
                         catch(Exception e)
                         {
@@ -63,17 +56,14 @@ public class TabRender {
 
                     }
                 }
-
         );
         int maxCount=tabHost.getTabWidget().getChildCount();
         for(int i=1;i<maxCount;i++)
         {
-            tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#ffffff"));
-            TextView tv= textViewList.get(i);
-            tv.setTextColor(Color.parseColor("#F1A75A"));
+            Drawable drawable = resources.getDrawable(images[2*i]);
+            tabHost.getTabWidget().getChildAt(i).setBackground(drawable);
         }
-        tabHost.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#F1A75A"));
-        TextView tv= textViewList.get(0);
-        tv.setTextColor(Color.parseColor("#ffffff"));
+        Drawable drawable =resources.getDrawable(images[1]);
+        tabHost.getTabWidget().getChildAt(0).setBackground(drawable);
     }
 }

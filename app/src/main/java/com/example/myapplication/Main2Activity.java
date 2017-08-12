@@ -200,6 +200,16 @@ public class Main2Activity extends AppCompatActivity
                 }
             }
         );
+        btnTendency.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.setClass(Main2Activity.this, TrainingDataActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        );
         btnChooseMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

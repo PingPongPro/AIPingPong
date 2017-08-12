@@ -29,6 +29,7 @@ public class CombinedChartManager {
     private CombinedChart combinedChart;
     private List<IBarDataSet> dataSets=new ArrayList<IBarDataSet>();
     private int dataCount;
+    private String dataDescription="";
     //private XAxis YAxis;
 
     public CombinedChartManager(CombinedChart chart)
@@ -37,7 +38,7 @@ public class CombinedChartManager {
         this.combinedChart.getAxisLeft();
         combinedChart.getDescription().setEnabled(false);
         //combinedChart.setPinchZoom(true);
-        combinedChart.setBackgroundColor(Color.parseColor("#D9D9D9"));           //背景颜色
+        //combinedChart.setBackgroundColor(Color.parseColor("#D9D9D9"));           //背景颜色
         combinedChart.getXAxis().setDrawAxisLine(true);                          //显示x轴
         combinedChart.getXAxis().setAxisLineColor(Color.parseColor("#FF8C00")); //设置x轴颜色
         combinedChart.getXAxis().setAxisLineWidth(2f);                           //设置x轴宽度
@@ -52,11 +53,16 @@ public class CombinedChartManager {
         MyXFormatter myXFormatter=new MyXFormatter();
         combinedChart.getXAxis().setValueFormatter(myXFormatter);
 
-        combinedChart.getAxisLeft().setAxisMinimum(-0.5f);
-        combinedChart.getAxisRight().setAxisMinimum(-0.5f);
+        combinedChart.getAxisLeft().setAxisMinimum(-1f);
+        combinedChart.getAxisRight().setAxisMinimum(-1f);
     }
-    public void setData(List<Float> data)
+    public String getDataDescription()
     {
+        return dataDescription;
+    }
+    public void setData(String description,List<Float> data)
+    {
+        this.dataDescription=description;
         this.dataCount=data.size();
         this.combinedChart.getLegend().setEnabled(false);
         CombinedData combinedData=new CombinedData();

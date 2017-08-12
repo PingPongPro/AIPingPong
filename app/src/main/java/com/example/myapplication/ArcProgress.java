@@ -21,7 +21,7 @@ public class ArcProgress extends ProgressBar {
     public static final int STYLE_ARC = 0;
     private final int DEFAULT_LINEHEIGHT = dp2px(15);
     private final int DEFAULT_mTickWidth = dp2px(2);
-    private final int DEFAULT_mRadius = dp2px(72);//63
+    private final int DEFAULT_mRadius = dp2px(63);//
     private final int DEFAULT_mUnmProgressColor = Color.parseColor("#E7E7E7");
     private final int DEFAULT_mProgressColor = Color.YELLOW;
     private final int DEFAULT_OFFSETDEGREE = 90;
@@ -191,6 +191,7 @@ public class ArcProgress extends ProgressBar {
                 canvas.rotate(mTickDensity,x,y);
             }
         }
+        textPaint.setColor(Color.parseColor("#777777"));
         textPaint.setStrokeWidth(3);
         textPaint.setTextSize(getSpValue(14));
         //paint.setColor(Color.CYAN);
@@ -230,7 +231,7 @@ public class ArcProgress extends ProgressBar {
         super.onSizeChanged(w, h, oldw, oldh);
         if(this.viewCenterY==0||this.viewCenterX==0)
         {
-            this.viewCenterY=getHeight()/2;
+            this.viewCenterY=getHeight()/2+getDpValue(10);
             this.viewCenterX=getWidth()/2;
             targetRect_Top = new Rect((int)(viewCenterX-mRadius/2), (int)(viewCenterY-6*mRadius/12), (int)(viewCenterX+mRadius/2), (int)(viewCenterY-7*mRadius/12));
             targetRect_Middle = new Rect((int)(viewCenterX-mRadius), (int)(viewCenterY-getDpValue(1)), (int)(viewCenterX+mRadius), (int)(viewCenterY+getDpValue(1)));
