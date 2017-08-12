@@ -21,7 +21,7 @@ public class ModeChoose extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(ModeChoose.this, BallGame.class);
+                intent.setClass(ModeChoose.this, BallGameMainActivity.class);
                 intent.putExtra("DeviceName", DeviceName);
                 intent.putExtra("DeviceAddress", DeviceAddress);
                 startActivity(intent);

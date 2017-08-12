@@ -10,17 +10,20 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class BallGame extends AppCompatActivity {
+import fr.castorflex.android.verticalviewpager.VerticalViewPager;
+
+public class BallGameMainActivity extends AppCompatActivity {
 
     private Button btnClearBack;
-
 
     private String mDeviceName;
     private String mDeviceAddress;
@@ -98,20 +101,27 @@ public class BallGame extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ball_game);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_BallGame);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_ball_game_main);
 
         Intent intent = getIntent();
         mDeviceName = intent.getStringExtra("DeviceName");
         mDeviceAddress = intent.getStringExtra("DeviceAddress");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_BallGame);
+        setSupportActionBar(toolbar);
 
         btnClearBack = (Button)findViewById(R.id.btnClearBack);
         Drawable STOP = getResources().getDrawable(R.drawable.stop);
         STOP.setBounds(60, 0, 160, 100);
         btnClearBack.setCompoundDrawables(STOP,null,null,null);
 
+        List<Fragment> fragments=new ArrayList<Fragment>();
+        fragments.add(new BallGameFragment());
+        fragments.add(new BallGameVideoFragment());
+        FragAdapter adapter = new FragAdapter(getSupportFragmentManager(), fragments);
+
+        VerticalViewPager VVP = (VerticalViewPager)findViewById(R.id.container);
+        VVP.setAdapter(adapter);
     }
     @Override
     protected void onPause() {

@@ -93,12 +93,14 @@
             android:name=".ModeChoose"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".BallGame"
-            android:label="颠球游戏"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
             android:name=".FightActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BallGameMainActivity"
+            android:label="颠球游戏"
+            android:theme="@style/AppTheme.NoActionBar" >
+
+        </activity>
     </application>
 
 </manifest>
