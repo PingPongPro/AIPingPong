@@ -14,7 +14,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,10 @@ public class BallGameMainActivity extends AppCompatActivity {
     private BluetoothLeService mBluetoothLeService;
     private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
+    private FragAdapter adapter;
+    private VerticalViewPager VVP;
+
+
     BluetoothGattCharacteristic mGattCharacteristics;
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
@@ -114,13 +120,11 @@ public class BallGameMainActivity extends AppCompatActivity {
         Drawable STOP = getResources().getDrawable(R.drawable.stop);
         STOP.setBounds(60, 0, 160, 100);
         btnClearBack.setCompoundDrawables(STOP,null,null,null);
-
         List<Fragment> fragments=new ArrayList<Fragment>();
         fragments.add(new BallGameFragment());
         fragments.add(new BallGameVideoFragment());
-        FragAdapter adapter = new FragAdapter(getSupportFragmentManager(), fragments);
-
-        VerticalViewPager VVP = (VerticalViewPager)findViewById(R.id.container);
+        adapter = new FragAdapter(getSupportFragmentManager(), fragments);
+        VVP = (VerticalViewPager)findViewById(R.id.container);
         VVP.setAdapter(adapter);
     }
     @Override
@@ -133,7 +137,6 @@ public class BallGameMainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);

@@ -4,14 +4,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
+import android.view.ViewGroup;
 
 import java.util.List;
 
-/**
- * Created by SKY on 2017/8/12.
- */
 
-public class FragAdapter extends FragmentStatePagerAdapter {
+public class FragAdapter extends FragmentPagerAdapter {
+
+    Fragment currentFragment;
 
     private List<Fragment> mFragments;
 
@@ -33,4 +34,9 @@ public class FragAdapter extends FragmentStatePagerAdapter {
         return mFragments.size();
     }
 
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        this.currentFragment= (Fragment) object;
+        super.setPrimaryItem(container, position, object);
+    }
 }
