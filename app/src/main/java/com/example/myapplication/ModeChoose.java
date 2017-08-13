@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +30,9 @@ public class ModeChoose extends Activity {
         btnPlayBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ModeChoose.this, MediaActivity.class);
+                intent.putExtra("path", "/storage/emulated/0/ballGame/demo_zheng.mp4");
+                startActivity(intent);
             }
         });
     }
@@ -38,7 +41,6 @@ public class ModeChoose extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mode_choose);
-
         {
             btnBallGame = (Button) findViewById(R.id.btnBallGame);
             btnFight = (Button) findViewById(R.id.btnFight);
