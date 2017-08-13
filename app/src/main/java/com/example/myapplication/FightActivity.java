@@ -151,22 +151,22 @@ public class FightActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ball_game_main);
+        setContentView(R.layout.activity_fight);
 
         Intent intent = getIntent();
         mDeviceName = intent.getStringExtra("DeviceName");
         mDeviceAddress = intent.getStringExtra("DeviceAddress");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_BallGame);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_Fight);
         setSupportActionBar(toolbar);
 
-        btnStartStop = (Button)findViewById(R.id.btnClearBack);
+        btnStartStop = (Button)findViewById(R.id.btnStartStop);
         Drawable STOP = getResources().getDrawable(R.drawable.stop);
         STOP.setBounds(60, 0, 160, 100);
         btnStartStop.setCompoundDrawables(STOP,null,null,null);
         List<Fragment> fragments=new ArrayList<Fragment>();
-        fragments.add(new BallGameFragment());
-        fragments.add(new BallGameVideoFragment());
+        fragments.add(new FightActivityUpFragment());
+        fragments.add(new FightActivityDownFragment());
         adapter = new FragAdapter(getSupportFragmentManager(), fragments);
         VVP = (VerticalViewPager)findViewById(R.id.container);
         VVP.setAdapter(adapter);
