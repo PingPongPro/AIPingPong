@@ -25,7 +25,8 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 
 public class BallGameMainActivity extends AppCompatActivity {
 
-    private Button btnClearBack;
+    private Button btnStartStop;
+    private View vtmp;
 
     private String mDeviceName;
     private String mDeviceAddress;
@@ -34,6 +35,12 @@ public class BallGameMainActivity extends AppCompatActivity {
     private BluetoothGattCharacteristic mNotifyCharacteristic;
     private FragAdapter adapter;
     private VerticalViewPager VVP;
+    private Boolean isPressedBtnStartStop = false;
+    private TextView textView_ForeHandNum;
+    private TextView textView_BackHandNum;
+    private TextView textView_DropTime;
+    private TextView textView_AvgBallSpeed;
+    private CircularRingPercentageView timer_HitBall;
 
 
     BluetoothGattCharacteristic mGattCharacteristics;
@@ -104,6 +111,43 @@ public class BallGameMainActivity extends AppCompatActivity {
         }
     };
 
+    public void findViews(){
+        vtmp = adapter.currentFragment.getView();
+        timer_HitBall = (CircularRingPercentageView)vtmp.findViewById(R.id.timer_HitBall);
+        textView_ForeHandNum = (TextView)vtmp.findViewById(R.id.textView_ForeHandNum);
+        textView_BackHandNum = (TextView)vtmp.findViewById(R.id.textView_BackHandNum);
+        textView_DropTime = (TextView)vtmp.findViewById(R.id.textView_DropTime);
+        textView_AvgBallSpeed = (TextView)vtmp.findViewById(R.id.textView_AvgBallSpeed);
+    }
+
+    public void myListener(){
+        btnStartStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(VVP.getCurrentItem() == 0){
+                    if(isPressedBtnStartStop == false) {
+                        findViews();
+                        isPressedBtnStartStop = true;
+                        Drawable STOP = getResources().getDrawable(R.drawable.stop);
+                        STOP.setBounds(60, 0, 160, 100);
+                        btnStartStop.setCompoundDrawables(STOP,null,null,null);
+                        btnStartStop.setText("停止        ");
+                        timer_HitBall.setMode(CircularRingPercentageView.TIMER);
+                        timer_HitBall.start();
+                    }
+                    else{
+                        findViews();
+                        isPressedBtnStartStop = false;
+                        Drawable START = getResources().getDrawable(R.drawable.start);
+                        START.setBounds(60, 0, 160, 100);
+                        btnStartStop.setCompoundDrawables(START,null,null,null);
+                        btnStartStop.setText("开始        ");
+                    }
+                }
+            }
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,16 +160,17 @@ public class BallGameMainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_BallGame);
         setSupportActionBar(toolbar);
 
-        btnClearBack = (Button)findViewById(R.id.btnClearBack);
+        btnStartStop = (Button)findViewById(R.id.btnClearBack);
         Drawable STOP = getResources().getDrawable(R.drawable.stop);
         STOP.setBounds(60, 0, 160, 100);
-        btnClearBack.setCompoundDrawables(STOP,null,null,null);
+        btnStartStop.setCompoundDrawables(STOP,null,null,null);
         List<Fragment> fragments=new ArrayList<Fragment>();
         fragments.add(new BallGameFragment());
         fragments.add(new BallGameVideoFragment());
         adapter = new FragAdapter(getSupportFragmentManager(), fragments);
         VVP = (VerticalViewPager)findViewById(R.id.container);
         VVP.setAdapter(adapter);
+        myListener();
     }
     @Override
     protected void onPause() {

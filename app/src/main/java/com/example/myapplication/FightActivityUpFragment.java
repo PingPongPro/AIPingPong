@@ -9,14 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class BallGameFragment extends Fragment {
+public class FightActivityUpFragment extends Fragment {
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ball_game, container, false);
+        View view = inflater.inflate(R.layout.fragment_fight_activity_up, container, false);
         return view;
     }
 }
