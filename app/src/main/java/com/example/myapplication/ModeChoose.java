@@ -13,18 +13,30 @@ public class ModeChoose extends Activity {
     private Button btnBallGame;
     private Button btnFight;
     private Button btnPlayBack;
+    private String DeviceName;
+    private String DeviceAddress;
 
     public void myListener(){
         btnBallGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(ModeChoose.this, BallGameMainActivity.class);
+                intent.putExtra("DeviceName", DeviceName);
+                intent.putExtra("DeviceAddress", DeviceAddress);
+                startActivity(intent);
+                finish();
             }
         });
         btnFight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setClass(ModeChoose.this, FightActivity.class);
+                intent.putExtra("DeviceName", DeviceName);
+                intent.putExtra("DeviceAddress", DeviceAddress);
+                startActivity(intent);
+                finish();
             }
         });
         btnPlayBack.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +53,11 @@ public class ModeChoose extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mode_choose);
+
+        Intent intent = getIntent();
+        DeviceName = intent.getStringExtra("DeviceName");
+        DeviceAddress = intent.getStringExtra("DeviceAddress");
+
         {
             btnBallGame = (Button) findViewById(R.id.btnBallGame);
             btnFight = (Button) findViewById(R.id.btnFight);

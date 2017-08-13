@@ -402,7 +402,6 @@ public class CircularRingPercentageView extends View {
                 }
                 break;
             case DAILYTASK:
-                System.out.println(progress+" "+(maxColorNumber*this.nowCount/this.totalCount));
                 if(progress<maxColorNumber*this.nowCount/this.totalCount)
                 {
                     long currenTime=System.currentTimeMillis();
