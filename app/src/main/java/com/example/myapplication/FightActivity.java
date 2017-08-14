@@ -11,6 +11,7 @@ import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,8 @@ public class FightActivity extends AppCompatActivity {
     private TextView textView_DropTime;
     private TextView textView_AvgBallSpeed;
     private CircularRingPercentageView timer_HitBall;
+    private Drawable START, STOP;
+    private Toolbar toolbar;
 
 
     BluetoothGattCharacteristic mGattCharacteristics;
@@ -128,8 +131,6 @@ public class FightActivity extends AppCompatActivity {
                     if(isPressedBtnStartStop == false) {
                         findViews();
                         isPressedBtnStartStop = true;
-                        Drawable STOP = getResources().getDrawable(R.drawable.stop);
-                        STOP.setBounds(60, 0, 160, 100);
                         btnStartStop.setCompoundDrawables(STOP,null,null,null);
                         btnStartStop.setText("停止        ");
                         timer_HitBall.setMode(CircularRingPercentageView.TIMER);
@@ -138,12 +139,46 @@ public class FightActivity extends AppCompatActivity {
                     else{
                         findViews();
                         isPressedBtnStartStop = false;
-                        Drawable START = getResources().getDrawable(R.drawable.start);
-                        START.setBounds(60, 0, 160, 100);
                         btnStartStop.setCompoundDrawables(START,null,null,null);
                         btnStartStop.setText("开始        ");
                     }
                 }
+                else {
+                    finish();
+                }
+            }
+        });
+        VVP.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 1){
+                    toolbar.setTitle("00:00");
+                    btnStartStop.setCompoundDrawables(STOP,null,null,null);
+                    btnStartStop.setText("清零/退出           ");
+                }
+                else{
+                    toolbar.setTitle("实战");
+                    if(isPressedBtnStartStop == false) {
+                        findViews();
+                        btnStartStop.setCompoundDrawables(START,null,null,null);
+                        btnStartStop.setText("开始        ");
+                    }
+                    else{
+                        findViews();
+                        btnStartStop.setCompoundDrawables(STOP,null,null,null);
+                        btnStartStop.setText("停止        ");
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }
@@ -157,13 +192,17 @@ public class FightActivity extends AppCompatActivity {
         mDeviceName = intent.getStringExtra("DeviceName");
         mDeviceAddress = intent.getStringExtra("DeviceAddress");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_Fight);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_Fight);
+        toolbar.setTitle("实战");
         setSupportActionBar(toolbar);
 
         btnStartStop = (Button)findViewById(R.id.btnStartStop);
-        Drawable STOP = getResources().getDrawable(R.drawable.stop);
+        START = getResources().getDrawable(R.drawable.start);
+        START.setBounds(60, 0, 160, 100);
+        STOP = getResources().getDrawable(R.drawable.stop);
         STOP.setBounds(60, 0, 160, 100);
-        btnStartStop.setCompoundDrawables(STOP,null,null,null);
+        btnStartStop.setCompoundDrawables(START,null,null,null);
+
         List<Fragment> fragments=new ArrayList<Fragment>();
         fragments.add(new FightActivityUpFragment());
         fragments.add(new FightActivityDownFragment());

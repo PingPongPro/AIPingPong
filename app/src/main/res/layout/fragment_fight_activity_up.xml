@@ -27,12 +27,13 @@
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="#D54C2A" />
+            android:background="#D54C2A"
+            android:id="@+id/relativeLayout2" />
 
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayout_textHitball"
         style="@style/layout_vertical"
         android:layout_width="match_parent"
         android:layout_height="120dp"
@@ -158,6 +159,53 @@
                 android:textSize="14dp" />
         </LinearLayout>
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout_textHitball"
+        android:background="#F06B4A">
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="3D/数据"
+            android:textColor="#F49B85"
+            android:textSize="12dp" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout3"
+            android:layout_width="120dp"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="13dp"
+            android:layout_toStartOf="@+id/textView9"
+            android:background="#D54C2A">
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout4"
+            android:layout_width="120dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/relativeLayout3"
+            android:layout_marginStart="11dp"
+            android:layout_toEndOf="@+id/textView9"
+            android:background="#D54C2A" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/textView9"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@android:drawable/arrow_up_float" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

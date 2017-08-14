@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EEEEEE"
     tools:context="com.example.myapplication.FightActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -24,7 +25,7 @@
     <fr.castorflex.android.verticalviewpager.VerticalViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="390dp"
+        android:layout_height="420dp"
         android:layout_below="@+id/appBarLayout_Fight"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
@@ -34,7 +35,7 @@
         android:layout_width="288.5dp"
         android:layout_height="50dp"
         android:background="@drawable/btn_selector_deep"
-        android:text="清零/退出           "
+        android:text="开始        "
         android:layout_marginBottom="18dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
