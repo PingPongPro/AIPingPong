@@ -46,8 +46,8 @@ public class DataStatisticsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Resources resources=this.getResources();
-        Drawable drawable=resources.getDrawable(R.drawable.back_white);
-        getSupportActionBar().setHomeAsUpIndicator(drawable);
+        //Drawable drawable=resources.getDrawable(R.drawable.back_white);
+        //getSupportActionBar().setHomeAsUpIndicator(drawable);
         toolbar.setNavigationOnClickListener(
                 new View.OnClickListener()
                 {

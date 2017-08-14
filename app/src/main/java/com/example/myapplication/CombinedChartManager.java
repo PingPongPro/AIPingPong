@@ -41,7 +41,7 @@ public class CombinedChartManager {
         //combinedChart.setBackgroundColor(Color.parseColor("#D9D9D9"));           //背景颜色
         combinedChart.getXAxis().setDrawAxisLine(true);                          //显示x轴
         combinedChart.getXAxis().setAxisLineColor(Color.parseColor("#FF8C00")); //设置x轴颜色
-        combinedChart.getXAxis().setAxisLineWidth(2f);                           //设置x轴宽度
+        combinedChart.getXAxis().setAxisLineWidth(1f);                           //设置x轴宽度
         combinedChart.getXAxis().setTextColor(Color.parseColor("#FF8C00"));
         combinedChart.getXAxis().setDrawGridLines(false);
         combinedChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);

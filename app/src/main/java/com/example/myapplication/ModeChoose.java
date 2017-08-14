@@ -3,16 +3,17 @@ package com.example.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 public class ModeChoose extends Activity {
 
     private Button btnBallGame;
     private Button btnFight;
     private Button btnPlayBack;
+    private RelativeLayout relativeLayout;
     private String DeviceName;
     private String DeviceAddress;
 
@@ -47,6 +48,14 @@ public class ModeChoose extends Activity {
                 startActivity(intent);
             }
         });
+        relativeLayout.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                }
+        );
     }
 
     @Override
@@ -57,6 +66,8 @@ public class ModeChoose extends Activity {
         Intent intent = getIntent();
         DeviceName = intent.getStringExtra("DeviceName");
         DeviceAddress = intent.getStringExtra("DeviceAddress");
+
+        relativeLayout =(RelativeLayout)findViewById(R.id.relativelayout_mc);
 
         {
             btnBallGame = (Button) findViewById(R.id.btnBallGame);

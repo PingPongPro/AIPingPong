@@ -27,7 +27,7 @@ public class BarChartManager {
         barChart.getDescription().setEnabled(false);
         barChart.getXAxis().setDrawAxisLine(true);                          //显示x轴
         barChart.getXAxis().setAxisLineColor(Color.parseColor("#FF8C00")); //设置x轴颜色
-        barChart.getXAxis().setAxisLineWidth(2f);                           //设置x轴宽度
+        barChart.getXAxis().setAxisLineWidth(1f);                           //设置x轴宽度
         barChart.getXAxis().setLabelCount(21);
         barChart.getXAxis().setTextColor(Color.parseColor("#FF8C00"));
         barChart.getXAxis().setTextSize(12);

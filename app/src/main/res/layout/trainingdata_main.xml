@@ -77,38 +77,52 @@
                             android:background="@drawable/shape_corner"
                             android:orientation="vertical">
 
-                            <LinearLayout
+                            <RelativeLayout
                                 style="@style/layout_vertical"
                                 android:layout_height="0px"
                                 android:layout_weight="27"
-                                android:paddingRight="10px"
-                                android:paddingLeft="10px"
-                                android:paddingTop="10px"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:gravity="center">
 
-                                <TextView
-                                    android:id="@+id/textView_chartTitle2"
-                                    style="@style/layout_horizontal"
-                                    android:layout_width="333dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.4"
-                                    android:textAlignment="textEnd"
-                                    android:text="▼ 第10周"
-                                    android:textColor="@color/color_f1a75a"
-                                    android:textSize="14sp" />
+                                <LinearLayout
+                                    style="@style/layout_vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_vertical|center"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="10px"
+                                    android:paddingRight="40px"
+                                    android:paddingTop="10px">
 
-                                <TextView
-                                    android:id="@+id/textView_change2"
-                                    style="@style/layout_horizontal"
-                                    android:layout_width="333dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.5"
-                                    android:text="时间/击球数"
-                                    android:textAlignment="textEnd"
-                                    android:textColor="@color/color_f1a75a"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
+                                    <TextView
+                                        android:id="@+id/textView_chartTitle2"
+                                        style="@style/layout_horizontal"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.6"
+                                        android:text="▼ 第10周"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/color_f1a75a"
+                                        android:textSize="14sp" />
+
+                                    <TextView
+                                        android:id="@+id/textView_change2"
+                                        style="@style/layout_horizontal"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.4"
+                                        android:text="时间/击球数"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/color_f1a75a"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="300dp"
+                                    android:layout_height="1dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:background="#FF8C00" >
+                                </RelativeLayout>
+
+                            </RelativeLayout>
 
                             <com.github.mikephil.charting.charts.CombinedChart
                                 android:id="@+id/combinedChart2"
@@ -136,38 +150,52 @@
                             android:background="@drawable/shape_corner"
                             android:orientation="vertical">
 
-                            <LinearLayout
+                            <RelativeLayout
                                 style="@style/layout_vertical"
                                 android:layout_height="0px"
                                 android:layout_weight="27"
-                                android:paddingRight="10px"
-                                android:paddingLeft="10px"
-                                android:paddingTop="10px"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:gravity="center">
 
-                                <TextView
-                                    android:id="@+id/textView_chartTitle3"
-                                    style="@style/layout_horizontal"
-                                    android:layout_width="333dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.4"
-                                    android:textAlignment="textEnd"
-                                    android:text="▼ 1月"
-                                    android:textColor="@color/color_f1a75a"
-                                    android:textSize="14sp" />
+                                <LinearLayout
+                                    style="@style/layout_vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_vertical|center"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="10px"
+                                    android:paddingRight="40px"
+                                    android:paddingTop="10px">
 
-                                <TextView
-                                    android:id="@+id/textView_change3"
-                                    style="@style/layout_horizontal"
-                                    android:layout_width="333dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.5"
-                                    android:text="时间/击球数"
-                                    android:textAlignment="textEnd"
-                                    android:textColor="@color/color_f1a75a"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
+                                    <TextView
+                                        android:id="@+id/textView_chartTitle3"
+                                        style="@style/layout_horizontal"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.6"
+                                        android:text="▼ 1月"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/color_f1a75a"
+                                        android:textSize="14sp" />
+
+                                    <TextView
+                                        android:id="@+id/textView_change3"
+                                        style="@style/layout_horizontal"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.4"
+                                        android:text="时间/击球数"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/color_f1a75a"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="300dp"
+                                    android:layout_height="1dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:background="#FF8C00" >
+                                </RelativeLayout>
+
+                            </RelativeLayout>
 
                             <com.github.mikephil.charting.charts.CombinedChart
                                 android:id="@+id/combinedChart3"
@@ -183,7 +211,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="0px"
                                 android:layout_weight="10"
-                                android:orientation="horizontal"></LinearLayout>
+                                android:orientation="horizontal">
+
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -193,38 +223,52 @@
                             android:background="@drawable/shape_corner"
                             android:orientation="vertical">
 
-                            <LinearLayout
+                            <RelativeLayout
                                 style="@style/layout_vertical"
                                 android:layout_height="0px"
                                 android:layout_weight="27"
-                                android:paddingRight="10px"
-                                android:paddingLeft="10px"
-                                android:paddingTop="10px"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:gravity="center">
 
-                                <TextView
-                                    android:id="@+id/textView_chartTitle4"
-                                    style="@style/layout_horizontal"
-                                    android:layout_width="333dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.4"
-                                    android:textAlignment="textEnd"
-                                    android:text="▼ 2016年"
-                                    android:textColor="@color/color_f1a75a"
-                                    android:textSize="14sp" />
+                                <LinearLayout
+                                    style="@style/layout_vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_vertical|center"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="10px"
+                                    android:paddingRight="40px"
+                                    android:paddingTop="10px">
 
-                                <TextView
-                                    android:id="@+id/textView_change4"
-                                    style="@style/layout_horizontal"
-                                    android:layout_width="333dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0.5"
-                                    android:text="时间/击球数"
-                                    android:textAlignment="textEnd"
-                                    android:textColor="@color/color_f1a75a"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
+                                    <TextView
+                                        android:id="@+id/textView_chartTitle4"
+                                        style="@style/layout_horizontal"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.6"
+                                        android:text="▼ 2016年"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/color_f1a75a"
+                                        android:textSize="14sp" />
+
+                                    <TextView
+                                        android:id="@+id/textView_change4"
+                                        style="@style/layout_horizontal"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.4"
+                                        android:text="时间/击球数"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/color_f1a75a"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="300dp"
+                                    android:layout_height="1dp"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:background="#FF8C00" >
+                                </RelativeLayout>
+
+                            </RelativeLayout>
 
                             <com.github.mikephil.charting.charts.CombinedChart
                                 android:id="@+id/combinedChart4"
