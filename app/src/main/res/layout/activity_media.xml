@@ -65,26 +65,26 @@
             <LinearLayout
                 android:id="@+id/ll_control"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="90dp"
                 android:layout_above="@+id/surface"
                 android:layout_alignBottom="@+id/surface"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
-                android:background="#7fffffff"
+                android:background="#d9ffffff"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <SeekBar
                     style="@style/layout_vertical"
                     android:id="@+id/seekbar"
+                    android:thumbOffset="0dp"
                     android:layout_width="match_parent"
-                    android:layout_weight="0.2"
-                    android:progressDrawable="@drawable/lay_seekbar"
-                    android:thumb="@drawable/seekbar_thumb" />
+                    android:layout_weight="0.19"
+                    android:progressDrawable="@drawable/lay_seekbar" />
 
                 <LinearLayout
                     style="@style/layout_vertical"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.16"
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
                     android:paddingLeft="10px"
@@ -96,9 +96,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="00:00"
-                        android:textColor="#ffffff"
+                        android:textColor="@color/color_gray"
                         android:textSize="12sp"
                         android:textAlignment="textStart"
+                        android:layout_marginLeft="20px"
                         tools:ignore="text" />
 
                     <TextView
@@ -109,48 +110,60 @@
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
                         android:text="10:00"
-                        android:textColor="#ffffff"
+                        android:textColor="@color/color_gray"
                         android:textSize="12sp"
+                        android:layout_marginRight="20px"
                         tools:ignore="text" />
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     style="@style/layout_vertical"
-                    android:layout_weight="0.6"
+                    android:layout_weight="0.47"
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
+                    android:layout_gravity="center|center_vertical"
                     android:paddingLeft="10px"
-                    android:paddingRight="10px">
+                    android:paddingRight="10px"
+                    android:paddingBottom="10px">
 
                     <ImageView
                         style="@style/layout_horizontal"
+                        android:id="@+id/replay"
+                        android:scaleType="center"
+                        android:layout_height="40dp"
+                        android:layout_width="40dp"
+                        android:layout_marginStart="11dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentStart="true" />
+
+                    <ImageView
+                        android:id="@+id/lastfile"
+                        style="@style/layout_horizontal"
+                        android:scaleType="center"
+                        android:layout_height="40dp"
+                        android:layout_width="40dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_toStartOf="@+id/iv_pause_or_start"
+                        android:layout_marginEnd="25dp" />
+
+                    <ImageView
                         android:id="@+id/iv_pause_or_start"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@android:drawable/ic_media_pause" />
-                    <ImageView
                         style="@style/layout_horizontal"
-                        android:id="@+id/iv_pause_or_start1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@android:drawable/ic_media_pause" />
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true" />
+
                     <ImageView
+                        android:id="@+id/nextfile"
                         style="@style/layout_horizontal"
-                        android:id="@+id/iv_pause_or_start2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@android:drawable/ic_media_pause" />
-                    <ImageView
-                        style="@style/layout_horizontal"
-                        android:id="@+id/iv_pause_or_start3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@android:drawable/ic_media_pause" />
-                </LinearLayout>
+                        android:scaleType="center"
+                        android:layout_height="40dp"
+                        android:layout_width="40dp"
+                        android:layout_marginStart="25dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_toEndOf="@+id/iv_pause_or_start" />
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -158,7 +171,7 @@
 
         <LinearLayout
             style="@style/layout_vertical"
-            android:layout_weight="0.03"
+            android:layout_weight="0.02"
             android:layout_width="match_parent"
             android:layout_height="0px">
 
