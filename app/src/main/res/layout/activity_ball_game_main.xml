@@ -6,5 +6,212 @@
     android:layout_height="match_parent"
     tools:context="com.example.myapplication.BallGameMainActivity">
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:id="@+id/appBarLayout_BallGame">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_BallGame"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#f2b75e"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:background="@drawable/main_backcolor"
+        android:layout_below="@+id/appBarLayout_BallGame"
+        android:layout_alignParentStart="true">
+
+        <com.example.myapplication.CircularRingPercentageView
+            android:id="@+id/timer_PopBall"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" />
+
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="#D54C2A"
+            android:id="@+id/relativeLayout2" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout_textPopball"
+        style="@style/layout_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relativeLayout"
+        android:background="#f06b4a"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            style="@style/layout_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_zhengshoudianqiu"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="正手颠球"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/textView_ForeHandPopNum"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:text="0个"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/textView_Popluodishijian"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="落地时间"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/textView_PopDropTime"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:text="0s"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/layout_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_fanshoudianqiu"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="反手颠球"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/textView_BackHandPopNum"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:text="0个"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/textView_dianqiusudu"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:paddingBottom="5dp"
+                android:text="颠球速度"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/textView_AvgPopSpeed"
+                style="@style/layout_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:text="0m/s"
+                android:textAlignment="center"
+                android:textColor="#EEEEEE"
+                android:textSize="14dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#F06B4A"
+        android:layout_below="@+id/linearLayout_textPopball"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout5">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout3"
+            android:layout_width="120dp"
+            android:layout_height="1dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="36dp"
+            android:background="#D54C2A">
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout4"
+            android:layout_width="120dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="36dp"
+            android:background="#D54C2A"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnPopStartStop"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="288.5dp"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_selector_deep"
+        android:text="开始        "
+        android:layout_below="@+id/relativeLayout5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp" />
+
 
 </RelativeLayout>
