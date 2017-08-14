@@ -127,25 +127,25 @@ public class FightActivity extends AppCompatActivity {
         btnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(VVP.getCurrentItem() == 0){
-                    if(isPressedBtnStartStop == false) {
-                        findViews();
-                        isPressedBtnStartStop = true;
-                        btnStartStop.setCompoundDrawables(STOP,null,null,null);
-                        btnStartStop.setText("停止        ");
-                        timer_HitBall.setMode(CircularRingPercentageView.TIMER);
-                        timer_HitBall.start();
-                    }
-                    else{
-                        findViews();
-                        isPressedBtnStartStop = false;
-                        btnStartStop.setCompoundDrawables(START,null,null,null);
-                        btnStartStop.setText("开始        ");
-                    }
+            if(VVP.getCurrentItem() == 0){
+                if(isPressedBtnStartStop == false) {
+                    findViews();
+                    isPressedBtnStartStop = true;
+                    btnStartStop.setCompoundDrawables(STOP,null,null,null);
+                    btnStartStop.setText("停止        ");
+                    timer_HitBall.setMode(CircularRingPercentageView.TIMER);
+                    timer_HitBall.start();
                 }
-                else {
-                    finish();
+                else{
+                    findViews();
+                    isPressedBtnStartStop = false;
+                    btnStartStop.setCompoundDrawables(START,null,null,null);
+                    btnStartStop.setText("开始        ");
                 }
+            }
+            else {
+                finish();
+            }
             }
         });
         VVP.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
