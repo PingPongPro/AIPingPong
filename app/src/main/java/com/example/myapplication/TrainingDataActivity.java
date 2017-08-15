@@ -28,6 +28,7 @@ import com.github.mikephil.charting.charts.CombinedChart;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -43,7 +44,11 @@ public class TrainingDataActivity extends AppCompatActivity {
     private CombinedChartManager combinedChartManager_month;
     private CombinedChartManager combinedChartManager_year;
 
-    private final int SELECTWEEK=0;
+    private TextView textView_week;
+    private TextView textView_month;
+    private TextView textView_year;
+
+    private final int SELECTDATE=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,13 +228,18 @@ public class TrainingDataActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Intent intent =new Intent();
-                            intent.setClass(TrainingDataActivity.this,ComboBoxActivity.class);
-                            intent.putExtra("Mode",ComboBoxActivity.WEEK);
-                            intent.putExtra("Number",DateTool.calculateWeekNumber());
-                            startActivityForResult(intent,SELECTWEEK);
+                            intent.setClass(TrainingDataActivity.this,CalendarActivity.class);
+                            //intent.setClass(TrainingDataActivity.this,ComboBoxActivity.class);
+                            //intent.putExtra("Mode",ComboBoxActivity.WEEK);
+                            //intent.putExtra("Number",DateTool.calculateWeekNumber());
+                            startActivityForResult(intent,SELECTDATE);
                         }
                     }
             );
+
+            this.textView_week=(TextView)findViewById(R.id.textView_chartTitle2);
+            this.textView_month=(TextView)findViewById(R.id.textView_chartTitle3);
+            this.textView_year=(TextView)findViewById(R.id.textView_chartTitle4);
         }
         catch(Exception e)
         {
@@ -286,12 +296,16 @@ public class TrainingDataActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK)
         {
-            if (requestCode == SELECTWEEK)
+            if (requestCode == SELECTDATE)
             {
-                Main2Activity.databaseService.getAllFromDailyRecord();
-                final String message=intent.getExtras().getString("String");
-                final TextView textView=(TextView)findViewById(R.id.textView_chartTitle2);
-                textView.setText(message);
+                //Main2Activity.databaseService.getAllFromDailyRecord();
+                final String message=intent.getExtras().getString("date");
+                final int weekNumber=DateTool.calculateWeekNumber(message);
+                final int monthNumber=DateTool.getDateMessage(message,DateTool.MONTH);
+                final int yearNumber=DateTool.getDateMessage(message,DateTool.YEAR);
+                this.textView_week.setText("▼ 第"+weekNumber+"周");
+                this.textView_month.setText("▼ "+monthNumber+"月");
+                this.textView_year.setText("▼ "+yearNumber+"年");
             }
         }
     }

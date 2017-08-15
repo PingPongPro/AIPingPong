@@ -118,6 +118,9 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask" />
+        <activity
+            android:name="com.example.myapplication.CalendarActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

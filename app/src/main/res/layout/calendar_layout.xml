@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical" android:layout_width="match_parent"
+android:layout_height="match_parent" android:background="@color/color_bg_gray"
+    android:paddingTop="50dp">
+
+    <LinearLayout
+        style="@style/layout_vertical"
+        android:layout_weight="0.1"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/record_left"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/record_left_press" />
+
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/record_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/color_white"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/record_right"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@drawable/record_right_press" />
+
+    </LinearLayout>
+
+    <!---->
+    <LinearLayout
+        style="@style/layout_vertical"
+        android:layout_weight="0.9"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <LinearLayout
+            style="@style/layout_vertical"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="center|center_vertical"
+            android:layout_weight="0.10"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp">
+
+            <TextView
+                style="@style/layout_horizontal"
+                android:id="@+id/textView"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:text="日"
+                android:textColor="@color/color_black"
+                android:textSize="16sp" />
+
+            <TextView
+                style="@style/layout_horizontal"
+                android:id="@+id/textView2"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="一"
+                android:textAlignment="center"
+                android:textColor="@color/color_black"
+                android:textSize="16sp" />
+
+            <TextView
+                style="@style/layout_horizontal"
+                android:id="@+id/textView3"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="二"
+                android:textAlignment="center"
+                android:textColor="@color/color_black"
+                android:textSize="16sp" />
+
+            <TextView
+                style="@style/layout_horizontal"
+                android:id="@+id/textView4"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="三"
+                android:textAlignment="center"
+                android:textColor="@color/color_black"
+                android:textSize="16sp" />
+
+            <TextView
+                style="@style/layout_horizontal"
+                android:id="@+id/textView5"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="四"
+                android:textAlignment="center"
+                android:textColor="@color/color_black"
+                android:textSize="16sp" />
+
+            <TextView
+                style="@style/layout_horizontal"
+                android:id="@+id/textView6"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="五"
+                android:textAlignment="center"
+                android:textColor="@color/color_black"
+                android:textSize="16sp" />
+
+            <TextView
+                style="@style/layout_horizontal"
+                android:id="@+id/textView7"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="六"
+                android:textAlignment="center"
+                android:textColor="@color/color_black"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <GridView
+            style="@style/layout_vertical"
+            android:id="@+id/record_gridView"
+            android:layout_width="match_parent"
+            android:layout_weight="0.9"
+            android:gravity="center"
+            android:numColumns="7"
+            android:listSelector="@color/transparent"
+            android:layout_marginLeft="20dp">
+        </GridView>
+    </LinearLayout>
+</LinearLayout>

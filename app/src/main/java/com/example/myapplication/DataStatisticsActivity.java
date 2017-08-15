@@ -224,11 +224,3 @@ public class DataStatisticsActivity extends AppCompatActivity {
         }
     }
 }
-class myException implements Thread.UncaughtExceptionHandler
-{
-
-    @Override
-    public void uncaughtException(Thread t, Throwable e) {
-        e.printStackTrace();
-    }
-}
