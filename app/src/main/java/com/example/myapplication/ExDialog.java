@@ -36,6 +36,18 @@ public class ExDialog extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent = this.getIntent();
+		try
+		{
+			Bundle bundle=intent.getExtras();
+			DirTitle= bundle.getString("title");
+			RootDir=bundle.getString("rootdir");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		System.out.println(DirTitle);
+        System.out.println(RootDir);
 		setTitle(DirTitle);
 		mDir = RootDir;
 		mData = getData();

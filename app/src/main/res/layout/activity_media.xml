@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:text="训练走势"
+                android:text="回放模式"
                 android:textColor="@color/color_eeeeee"
                 android:textSize="18sp" />
         </android.support.v7.widget.Toolbar>
@@ -74,45 +74,43 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <SeekBar
-                    style="@style/layout_vertical"
-                    android:id="@+id/seekbar"
-                    android:thumbOffset="0dp"
-                    android:layout_width="match_parent"
-                    android:layout_weight="0.19"
-                    android:progressDrawable="@drawable/lay_seekbar" />
-
                 <LinearLayout
                     style="@style/layout_vertical"
-                    android:layout_weight="0.16"
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
                     android:paddingLeft="10px"
-                    android:paddingRight="10px">
+                    android:paddingRight="10px"
+                    android:layout_height="wrap_content">
 
                     <TextView
                         style="@style/layout_horizontal"
                         android:id="@+id/tv_time"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:text="00:00"
                         android:textColor="@color/color_gray"
                         android:textSize="12sp"
                         android:textAlignment="textStart"
-                        android:layout_marginLeft="20px"
-                        tools:ignore="text" />
+                        tools:ignore="text"
+                        android:layout_width="wrap_content" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar"
+                        style="@style/layout_horizontal"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.96"
+                        android:progressDrawable="@drawable/lay_seekbar"
+                        android:thumbOffset="1.5dp" />
 
                     <TextView
                         style="@style/layout_horizontal"
                         android:id="@+id/tv_time_max"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.03"
                         android:textAlignment="textEnd"
                         android:text="10:00"
                         android:textColor="@color/color_gray"
                         android:textSize="12sp"
-                        android:layout_marginRight="20px"
                         tools:ignore="text" />
                 </LinearLayout>
 
@@ -142,16 +140,16 @@
                         android:scaleType="center"
                         android:layout_height="40dp"
                         android:layout_width="40dp"
-                        android:layout_alignParentBottom="true"
+                        android:layout_alignTop="@+id/replay"
                         android:layout_toStartOf="@+id/iv_pause_or_start"
-                        android:layout_marginEnd="25dp" />
+                        android:layout_marginEnd="19dp" />
 
                     <ImageView
                         android:id="@+id/iv_pause_or_start"
                         style="@style/layout_horizontal"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true" />
 
                     <ImageView
@@ -161,8 +159,9 @@
                         android:layout_height="40dp"
                         android:layout_width="40dp"
                         android:layout_marginStart="25dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_toEndOf="@+id/iv_pause_or_start" />
+                        android:layout_alignTop="@+id/lastfile"
+                        android:layout_toEndOf="@+id/iv_pause_or_start"
+                        android:layout_alignBottom="@+id/lastfile" />
                 </RelativeLayout>
 
             </LinearLayout>

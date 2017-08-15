@@ -31,8 +31,13 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,9 +45,13 @@ public class MediaActivity extends AppCompatActivity {
 
     private final static String TAG = MediaActivity.class.getSimpleName();
     private final int CHOOSEFILE=0;
-    private boolean shouldStart=false;
+    private final String VEDIONAME="real.mp4";
+    private String lastFilePath=null;
+    private String nextFilePath=null;
+    private boolean shouldStart=true;
     private RelativeLayout rl;
     private int currentPosition=0;
+    private boolean isSurfaceViewCreated=false;
 
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
@@ -64,6 +73,8 @@ public class MediaActivity extends AppCompatActivity {
     private final int CONTROLLERHEIGHT=90;
 
     public final static String FirstFolder = "Idami";    //一级目录名称
+    private final String DEMO_PATH = Environment.getExternalStorageDirectory()
+            + File.separator +"ballGame"+ File.separator+ "demo";
     private final static String ALBUM_PATH = Environment.getExternalStorageDirectory()
             + File.separator + FirstFolder + File.separator;
 
@@ -73,8 +84,11 @@ public class MediaActivity extends AppCompatActivity {
     private final static int SINGLE_MEDIA = 0;
     private final static int MULTI_MEDIA = 1;
     private int currentPlayType = SINGLE_MEDIA;
-
     private int currentMedia = 0;
+    private final int REAL=0;
+    private final int DEMO=1;
+    private int currentChoose=REAL;
+
 
     private int screenWidth;
     private int screenHeight;
@@ -108,6 +122,7 @@ public class MediaActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        currentChoose=REAL;
                         Intent intent = new Intent();
                         intent.setClass(MediaActivity.this, ExDialog.class);
                         startActivityForResult(intent, CHOOSEFILE);
@@ -115,8 +130,20 @@ public class MediaActivity extends AppCompatActivity {
                 }
         );
 
+        this.button_demo.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        currentChoose=DEMO;
+                        Intent intent = new Intent();
+                        intent.putExtra("title","演示视频");
+                        intent.putExtra("rootdir",DEMO_PATH);
+                        intent.setClass(MediaActivity.this, ExDialog.class);
+                        startActivityForResult(intent, CHOOSEFILE);
+                    }
+                }
+        );
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -124,21 +151,11 @@ public class MediaActivity extends AppCompatActivity {
                 try
                 {
                     ///storage/emulated/0/ballGame/data/REAL.mp4
-                    this.vedioPath=data.getExtras().getString("path")+File.separator+"REAL.mp4";
-                    //System.out.println(this.vedioPath);
-                    pausePro();
-                    player.release();
-                    //if(player!=null&&player.isPlaying())
-                        //player.pause();
-                    player=new MediaPlayer();
-                    player.setDataSource(vedioPath);
-                    player.prepare();
-                    player.setDisplay(this.surfaceHolder);
-                    this.currentPosition=0;
-                    this.seekBar.setMax(player.getDuration());
-                    this.seekBar.setProgress(0);
-                    isPlaying=false;
-                    //player.start();
+                    if(currentChoose==REAL)
+                        this.vedioPath=data.getExtras().getString("path")+File.separator+VEDIONAME;
+                    if(currentChoose==DEMO)
+                        this.vedioPath=data.getExtras().getString("path")+File.separator+"demo_fan.mp4";
+                    changeVedio();
                 }
                 catch(Exception e)
                 {
@@ -147,6 +164,119 @@ public class MediaActivity extends AppCompatActivity {
 
             }
         }
+    }
+    private void changeVedio()
+    {
+        try
+        {
+            pausePro();
+            player.release();
+            //if(player!=null&&player.isPlaying())
+            //player.pause();
+            player=new MediaPlayer();
+            player.setDataSource(vedioPath);
+            player.prepare();
+            player.setDisplay(this.surfaceHolder);
+            this.currentPosition=0;
+            this.seekBar.setMax(player.getDuration());
+            this.seekBar.setProgress(0);
+            this.lastFilePath=getLastFilePath();
+            this.nextFilePath=getNextFilePath();
+            if(lastFilePath==null)
+                lastFile.setVisibility(View.INVISIBLE);
+            else
+                lastFile.setVisibility(View.VISIBLE);
+            if(nextFilePath==null)
+                nextFile.setVisibility(View.INVISIBLE);
+            else
+                nextFile.setVisibility(View.VISIBLE);
+            isPlaying=true;
+            player.start();
+            startPro();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+    private String getLastFilePath()
+    {
+        try
+        {
+            final String RootDir = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"ballGame";
+            File f = new File(RootDir);
+            List files = Arrays.asList(f.listFiles());
+
+            Collections.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    if (o1.isDirectory() && o2.isFile())
+                        return -1;
+                    if (o1.isFile() && o2.isDirectory())
+                        return 1;
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+            String url=null;
+
+            if (files != null) {
+                for (int i = 0; i < files.size(); i++) {
+                    File file=((File)(files.get(i)));
+                    if (file.isDirectory())
+                    {
+                        if(this.vedioPath.equals(file.getPath()+File.separator+VEDIONAME)&&url!=null)
+                            return url+File.separator+VEDIONAME;
+                        else
+                            url=((File)(files.get(i))).getPath();
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    private String getNextFilePath()
+    {
+        try
+        {
+            final String RootDir = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"ballGame";
+            File f = new File(RootDir);
+            List files = Arrays.asList(f.listFiles());
+
+            Collections.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    if (o1.isDirectory() && o2.isFile())
+                        return -1;
+                    if (o1.isFile() && o2.isDirectory())
+                        return 1;
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+
+            boolean found=false;
+            if (files != null) {
+                for (int i = 0; i < files.size(); i++) {
+                    String url=((File)(files.get(i))).getPath();
+                    if (((File)(files.get(i))).isDirectory())
+                    {
+                        if(found&&url!=null)
+                            return url+File.separator+VEDIONAME;
+                        else if(this.vedioPath.equals(url+File.separator+VEDIONAME))
+                            found=true;
+                    }
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -185,7 +315,7 @@ public class MediaActivity extends AppCompatActivity {
         rl = (RelativeLayout) findViewById(R.id.relativeLayout1);
         surfaceView = (SurfaceView) findViewById(R.id.surface);
         seekBar = (SeekBar) findViewById(R.id.seekbar);
-        Drawable drawable = DensityUtil.scaleImage(this,R.drawable.seekbar,40,40,DensityUtil.DP);
+        Drawable drawable = DensityUtil.scaleImage(this,R.drawable.seekbar,30,30,DensityUtil.DP);
         seekBar.setThumb(drawable);
         rePlay=(ImageView) findViewById(R.id.replay);
         rePlay.setImageDrawable(DensityUtil.scaleImage(this,R.drawable.playagain,60,60,DensityUtil.DP));
@@ -199,6 +329,12 @@ public class MediaActivity extends AppCompatActivity {
         tvTime = (TextView) findViewById(R.id.tv_time);
         tvTimeMax = (TextView) findViewById(R.id.tv_time_max);
 
+        this.lastFilePath=getLastFilePath();
+        this.nextFilePath=getNextFilePath();
+        if(lastFilePath==null)
+            lastFile.setVisibility(View.INVISIBLE);
+        if(nextFilePath==null)
+            nextFile.setVisibility(View.INVISIBLE);
 
 //        surfaceView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 //            @Override
@@ -218,7 +354,7 @@ public class MediaActivity extends AppCompatActivity {
                 if (isPlaying) {
                     currentPosition=player.getCurrentPosition();
                     player.pause();
-                    ivPauseOrStart.setImageResource(android.R.drawable.ic_media_play);
+                    ivPauseOrStart.setImageResource(R.drawable.video_start);
                     isPlaying = false;
                     shouldStart=false;
                     pausePro();
@@ -227,12 +363,47 @@ public class MediaActivity extends AppCompatActivity {
                     player.start();
                     seekBar.setMax(player.getDuration());
                     startPro();
-                    ivPauseOrStart.setImageResource(android.R.drawable.ic_media_pause);
+                    ivPauseOrStart.setImageResource(R.drawable.video_pause);
                     isPlaying = true;
                     shouldStart=true;
                 }
             }
         });
+
+        rePlay.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MediaActivity.this.player.seekTo(0);
+                        MediaActivity.this.player.start();
+                    }
+                }
+        );
+
+        lastFile.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(lastFilePath!=null)
+                        {
+                            vedioPath=lastFilePath;
+                            changeVedio();
+                        }
+                    }
+                }
+        );
+        nextFile.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(nextFilePath!=null)
+                        {
+                            vedioPath=nextFilePath;
+                            changeVedio();
+                        }
+                    }
+                }
+        );
 
         //显示或隐藏进度条
         rl.setOnClickListener(new View.OnClickListener() {
@@ -371,6 +542,7 @@ public class MediaActivity extends AppCompatActivity {
 
                     //setSurficeViewSize();
                     Log.e(TAG, "-------------");
+                    System.out.println(shouldStart);
 
                     if(shouldStart)
                         startPlayer();
@@ -511,7 +683,7 @@ public class MediaActivity extends AppCompatActivity {
         currentPosition=player.getCurrentPosition();
         player.pause();
         pausePro();
-        player.release();
+        //player.release();
     }
 
     @Override
@@ -533,6 +705,8 @@ public class MediaActivity extends AppCompatActivity {
             surfaceHolder.addCallback(new SurfaceHolder.Callback() {
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
+                    //System.out.println("callBack");
+                    isSurfaceViewCreated=true;
                     player = new MediaPlayer();
                     player.setOnErrorListener(
                             new MediaPlayer.OnErrorListener() {
@@ -586,9 +760,26 @@ public class MediaActivity extends AppCompatActivity {
 
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
+                    isSurfaceViewCreated=false;
                 }
             });
-
+        }
+        else if(isSurfaceViewCreated)
+        {
+            try
+            {
+                if(shouldStart)
+                {
+                    isPlaying = true;
+                    player.seekTo(currentPosition);
+                    player.start();
+                    startPro();
+                }
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }
