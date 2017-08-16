@@ -216,10 +216,10 @@ public class Main2Activity extends AppCompatActivity
         btnChooseMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mConnected == false){
-                    new AlertDialog.Builder(Main2Activity.this).setMessage("未检测到蓝牙，请连接蓝牙").show();
-                }
-                else
+//                if(mConnected == false){
+//                    new AlertDialog.Builder(Main2Activity.this).setMessage("未检测到蓝牙，请连接蓝牙").show();
+//                }
+//                else
                 {
                     Intent intent = new Intent();
                     intent.setClass(Main2Activity.this, ModeChoose.class);
