@@ -45,6 +45,7 @@ public class MediaActivity extends AppCompatActivity {
 
     private final static String TAG = MediaActivity.class.getSimpleName();
     private final int CHOOSEFILE=0;
+    private final int RECORDING = 2;
     private final String VEDIONAME="real.mp4";
     private String lastFilePath=null;
     private String nextFilePath=null;
@@ -87,6 +88,7 @@ public class MediaActivity extends AppCompatActivity {
     private int currentMedia = 0;
     private final int REAL=0;
     private final int DEMO=1;
+    private final int RECORD = 2;
     private int currentChoose=REAL;
 
 
@@ -118,6 +120,15 @@ public class MediaActivity extends AppCompatActivity {
 
     private void addOnclickListener()
     {
+        this.button_vedio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentChoose = RECORD;
+                Intent intent = new Intent();
+                intent.setClass(MediaActivity.this,PlayBack.class);
+                startActivityForResult(intent, RECORDING);
+            }
+        });
         this.button_choose.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
