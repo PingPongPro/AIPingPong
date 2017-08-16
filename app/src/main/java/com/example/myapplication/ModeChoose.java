@@ -44,7 +44,7 @@ public class ModeChoose extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ModeChoose.this, MediaActivity.class);
-                intent.putExtra("path", "/storage/emulated/0/ballGame/demo_zheng.mp4");
+                intent.putExtra("path", "/storage/emulated/0/ballGame/default/real.mp4");
                 startActivity(intent);
             }
         });
