@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.os.IBinder;
@@ -69,6 +70,9 @@ public class FightActivity extends AppCompatActivity {
             File.separator+"ballGame/demo_fan.mp4";
     //折线图
     private LineChart lineChart_Fight;
+    private DataChartManager dataChartManager;
+    private String dataPath=Environment.getExternalStorageDirectory().getAbsolutePath()+
+            File.separator+"ballGame/default/data.txt";
 
 
     BluetoothGattCharacteristic mGattCharacteristics;
@@ -213,6 +217,9 @@ public class FightActivity extends AppCompatActivity {
                         hasEverPressedBtnStartStop = true;
                         mediaPlayerManagerFor3D = new MediaPlayerManager(surfaceView_3Dmodel, mediaPath_Forehand, true);
                         mediaPlayerManagerFor3D.startVideo();
+                        dataChartManager = new DataChartManager(lineChart_Fight,dataPath,
+                                new String[]{"accX","accY","accZ"},new int[]{Color.RED,Color.BLUE,Color.GREEN},FightActivity.this);
+                        dataChartManager.start();
                     }
                 }
             }
