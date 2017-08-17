@@ -58,7 +58,8 @@ public class MediaPlayerManager
         this.mediaPath=path;
         this.createSurface();
         this.prepareVideo();
-        this.surfaceView.setBackground(this.getVedioPicture(this.mediaPath,this.currentIndex));
+        if(loop == false)
+            this.surfaceView.setBackground(this.getVedioPicture(this.mediaPath,this.currentIndex));
     }
     public int getCurrentIndex()
     {
@@ -77,7 +78,7 @@ public class MediaPlayerManager
     {
         this.surfaceHolder=surfaceView.getHolder();
         this.surfaceHolder.addCallback(new MyCallBack());
-        surfaceHolder.setFixedSize(100,100);
+        //surfaceHolder.setFixedSize(100,100);
     }
     private void prepareVideo()
     {

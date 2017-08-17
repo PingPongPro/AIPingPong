@@ -11,6 +11,11 @@
         android:layout_height="180dp"
         android:background="#f2b75e">
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/linechart_Fight"
+            style="@style/layout_vertical"
+            android:layout_height="202dp" />
+
     </RelativeLayout>
 
     <RelativeLayout

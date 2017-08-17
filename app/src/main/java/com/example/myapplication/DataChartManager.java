@@ -221,7 +221,7 @@ public class DataChartManager extends Thread{
             //添加一个空的 LineData
             lineData = new LineData();
             lineChart.setData(lineData);
-            lineChart.invalidate();
+            //lineChart.invalidate();
             lineChart.setTouchEnabled(false);
 
             preAddData(250);
@@ -337,7 +337,7 @@ public class DataChartManager extends Thread{
             Description description = new Description();
             description.setText(str);
             lineChart.setDescription(description);
-            lineChart.invalidate();
+            //lineChart.invalidate();
         }
     }
     public void pauseChart()
