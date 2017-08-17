@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
@@ -44,6 +48,12 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
     private Drawable VIDEO_PAUSE;
     private Drawable VIDEO_START;
 
+    private SeekBar seekBar;
+    private LinearLayout videoPlay_BigScreen;
+    private RelativeLayout wholeLayout;
+    private int CONTROLLERHEIGHT = 90;
+    private boolean isShowController = true;
+
     private android.os.Handler handler = new android.os.Handler();
     private Runnable runnable = new Runnable() {
         @Override
@@ -53,6 +63,17 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
             handler.postDelayed(this,1000);
         }
     };
+
+    private void startAnimHide(){
+        ObjectAnimator.ofFloat(videoPlay_BigScreen, View.TRANSLATION_Y,
+                0, DensityUtil.dip2px(this, this.CONTROLLERHEIGHT))
+                .setDuration(200).start();
+    }
+    private void startAnimShow(){
+        ObjectAnimator.ofFloat(videoPlay_BigScreen, View.TRANSLATION_Y,
+                DensityUtil.dip2px(this, this.CONTROLLERHEIGHT), 0)
+                .setDuration(200).start();
+    }
 
     private void myListener(){
         mBtnStartStop.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +166,7 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
             public void onClick(View view) {
                 mIsPlay = true;
                 mImageView.setVisibility(View.GONE);
+                mBtnPlay.setBackground(VIDEO_PAUSE);
                 if (mediaPlayer == null) {
                     mediaPlayer = new MediaPlayer();
                 }
@@ -161,6 +183,18 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
                 mediaPlayer.start();
             }
         });
+        wholeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isShowController){
+                    startAnimHide();
+                }
+                else{
+                    startAnimShow();
+                }
+                isShowController = !isShowController;
+            }
+        });
     }
 
     @Override
@@ -173,6 +207,10 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
         mBtnStartStop = (Button) findViewById(R.id.btnStartStop);
         mBtnPlay = (Button) findViewById(R.id.btnPlayVideo);
         //textView = (TextView)findViewById(R.id.text);
+        seekBar = (SeekBar)findViewById(R.id.seekbar_BigScreen);
+        wholeLayout = (RelativeLayout)findViewById(R.id.wholeLayout);
+        videoPlay_BigScreen = (LinearLayout)findViewById(R.id.videoPlay_BigScreen);
+
         VIDEO_START = getResources().getDrawable(R.drawable.video_start);
         VIDEO_PAUSE = getResources().getDrawable(R.drawable.video_pause);
         myListener();
