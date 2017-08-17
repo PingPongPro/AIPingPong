@@ -16,6 +16,8 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ProgressBar;
 
+import java.text.DecimalFormat;
+
 public class ArcProgress extends ProgressBar {
     public static final int STYLE_TICK = 1;
     public static final int STYLE_ARC = 0;
@@ -58,18 +60,34 @@ public class ArcProgress extends ProgressBar {
     private int Mode=0;
     public static final int SPORTTIME=0;
     public static final int HITCOUNTER=1;
+    private int precision=0;
+    public void setPrecision(int precision) {
+        this.precision = precision;
+    }
+
+    public int getPrecision() {
+        return precision;
+    }
     public void setTask(int value)
     {
         if(value>0)
             this.task=value;
     }
-    public void updateMiddle(int value)
+    public void updateMiddle(float value)
     {
-        if(value<=task&&value>=0)
-        {
-            this.textMiddle=value+"";
-            this.setProgress(value*100/task);
-        }
+        if(value<0)
+            return ;
+        String parse=".";
+        int thisPrecision=(value>=10000?2:precision);
+        for(int i=0;i<thisPrecision;i++)
+            parse+="0";
+        DecimalFormat decimalFormat=new DecimalFormat(parse);
+        float progressValue=(value>task?task:value);
+        String postfix=(value>10000?"w":"");
+        value=(value>10000?value/10000:value);
+        this.textMiddle=(thisPrecision==0?(int)value:decimalFormat.format(value))+postfix;
+        this.setProgress((int)(progressValue*100/task));
+        invalidate();
     }
     public void setMode(int value)
     {

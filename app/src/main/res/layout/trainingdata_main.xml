@@ -342,7 +342,7 @@
                     android:textAlignment="center"
                     android:gravity="top"
                     android:layout_weight="1"
-                    android:id="@+id/textView3"
+                    android:id="@+id/textView_aver_speed"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:text="0m/s" />
@@ -371,7 +371,7 @@
                     android:textAlignment="center"
                     android:gravity="top"
                     android:layout_weight="1"
-                    android:id="@+id/textView5"
+                    android:id="@+id/textView_max_speed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="0m/s" />
@@ -399,7 +399,7 @@
                     android:textAlignment="center"
                     android:gravity="top"
                     android:layout_weight="1"
-                    android:id="@+id/textView7"
+                    android:id="@+id/textView_energy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="0" />

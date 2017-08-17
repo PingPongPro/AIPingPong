@@ -13,6 +13,87 @@ public class DateTool {
     public static final int WEEK=0;
     public static final int MONTH=1;
     public static final int YEAR=2;
+    //获得指定日期该周的周一的日期
+    public static String getFirstDayOfWeek(String date)
+    {
+        int weekNumber=dayForWeek(date);
+        if(weekNumber==7)
+            return date;
+        String ans=date;
+        ans=nextOrLastDay(ans,-weekNumber);
+        return ans;
+    }
+    //获得指定日期该周的周日的日期
+    public static String getLastDayOfWeek(String date)
+    {
+        int weekNumber=dayForWeek(date);
+        String ans=date;
+        ans=nextOrLastDay(ans,6-weekNumber);
+        return ans;
+    }
+    //获得指定日期的月头
+    public static String getFirstDayOfMonth(String date)
+    {
+        try
+        {
+            int monthNumber=getDateMessage(date,DateTool.MONTH);
+            String ans=getDateMessage(date,DateTool.YEAR)+"-"+
+                    (monthNumber<10?"0"+monthNumber:monthNumber)+"-"+"01";
+            return ans;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    //获得指定日期的月尾
+    public static String getLastDayOfMonth(String date)
+    {
+        try
+        {
+            int yearNumber=getDateMessage(date,DateTool.YEAR);
+            int monthNumber=getDateMessage(date,DateTool.MONTH);
+            int lastDay=getDaysOfMonth(yearNumber,monthNumber);
+            String ans=yearNumber+"-"+
+                    (monthNumber<10?"0"+monthNumber:monthNumber)+"-"+lastDay;
+            return ans;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    //获得指定日期的年头
+    public static String getFirstDayOfYear(String date)
+    {
+        try
+        {
+            String ans=getDateMessage(date,DateTool.YEAR)+"-01-01";
+            return ans;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    //获得指定日期的年尾
+    public static String getLastDayOfYear(String date)
+    {
+        try
+        {
+            int yearNumber=getDateMessage(date,DateTool.YEAR);
+            String ans=yearNumber+"-12-31";
+            return ans;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
     //计算指定日期是星期几
     public static int dayForWeek(String pTime)
     {
@@ -256,5 +337,44 @@ public class DateTool {
             e.printStackTrace();
         }
         return -1;
+    }
+    //计算相邻日期，+1代表下一天，-1代表上一天
+    public static String nextOrLastDay(String time, int number)
+    {
+        try
+        {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date oldTime=format.parse(time);
+            Calendar calendar=Calendar.getInstance();
+            calendar.setTime(oldTime);
+            calendar.set(Calendar.DAY_OF_MONTH,calendar.get(Calendar.DAY_OF_MONTH)+number);
+            return format.format(calendar.getTime());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static int daysBetween(String date1,String date2)
+    {
+        try
+        {
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            Date fdate=sdf.parse(date1);
+            Date ldate=sdf.parse(date2);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(fdate);
+            long time1 = cal.getTimeInMillis();
+            cal.setTime(ldate);
+            long time2 = cal.getTimeInMillis();
+            long between_days=(time2-time1)/(1000*3600*24);
+            return Integer.parseInt(String.valueOf(between_days))+1;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return 1;
     }
 }

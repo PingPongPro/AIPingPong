@@ -30,6 +30,7 @@ public class CombinedChartManager {
     private List<IBarDataSet> dataSets=new ArrayList<IBarDataSet>();
     private int dataCount;
     private String dataDescription="";
+    private List<Float> chartData=null;
     //private XAxis YAxis;
 
     public CombinedChartManager(CombinedChart chart)
@@ -53,22 +54,26 @@ public class CombinedChartManager {
         MyXFormatter myXFormatter=new MyXFormatter();
         combinedChart.getXAxis().setValueFormatter(myXFormatter);
 
-        combinedChart.getAxisLeft().setAxisMinimum(-1f);
-        combinedChart.getAxisRight().setAxisMinimum(-1f);
+        combinedChart.getAxisLeft().setAxisMinimum(0f);//-1
+        combinedChart.getAxisRight().setAxisMinimum(0f);//-1
     }
     public String getDataDescription()
     {
         return dataDescription;
     }
+    public List<Float> getChartData()
+    {
+        return this.chartData;
+    }
     public void setData(String description,List<Float> data)
     {
+        this.chartData=data;
         this.dataDescription=description;
         this.dataCount=data.size();
         this.combinedChart.getLegend().setEnabled(false);
         CombinedData combinedData=new CombinedData();
         combinedData.setData(generateLineData(data,"折线图"));
         combinedData.setData(generateBarData(data,"柱状图"));
-
         combinedChart.setData(combinedData);
         combinedChart.invalidate();
     }

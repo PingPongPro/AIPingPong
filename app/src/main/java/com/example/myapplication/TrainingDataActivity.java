@@ -2,33 +2,28 @@ package com.example.myapplication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 
-import org.w3c.dom.Text;
-
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -47,8 +42,15 @@ public class TrainingDataActivity extends AppCompatActivity {
     private TextView textView_week;
     private TextView textView_month;
     private TextView textView_year;
+    private TextView textView_aver_speed;
+    private TextView textView_max_speed;
+    private TextView textView_energy;
 
-    private final int SELECTDATE=0;
+    private final int SELECTDATE =0;
+    private int currentChoose=DateTool.WEEK;
+
+    private String currentDate=DateTool.getCurrentDate();
+    private DataCache dataCache=new DataCache(30);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,47 +83,40 @@ public class TrainingDataActivity extends AppCompatActivity {
 //            for(int i=1;i<=19;i++)
 //                floatList.add(random.nextFloat()*50);
 //            barChartManager.setData(floatList);
+
+
             List<Float> floatList=new ArrayList<Float>();
             Random random=new Random();
 
             floatList.clear();
             CombinedChart combinedChart2 =(CombinedChart) findViewById(R.id.combinedChart2);
             combinedChartManager_week=new CombinedChartManager(combinedChart2);
-            for(int i=1;i<=7;i++)
-                floatList.add(random.nextFloat()*50);
-            combinedChartManager_week.setData("击球数",floatList);
+            setDataForManager("击球数",combinedChartManager_week,DateTool.WEEK);
 
             floatList.clear();
             CombinedChart combinedChart3 =(CombinedChart) findViewById(R.id.combinedChart3);
             combinedChartManager_month=new CombinedChartManager(combinedChart3);
-            for(int i=1;i<=30;i++)
-                floatList.add(random.nextFloat()*50);
-            combinedChartManager_month.setData("击球数",floatList);
+            setDataForManager("击球数",combinedChartManager_month,DateTool.MONTH);
 
             floatList.clear();
             CombinedChart combinedChart4 =(CombinedChart) findViewById(R.id.combinedChart4);
             combinedChartManager_year=new CombinedChartManager(combinedChart4);
-            for(int i=1;i<=12;i++)
-                floatList.add(random.nextFloat()*50);
-            combinedChartManager_year.setData("击球数",floatList);
-
+            setDataForManager("击球数",combinedChartManager_year,DateTool.YEAR);
 
             TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
             tabHost.setup();
 
-            TabRender.TabHostRender(new int[]{R.id.tab2, R.id.tab3, R.id.tab4},
+            TabHostRender(new int[]{R.id.tab2, R.id.tab3, R.id.tab4},
                     new int[]{R.drawable.week,R.drawable.week_click,
-                            R.drawable.month,R.drawable.month_click,R.drawable.year,R.drawable.year_click,},tabHost,this);
+                            R.drawable.month,R.drawable.month_click,R.drawable.year,R.drawable.year_click,},tabHost);
 
             arcProgress=(ArcProgress) findViewById(R.id.arcProgress1);
             arcProgress.setMode(ArcProgress.SPORTTIME);
-            arcProgress.setTask(15);
-            arcProgress.updateMiddle(12);
+            arcProgress.setTask(14);
 
             arcProgress1=(ArcProgress) findViewById(R.id.arcProgress2);
             arcProgress1.setMode(ArcProgress.HITCOUNTER);
-            arcProgress1.setTask(150);
-            arcProgress1.updateMiddle(100);
+            arcProgress1.setTask(2100);
 
             final TextView textView2=(TextView)findViewById(R.id.textView_change2);
             initTextView(textView2);
@@ -133,13 +128,13 @@ public class TrainingDataActivity extends AppCompatActivity {
                             int size=0;
                             if(combinedChartManager_week.getDataDescription().equals("时间"))
                             {
-                                setDataForManager("击球数",combinedChartManager_week);
+                                setDataForManager("击球数",combinedChartManager_week,DateTool.WEEK);
                                 text="击球数/时间";
                                 size=3;
                             }
                             else
                             {
-                                setDataForManager("时间",combinedChartManager_week);
+                                setDataForManager("时间",combinedChartManager_week,DateTool.WEEK);
                                 text="时间/击球数";
                                 size=2;
                             }
@@ -166,13 +161,13 @@ public class TrainingDataActivity extends AppCompatActivity {
                             int size=0;
                             if(combinedChartManager_month.getDataDescription().equals("时间"))
                             {
-                                setDataForManager("击球数",combinedChartManager_month);
+                                setDataForManager("击球数",combinedChartManager_month,DateTool.MONTH);
                                 text="击球数/时间";
                                 size=3;
                             }
                             else
                             {
-                                setDataForManager("时间",combinedChartManager_month);
+                                setDataForManager("时间",combinedChartManager_month,DateTool.MONTH);
                                 text="时间/击球数";
                                 size=2;
                             }
@@ -199,13 +194,13 @@ public class TrainingDataActivity extends AppCompatActivity {
                             int size=0;
                             if(combinedChartManager_year.getDataDescription().equals("时间"))
                             {
-                                setDataForManager("击球数",combinedChartManager_year);
+                                setDataForManager("击球数",combinedChartManager_year,DateTool.YEAR);
                                 text="击球数/时间";
                                 size=3;
                             }
                             else
                             {
-                                setDataForManager("时间",combinedChartManager_year);
+                                setDataForManager("时间",combinedChartManager_year,DateTool.YEAR);
                                 text="时间/击球数";
                                 size=2;
                             }
@@ -222,24 +217,59 @@ public class TrainingDataActivity extends AppCompatActivity {
                     }
             );
 
-            TextView textView=(TextView)findViewById(R.id.textView_chartTitle2);
-            textView.setOnClickListener(
+            this.textView_week=(TextView)findViewById(R.id.textView_chartTitle2);
+            this.textView_month=(TextView)findViewById(R.id.textView_chartTitle3);
+            this.textView_year=(TextView)findViewById(R.id.textView_chartTitle4);
+
+            this.textView_week=(TextView)findViewById(R.id.textView_chartTitle2);
+            this.textView_week.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent =new Intent();
                             intent.setClass(TrainingDataActivity.this,CalendarActivity.class);
-                            //intent.setClass(TrainingDataActivity.this,ComboBoxActivity.class);
-                            //intent.putExtra("Mode",ComboBoxActivity.WEEK);
-                            //intent.putExtra("Number",DateTool.calculateWeekNumber());
-                            startActivityForResult(intent,SELECTDATE);
+                            startActivityForResult(intent, SELECTDATE);
                         }
                     }
             );
 
-            this.textView_week=(TextView)findViewById(R.id.textView_chartTitle2);
             this.textView_month=(TextView)findViewById(R.id.textView_chartTitle3);
+            this.textView_month.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent =new Intent();
+                            intent.setClass(TrainingDataActivity.this,CalendarActivity.class);
+                            startActivityForResult(intent, SELECTDATE);
+                        }
+                    }
+            );
+
             this.textView_year=(TextView)findViewById(R.id.textView_chartTitle4);
+            this.textView_year.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent =new Intent();
+                            intent.setClass(TrainingDataActivity.this,CalendarActivity.class);
+                            startActivityForResult(intent, SELECTDATE);
+                        }
+                    }
+            );
+
+            final int weekNumber=DateTool.calculateWeekNumber(currentDate);
+            final int monthNumber=DateTool.getDateMessage(currentDate,DateTool.MONTH);
+            final int yearNumber=DateTool.getDateMessage(currentDate,DateTool.YEAR);
+            this.textView_week.setText("▼ 第"+weekNumber+"周");
+            this.textView_month.setText("▼ "+monthNumber+"月");
+            this.textView_year.setText("▼ "+yearNumber+"年");
+
+            this.textView_aver_speed=(TextView)findViewById(R.id.textView_aver_speed);
+            this.textView_max_speed=(TextView)findViewById(R.id.textView_max_speed);
+            this.textView_energy=(TextView)findViewById(R.id.textView_energy);
+            updateTextView();
+            updateArcProgress(arcProgress, "时间",currentDate);
+            updateArcProgress(arcProgress1, "击球数",currentDate);
         }
         catch(Exception e)
         {
@@ -260,12 +290,38 @@ public class TrainingDataActivity extends AppCompatActivity {
         spannable.setSpan(new AbsoluteSizeSpan((int)sp2px(12)),4,6,0);
         textView.setText(spannable);
     }
-    private void setDataForManager(String descripton,CombinedChartManager combinedChartManager)
+    private void setDataForManager(String descripton,CombinedChartManager combinedChartManager,int type)
     {
-        List<Float> floatList=new ArrayList<Float>();
-        Random random=new Random();
-        for(int i=1;i<=24;i++)
-            floatList.add(random.nextFloat()*50);
+        String colName=descripton.equals("时间")?"sport_time":"hit";
+        List <Float> floatList=null;
+        String dataCacheId=null;
+        switch (type)
+        {
+            case DateTool.WEEK:
+                String firstDayOfWeek=DateTool.getFirstDayOfWeek(currentDate);
+                dataCacheId=Main2Activity.databaseService.getUser_id()+DateTool.WEEK+colName+firstDayOfWeek;
+                if(this.dataCache.isEntryContained(dataCacheId))
+                    floatList=(ArrayList<Float>)dataCache.getData(dataCacheId);
+                else
+                    floatList=searchDataFromDatabase(DateTool.WEEK,descripton,currentDate);
+                break;
+            case DateTool.MONTH:
+                String firstDayOfMonth=DateTool.getFirstDayOfMonth(currentDate);
+                dataCacheId=Main2Activity.databaseService.getUser_id()+DateTool.MONTH+colName+firstDayOfMonth;
+                if(this.dataCache.isEntryContained(dataCacheId))
+                    floatList=(ArrayList<Float>)dataCache.getData(dataCacheId);
+                else
+                    floatList=searchDataFromDatabase(DateTool.MONTH,descripton,currentDate);
+                break;
+            case DateTool.YEAR:
+                int year=DateTool.getDateMessage(currentDate,DateTool.YEAR);
+                dataCacheId=Main2Activity.databaseService.getUser_id()+DateTool.YEAR+colName+year;
+                if(this.dataCache.isEntryContained(dataCacheId))
+                    floatList=(ArrayList<Float>)dataCache.getData(dataCacheId);
+                else
+                    floatList=searchDataFromDatabase(DateTool.YEAR,descripton,currentDate);
+                break;
+        }
         combinedChartManager.setData(descripton,floatList);
     }
     @Override
@@ -306,7 +362,185 @@ public class TrainingDataActivity extends AppCompatActivity {
                 this.textView_week.setText("▼ 第"+weekNumber+"周");
                 this.textView_month.setText("▼ "+monthNumber+"月");
                 this.textView_year.setText("▼ "+yearNumber+"年");
+                this.currentDate=message;
+                setDataForManager(combinedChartManager_week.getDataDescription(),combinedChartManager_week,DateTool.WEEK);
+                setDataForManager(combinedChartManager_month.getDataDescription(),combinedChartManager_month,DateTool.MONTH);
+                setDataForManager(combinedChartManager_year.getDataDescription(),combinedChartManager_year,DateTool.YEAR);
+                updateArcProgress(arcProgress, "时间",currentDate);
+                updateArcProgress(arcProgress1, "击球数",currentDate);
+                updateTextView();
             }
         }
+    }
+    private List<Float> searchDataFromDatabase(int type,String description,String date)
+    {
+        List<Float> floatList=new ArrayList<Float>();
+        String colName=description.equals("时间")?"sport_time":"hit";
+        String dataCacheId;
+        switch (type)
+        {
+            case DateTool.WEEK:
+                String firstDayOfWeek=DateTool.getFirstDayOfWeek(date);
+                String lastDayOfWeek=DateTool.getLastDayOfWeek(date);
+                floatList=Main2Activity.databaseService.
+                        getFloatDataFromDailyRecordByDate(firstDayOfWeek, lastDayOfWeek,colName);
+                dataCacheId=Main2Activity.databaseService.getUser_id()
+                        +type+colName+firstDayOfWeek;
+                if(floatList.size()==0)
+                    for(int i=0;i<7;i++)
+                        floatList.add(0f);
+                this.dataCache.addEntry(dataCacheId,floatList,System.currentTimeMillis());
+                break;
+            case DateTool.MONTH:
+                String firstDayOfMonth=DateTool.getFirstDayOfMonth(date);
+                String lastDayOfMonth=DateTool.getLastDayOfMonth(date);
+                floatList=Main2Activity.databaseService.
+                        getFloatDataFromDailyRecordByDate(firstDayOfMonth, lastDayOfMonth,colName);
+                dataCacheId=Main2Activity.databaseService.getUser_id()
+                        +type+colName+firstDayOfMonth;
+                if(floatList.size()==0)
+                    for(int i=0;i<DateTool.getDaysOfMonth(
+                            DateTool.getDateMessage(currentDate,DateTool.YEAR),DateTool.getDateMessage(currentDate,DateTool.MONTH));i++)
+                        floatList.add(0f);
+                this.dataCache.addEntry(dataCacheId,floatList,System.currentTimeMillis());
+                break;
+            case DateTool.YEAR:
+                floatList=new ArrayList<Float>();
+                int year=DateTool.getDateMessage(date,DateTool.YEAR);
+                for(int i=1;i<=12;i++)
+                {
+                    String time=year+"-"+(i<10?"0"+i:i)+"-01";
+                    float ans=Main2Activity.databaseService.searchDataByTime(
+                            DateTool.getFirstDayOfMonth(time),DateTool.getLastDayOfMonth(time),colName
+                    );
+                    floatList.add(ans);
+                }
+                dataCacheId=Main2Activity.databaseService.getUser_id()
+                        +type+colName+year;
+                if(floatList.size()==0)
+                    for(int i=0;i<12;i++)
+                        floatList.add(0f);
+                this.dataCache.addEntry(dataCacheId,floatList,System.currentTimeMillis());
+                break;
+        }
+        return floatList;
+    }
+    private void updateTextView()
+    {
+        String firstDayOfWeek,lastDayOfWeek;
+        float ans;
+        switch (currentChoose)
+        {
+            case DateTool.WEEK:
+                firstDayOfWeek=DateTool.getFirstDayOfWeek(currentDate);
+                lastDayOfWeek=DateTool.getLastDayOfWeek(currentDate);
+                ans=Main2Activity.databaseService.calculateEnergy(firstDayOfWeek,lastDayOfWeek);
+                textView_energy.setText(DensityUtil.floatPrecision(2,ans)+"Cal");
+                ans=Main2Activity.databaseService.getAverageSpeedBetweenDate(firstDayOfWeek,lastDayOfWeek);
+                textView_aver_speed.setText(DensityUtil.floatPrecision(2,ans)+"m/s");
+                ans=Main2Activity.databaseService.getMaxSpeedBetweenDate(firstDayOfWeek,lastDayOfWeek);
+                textView_max_speed.setText(DensityUtil.floatPrecision(2,ans)+"m/s");
+                break;
+            case DateTool.MONTH:
+                firstDayOfWeek=DateTool.getFirstDayOfMonth(currentDate);
+                lastDayOfWeek=DateTool.getLastDayOfMonth(currentDate);
+                ans=Main2Activity.databaseService.calculateEnergy(firstDayOfWeek,lastDayOfWeek);
+                textView_energy.setText(DensityUtil.floatPrecision(2,ans)+"Cal");
+                ans=Main2Activity.databaseService.getAverageSpeedBetweenDate(firstDayOfWeek,lastDayOfWeek);
+                textView_aver_speed.setText(DensityUtil.floatPrecision(2,ans)+"m/s");
+                ans=Main2Activity.databaseService.getMaxSpeedBetweenDate(firstDayOfWeek,lastDayOfWeek);
+                textView_max_speed.setText(DensityUtil.floatPrecision(2,ans)+"m/s");
+                break;
+            case DateTool.YEAR:
+                firstDayOfWeek=DateTool.getFirstDayOfYear(currentDate);
+                lastDayOfWeek=DateTool.getLastDayOfYear(currentDate);
+                ans=Main2Activity.databaseService.calculateEnergy(firstDayOfWeek,lastDayOfWeek);
+                textView_energy.setText(DensityUtil.floatPrecision(2,ans)+"Cal");
+                ans=Main2Activity.databaseService.getAverageSpeedBetweenDate(firstDayOfWeek,lastDayOfWeek);
+                textView_aver_speed.setText(DensityUtil.floatPrecision(2,ans)+"m/s");
+                ans=Main2Activity.databaseService.getMaxSpeedBetweenDate(firstDayOfWeek,lastDayOfWeek);
+                textView_max_speed.setText(DensityUtil.floatPrecision(2,ans)+"m/s");
+                break;
+        }
+    }
+    private void updateArcProgress(ArcProgress arcProgress,String description,String date)
+    {
+        int type=currentChoose;
+        String colName=description.equals("时间")?"sport_time":"hit";
+        String dataCacheId=Main2Activity.databaseService.getUser_id()
+                +type+colName+date;
+        List<Float> floatList=(ArrayList<Float>)this.dataCache.getData(dataCacheId);
+        if(floatList==null)
+        {
+            floatList=searchDataFromDatabase(type,description,date);
+            dataCache.addEntry(dataCacheId,floatList,System.currentTimeMillis());
+        }
+        float ans=0;
+        for(float x:floatList)
+            ans+=x;
+        arcProgress.updateMiddle(ans);
+    }
+    private void TabHostRender(int[]  pageIDs, final int images[], final TabHost tabHost)
+    {
+        if(images.length/2!=pageIDs.length)
+            return ;
+        final Resources resources = this .getResources();
+        for(int i=0;i<pageIDs.length;i++)
+        {
+            TabHost.TabSpec page = tabHost.newTabSpec(i+"")
+                    .setIndicator(new TextView(this))
+                    .setContent(pageIDs[i]);
+            tabHost.addTab(page);
+        }
+        tabHost.setOnTabChangedListener(
+                new TabHost.OnTabChangeListener() {
+                    @Override
+                    public void onTabChanged(String tabId) {
+                        try
+                        {
+                            switch (tabId)
+                            {
+                                case "0":
+                                    currentChoose=DateTool.WEEK;
+                                    break;
+                                case "1":
+                                    currentChoose=DateTool.MONTH;
+                                    break;
+                                case "2":
+                                    currentChoose=DateTool.YEAR;
+                                    break;
+                            }
+                            updateArcProgress(arcProgress, "时间",currentDate);
+                            updateArcProgress(arcProgress1, "击球数",currentDate);
+                            updateTextView();
+                            int maxCount=tabHost.getTabWidget().getChildCount();
+                            TabWidget tabWidget=tabHost.getTabWidget();
+                            for(int i=0;i<maxCount;i++)
+                            {
+                                if(i==tabHost.getCurrentTab())
+                                    continue;
+                                Drawable drawable=resources.getDrawable(images[2*i]);
+                                tabWidget.getChildAt(i).setBackground(drawable);
+                            }
+                            int currenIndex=tabHost.getCurrentTab();
+                            Drawable drawable =resources.getDrawable(images[2*currenIndex+1]);
+                            tabWidget.getChildAt(currenIndex).setBackground(drawable);
+                        }
+                        catch(Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+        );
+        int maxCount=tabHost.getTabWidget().getChildCount();
+        for(int i=1;i<maxCount;i++)
+        {
+            Drawable drawable = resources.getDrawable(images[2*i]);
+            tabHost.getTabWidget().getChildAt(i).setBackground(drawable);
+        }
+        Drawable drawable =resources.getDrawable(images[1]);
+        tabHost.getTabWidget().getChildAt(0).setBackground(drawable);
     }
 }

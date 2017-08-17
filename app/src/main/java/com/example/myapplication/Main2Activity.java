@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.v7.app.AlertDialog;
 import android.view.MenuInflater;
 import android.view.SurfaceView;
 import android.view.View;
@@ -29,6 +28,7 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.util.List;
+import java.util.Random;
 
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -230,14 +230,40 @@ public class Main2Activity extends AppCompatActivity
             }
         });
     }
+    private void addDataIntoDataBase()
+    {
+        Random random=new Random();
+        String date="2017-1-1";
+        for(int i=0;i<1000;i++)
+        {
+            int hit=random.nextInt(200);
+            float aver_speed= random.nextFloat()*100+1;
+            float max_speed=random.nextFloat()*200+1;
+            float sport_time=random.nextFloat()+1;
+            databaseService.InsertDataToDailyRecord(date,hit,aver_speed,max_speed,sport_time);
+            date=DateTool.nextOrLastDay(date,1);
+        }
+        /*databaseService.setUser_id("lily");
+        date="2000-1-10";
+        for(int i=0;i<1000;i++)
+        {
+            int hit=random.nextInt(200);
+            float aver_speed= random.nextFloat()*100+1;
+            float max_speed=random.nextFloat()*200+1;
+            float sport_time=random.nextFloat()*120+1;
+            databaseService.InsertDataToDailyRecord(date,hit,aver_speed,max_speed,sport_time);
+            date=DateTool.nextOrLastDay(date,1);
+        }*/
+        //databaseService.InsertDataToDailyRecord(10,10,10,10);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
         databaseService =new DatabaseService(this,"bill");
-        //databaseService.InsertDataToDailyRecord("2017-8-10",12,12,12,12);
-        //databaseService.InsertDataToDailyRecord(10,10,10,10);
+        //this.addDataIntoDataBase();
+        //databaseService.getAllFromDailyRecord();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

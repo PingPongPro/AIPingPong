@@ -8,6 +8,8 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import java.text.DecimalFormat;
+
 public class DensityUtil {
     public static final int PX=0;
     public static final int SP=1;
@@ -59,5 +61,14 @@ public class DensityUtil {
         //System.out.println(px2dip(context,resizeBitmap.getHeight())+" "+px2dip(context,resizeBitmap.getWidth()));
         Drawable drawable = new BitmapDrawable(resizeBitmap);
         return drawable;
+    }
+    public static String floatPrecision(int precision,float value)
+    {
+        String parse=".";
+        for(int i=0;i<precision;i++)
+            parse+="0";
+        DecimalFormat decimalFormat=new DecimalFormat(parse);
+        String ans=(precision==0?(int)value+"":decimalFormat.format(value));
+        return ans;
     }
 }  

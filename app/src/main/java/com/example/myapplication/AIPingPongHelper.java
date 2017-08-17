@@ -23,7 +23,7 @@ public class AIPingPongHelper extends SQLiteOpenHelper {
                     "hit integer DEFAULT 0," +
                     "aver_speed float DEFAULT 0," +
                     "max_speed float DEFAULT 0," +
-                    "sport_time integer DEFAULT 0" +
+                    "sport_time float DEFAULT 0" +
                     ",primary key(user_id,day)" +//
                     ")";
         //
@@ -35,7 +35,7 @@ public class AIPingPongHelper extends SQLiteOpenHelper {
                         "hit integer DEFAULT 0," +
                         "aver_speed float DEFAULT 0," +
                         "max_speed float DEFAULT 0," +
-                        "sport_time int DEFAULT 0)";
+                        "sport_time float DEFAULT 0)";
         db.execSQL("CREATE TABLE IF NOT EXISTS ContestRecord" +struct2);
     }
     public void onUpgrade(SQLiteDatabase db,int oldVersion,int newVersion)
