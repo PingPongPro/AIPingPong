@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -39,6 +41,9 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
     private TextView textView;
     private int text = 0;
 
+    private Drawable VIDEO_PAUSE;
+    private Drawable VIDEO_START;
+
     private android.os.Handler handler = new android.os.Handler();
     private Runnable runnable = new Runnable() {
         @Override
@@ -49,16 +54,7 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
         }
     };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_back);
-
-        mSurfaceview = (SurfaceView) findViewById(R.id.surfaceview);
-        mImageView = (ImageView) findViewById(R.id.imageview);
-        mBtnStartStop = (Button) findViewById(R.id.btnStartStop);
-        mBtnPlay = (Button) findViewById(R.id.btnPlayVideo);
-        textView = (TextView)findViewById(R.id.text);
+    private void myListener(){
         mBtnStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,7 +68,7 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
                     }
                 }
                 if (!mStartedFlg) {
-                    handler.postDelayed(runnable,1000);
+                    //handler.postDelayed(runnable,1000);
                     mImageView.setVisibility(View.GONE);
                     if (mRecorder == null) {
                         mRecorder = new MediaRecorder();
@@ -80,7 +76,7 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
 
                     camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
                     if (camera != null) {
-                        camera.setDisplayOrientation(90);
+                        camera.setDisplayOrientation(0);
                         camera.unlock();
                         mRecorder.setCamera(camera);
                     }
@@ -97,8 +93,8 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
                         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
                         mRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
 
-                        mRecorder.setVideoSize(640, 480);
                         mRecorder.setVideoFrameRate(30);
+                        mRecorder.setOrientationHint(0);
 
                         mRecorder.setVideoEncodingBitRate(3 * 1024 * 1024);
                         //设置记录会话的最大持续时间（毫秒）
@@ -116,7 +112,7 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
                             mRecorder.prepare();
                             mRecorder.start();
                             mStartedFlg = true;
-                            mBtnStartStop.setText("Stop");
+                            mBtnStartStop.setBackground(VIDEO_PAUSE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -125,12 +121,12 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
                     //stop
                     if (mStartedFlg) {
                         try {
-                            handler.removeCallbacks(runnable);
+                            //handler.removeCallbacks(runnable);
                             mRecorder.stop();
                             mRecorder.reset();
                             mRecorder.release();
                             mRecorder = null;
-                            mBtnStartStop.setText("Start");
+                            mBtnStartStop.setBackground(VIDEO_START);
                             if (camera != null) {
                                 camera.release();
                                 camera = null;
@@ -165,7 +161,21 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
                 mediaPlayer.start();
             }
         });
+    }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_play_back);
+
+        mSurfaceview = (SurfaceView) findViewById(R.id.surfaceview);
+        mImageView = (ImageView) findViewById(R.id.imageview);
+        mBtnStartStop = (Button) findViewById(R.id.btnStartStop);
+        mBtnPlay = (Button) findViewById(R.id.btnPlayVideo);
+        //textView = (TextView)findViewById(R.id.text);
+        VIDEO_START = getResources().getDrawable(R.drawable.video_start);
+        VIDEO_PAUSE = getResources().getDrawable(R.drawable.video_pause);
+        myListener();
         SurfaceHolder holder = mSurfaceview.getHolder();
         holder.addCallback(this);
         // setType必须设置，要不出错.
@@ -175,6 +185,9 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
     @Override
     protected void onResume() {
         super.onResume();
+        if(getRequestedOrientation()!= ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
         if (!mStartedFlg) {
             mImageView.setVisibility(View.VISIBLE);
         }
