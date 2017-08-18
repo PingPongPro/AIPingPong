@@ -160,15 +160,12 @@
                                     android:layout_centerHorizontal="true"
                                     android:background="#FF8C00"/>
                             </RelativeLayout>
-
-                            <com.github.mikephil.charting.charts.BarChart
-                                android:id="@+id/barChart2"
+                            <com.github.mikephil.charting.charts.RadarChart
+                                android:id="@+id/radarChart"
                                 style="@style/layout_vertical"
                                 android:layout_width="match_parent"
-                                android:layout_height="0px"
-                                android:layout_weight="141">
-
-                            </com.github.mikephil.charting.charts.BarChart>
+                                android:layout_weight="141"
+                                android:layout_height="0px"/>
 
                             <LinearLayout
                                 style="@style/layout_vertical"
