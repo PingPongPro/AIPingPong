@@ -79,10 +79,6 @@ public class Main2Activity extends AppCompatActivity
     private boolean shouldPause=false;
     private boolean counterEverRelease=false;       //计数器是否曾被销毁
 
-
-
-
-
     //蓝牙相关
     private String mDeviceName;
     private String mDeviceAddress;
@@ -260,6 +256,7 @@ public class Main2Activity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        Thread.setDefaultUncaughtExceptionHandler(new myException());
 
         databaseService =new DatabaseService(this,"bill");
         //this.addDataIntoDataBase();
@@ -309,6 +306,11 @@ public class Main2Activity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         myListener();
+
+        textView_TrainingTime=(TextView)findViewById(R.id.textView_TrainingTime);
+        textView_AvgBallNum=(TextView)findViewById(R.id.textView_AvgBallNum);
+        textView_MaxSpeed=(TextView)findViewById(R.id.textView_MaxSpeed);
+        updateView();
     }
 
     @Override
@@ -335,6 +337,8 @@ public class Main2Activity extends AppCompatActivity
         super.onDestroy();
         if(mConnected == true)
             unbindService(mServiceConnection);
+        if(databaseService!=null)
+            databaseService.close();
     }
 
     @Override
@@ -419,5 +423,28 @@ public class Main2Activity extends AppCompatActivity
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         return intentFilter;
+    }
+    private void updateView()
+    {
+        float time=0;
+        List<Float> floatList=databaseService.getFloatDataFromDailyRecordByDate
+                (DateTool.getCurrentDate(),DateTool.getCurrentDate(),"sport_time");
+        if(floatList!=null&&floatList.size()!=0)
+        {
+            time=floatList.get(0);
+            textView_TrainingTime.setText(DensityUtil.floatPrecision(2,time)+"s");
+        }
+        floatList=databaseService.getFloatDataFromDailyRecordByDate
+                (DateTool.getCurrentDate(),DateTool.getCurrentDate(),"hit");
+        if(floatList!=null&&floatList.size()!=0)
+        {
+            time=(floatList.get(0)/(time==0?1:time));
+            textView_AvgBallNum.setText(DensityUtil.floatPrecision(2,time)+"个/min");
+            this.timerView.updateTextMiddle((int)((float)floatList.get(0)));
+        }
+        floatList=databaseService.getFloatDataFromDailyRecordByDate
+                (DateTool.getCurrentDate(),DateTool.getCurrentDate(),"max_speed");
+        if(floatList!=null&&floatList.size()!=0)
+            textView_MaxSpeed.setText(DensityUtil.floatPrecision(2,floatList.get(0))+"m/s");
     }
 }

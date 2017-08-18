@@ -95,6 +95,7 @@ public class DatabaseService {
             result+=cursor.getInt(cursor.getColumnIndex(att));
         return result;
     }
+    //计算指定日期之间指定列的和
     public float searchDataByTime(String begin ,String end,String att)
     {
         String order="select "+att+" from DailyRecord where user_id = '"+user_id+
@@ -107,6 +108,7 @@ public class DatabaseService {
             result+=cursor.getFloat(cursor.getColumnIndex(att));
         return result;
     }
+    //查询日期之间指定列的所有值
     public List<Float> getFloatDataFromDailyRecordByDate(String beginDate, String endDate, String colName)
     {
         String order="select "+colName+" from DailyRecord where user_id = '"+user_id+
@@ -119,6 +121,7 @@ public class DatabaseService {
             ans.add(cursor.getFloat(cursor.getColumnIndex(colName)));
         return ans;
     }
+    //查询日期之间指定列的所有值
     public List<Integer> getIntDataFromDailyRecordByDate(String beginDate, String endDate, String colName)
     {
         String order="select "+colName+" from DailyRecord where user_id = '"+user_id+
@@ -131,6 +134,7 @@ public class DatabaseService {
             ans.add(cursor.getInt(cursor.getColumnIndex(colName)));
         return ans;
     }
+    //计算能量消耗
     public float calculateEnergy(String beginDate, String endDate)
     {
         float ans=0;
@@ -143,6 +147,7 @@ public class DatabaseService {
             ans+=cursor.getFloat(cursor.getColumnIndex("sport_time"))*800;
         return ans;
     }
+    //计算平均速度
     public float getAverageSpeedBetweenDate(String beginDate, String endDate)
     {
         float ans=0;
@@ -156,6 +161,7 @@ public class DatabaseService {
             ans+=cursor.getFloat(cursor.getColumnIndex("aver_speed"));
         return ans/counter;
     }
+    //计算最大速度
     public float getMaxSpeedBetweenDate(String beginDate, String endDate)
     {
         float ans=0;

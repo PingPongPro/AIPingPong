@@ -84,7 +84,6 @@ public class TrainingDataActivity extends AppCompatActivity {
 //                floatList.add(random.nextFloat()*50);
 //            barChartManager.setData(floatList);
 
-
             List<Float> floatList=new ArrayList<Float>();
             Random random=new Random();
 

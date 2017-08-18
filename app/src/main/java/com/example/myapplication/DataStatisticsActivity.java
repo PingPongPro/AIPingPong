@@ -19,6 +19,7 @@ import android.widget.TabHost;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.charts.RadarChart;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,8 @@ import java.util.Random;
 
 public class DataStatisticsActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private BarChartManager barChartManager;
+    private RadarChartManager radarChartManager;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -94,12 +97,20 @@ public class DataStatisticsActivity extends AppCompatActivity {
         try
         {
             BarChart barChart=(BarChart)findViewById(R.id.barChart);
-            BarChartManager barChartManager=new BarChartManager(barChart);
+            barChartManager=new BarChartManager(barChart);
             List<Float> floatList=new ArrayList<Float>();
             Random random=new Random();
             for(int i=1;i<=19;i++)
                 floatList.add(random.nextFloat()*50);
             barChartManager.setData(floatList);
+
+            RadarChart radarChart=(RadarChart)findViewById(R.id.radarChart);
+            radarChartManager=new RadarChartManager(radarChart);
+            floatList.clear();
+            for(int i=1;i<=6;i++)
+                floatList.add(random.nextFloat()*50);
+            radarChartManager.setData(floatList);
+
             TabHost tabHost=(TabHost)findViewById(R.id.tabhost);
             tabHost.setup();
 
@@ -165,7 +176,8 @@ public class DataStatisticsActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+                                 Bundle savedInstanceState)
+        {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             int arg=getArguments().getInt(ARG_SECTION_NUMBER);
             PieChart pieChart=(PieChart) rootView.findViewById(R.id.chart);
