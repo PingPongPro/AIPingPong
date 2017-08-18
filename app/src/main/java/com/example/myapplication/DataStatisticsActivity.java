@@ -108,11 +108,7 @@ public class DataStatisticsActivity extends AppCompatActivity {
             radarChartManager=new RadarChartManager(radarChart);
             floatList.clear();
             for(int i=1;i<=6;i++)
-            {
-                float keep=random.nextFloat()*50;
-                floatList.add(keep);
-                System.out.println(keep);
-            }
+                floatList.add(random.nextFloat()*50);
             radarChartManager.setData(floatList);
 
             TabHost tabHost=(TabHost)findViewById(R.id.tabhost);

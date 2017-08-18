@@ -82,7 +82,7 @@ public class CircularRingPercentageView extends View {
                 this.textMiddle=value+"";
                 break;
             case DAILYTASK:
-                this.nowCount=value;
+                this.nowCount=(value>totalCount?totalCount:value);
                 this.textMiddle=value+"";
                 updateProgress();
                 break;
@@ -402,12 +402,17 @@ public class CircularRingPercentageView extends View {
                 }
                 break;
             case DAILYTASK:
-                if(progress<maxColorNumber*this.nowCount/this.totalCount)
+                if(progress<maxColorNumber*this.nowCount/this.totalCount-0.001f)
                 {
                     long currenTime=System.currentTimeMillis();
                     if(startTime==0)
                         startTime=currenTime;
                     this.progress+=(float)((this.saveTime+currenTime-this.startTime)/100);
+                    invalidate();
+                }
+                else if(progress>maxColorNumber*this.nowCount/this.totalCount)
+                {
+                    this.progress=maxColorNumber*this.nowCount/this.totalCount-0.0005f;
                     invalidate();
                 }
                 else
