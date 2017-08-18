@@ -161,8 +161,9 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
                                             if(ETmp.getText() != null){
                                                 FileCheck FCTmp = new FileCheck();
                                                 if(FCTmp.isValidFileName(ETmp.getText().toString())){
-                                                    String newPath = folderPath + "/" + ETmp.getText().toString();
-                                                    FCTmp.renameFileName(folderPath.getPath(), newPath);
+                                                    String newPath = dir + "/" + ETmp.getText().toString();
+                                                    FCTmp.moveFile(path, newPath);
+                                                    FCTmp.deleteDirectory(folderPath.getPath());
                                                 }
                                             }
                                         }
@@ -253,13 +254,28 @@ public class PlayBack extends Activity implements SurfaceHolder.Callback {
     public static String getDate() {
         Calendar ca = Calendar.getInstance();
         int year = ca.get(Calendar.YEAR);           // 获取年份
-        int month = ca.get(Calendar.MONTH);         // 获取月份
+        int month = ca.get(Calendar.MONTH) + 1;     // 获取月份
         int day = ca.get(Calendar.DATE);            // 获取日
         int minute = ca.get(Calendar.MINUTE);       // 分
-        int hour = ca.get(Calendar.HOUR);           // 小时
+        int hour = ca.get(Calendar.HOUR_OF_DAY);   // 小时
         int second = ca.get(Calendar.SECOND);       // 秒
 
-        String date = "" + year + (month + 1) + day + hour + minute + second;
+        String date = "" + year + "-";
+        if(month < 10)
+            date = date + "0";
+        date = date + month + "-";
+        if(day < 10)
+            date = date + "0";
+        date = date + day + "-";
+        if(hour < 10)
+            date = date + "0";
+        date = date + hour + "-";
+        if(minute < 10)
+            date = date + "0";
+        date = date + minute + "-";
+        if(second < 10)
+            date = date + "0";
+        date = date + second;
         Log.d(TAG, "date:" + date);
 
         return date;

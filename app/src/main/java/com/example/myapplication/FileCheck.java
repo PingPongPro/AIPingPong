@@ -47,4 +47,14 @@ public class FileCheck {
         if (!flag) return false;
         return dirFile.delete();
     }
+    public boolean moveFile(String fileName, String finDirName) {
+
+        File file = new File(fileName);
+        if(!file.exists() || !file.isFile())
+            return false;
+        File dir = new File(finDirName);
+        if (!dir.exists())
+            dir.mkdirs();
+        return file.renameTo(new File(finDirName + File.separator + file.getName()));
+    }
 }
