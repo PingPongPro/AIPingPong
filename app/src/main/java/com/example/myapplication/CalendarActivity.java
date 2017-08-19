@@ -22,12 +22,11 @@ public class CalendarActivity extends Activity implements View.OnClickListener {
     private String title;
     private int[][] days = new int[6][7];
  
-            @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new myException());
         setContentView(R.layout.calendar_layout);
-
         //初始化日期数据
         initData();
         //初始化组件
@@ -48,8 +47,8 @@ public class CalendarActivity extends Activity implements View.OnClickListener {
  
     private void initView() {
         /**
-                  * 以下是初始化GridView
-                  */
+         * 以下是初始化GridView
+         */
         record_gridView = (GridView) findViewById(R.id.record_gridView);
         days = DateTool.getDayOfMonthFormat(year, month);
         dateAdapter = new CalendarDateAdapter(this, days, year, month);//传入当前月的年
@@ -57,15 +56,15 @@ public class CalendarActivity extends Activity implements View.OnClickListener {
         record_gridView.setVerticalSpacing(60);
         //record_gridView.setEnabled(false);
         record_gridView.setOnItemClickListener(
-                new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent=new Intent();
-                        intent.putExtra("date",parent.getAdapter().getItem(position).toString());
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
+            new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent=new Intent();
+                    intent.putExtra("date",parent.getAdapter().getItem(position).toString());
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
+            }
         );
         /**
                   * 以下是初始化其他组件
@@ -77,7 +76,7 @@ public class CalendarActivity extends Activity implements View.OnClickListener {
     }
  
          
-            /**
+    /**
       * 下一个月
       *
       * @return
