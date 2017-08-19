@@ -31,7 +31,6 @@ public class ExDialog extends ListActivity {
 	private String mDir;
 	private String DirTitle = "ballGame";
 	private String RootDir = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"ballGame";
-	private int aaaaa;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
